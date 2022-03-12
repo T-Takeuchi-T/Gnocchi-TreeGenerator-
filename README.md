@@ -30,6 +30,32 @@ Gnocchi -TreeGenerator- is software for generating trees.
 0) Ⓐ ① ③ input is invalidated, only accepted from new window
 1) Accept from both old and new
 #### * Output to the background when Ⓐ⑧ is 1), 2)
+#### * Role of characters
+The "pen" method of receiving characters as commands was adopted as a method of generating a 3D model based on a character string. The role of the character was given as follows. (Decimal numbers are entered in □ and ■) (s and l are used for leaf formation)
+#### f□c
+* Change to {□ c \<arbitrary\>} when the conversion character f → \<arbitrary\>
+#### g□c
+* The pen creates vertices and polygons on the spot with a radius of □
+#### h□,■c
+* (In the case of the root of the branch, after the vertex is generated with the radius □) Move the pen straight ■
+#### [□c
+* Start branching
+* In generation, □ square regular polygon will be generated
+#### ]□,■c
+* (In the case of the root of a branch, after the vertex is generated with a radius □) Length ■ tip generation
+Return the pen to the previous s / [position and rotation
+#### (Axis)□c
+* Rotate other local axes around the specified local axis (x / y / z) by □ °
+#### s
+* Start branching.
+* Digons will be generated in generation
+#### l□,■c
+* (In the case of the root of a branch, after the vertex is generated with a radius □) Length ■ tip generation
+* Return the pen to the previous s / [position and rotation
+#### w□c
+* Move the pen straight □
+#### {□c / }
+* Between {□ c to} is □ enlarged / reduced
 ### Ⓑ New window
 #### ①Output when ①Ⓐ⑧ is other than 1) and 2)
 * Left-click, wheel-click : Parallel movement of viewpoint
