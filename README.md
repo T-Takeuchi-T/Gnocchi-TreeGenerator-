@@ -3,7 +3,7 @@ Gnocchi -TreeGenerator- is software for generating trees.
 
 ## DEMO
 ### _How to use Gnocci(β)_
-![y](https://user-images.githubusercontent.com/93573362/158017098-645e2b76-dd1a-4926-b184-ea915a2af25c.png)
+![How to use Gnocci(β)](https://user-images.githubusercontent.com/93573362/158017098-645e2b76-dd1a-4926-b184-ea915a2af25c.png)
 ### Ⓐ Old window
 #### ① Character string input
 #### ② Number of fractal repetitions
@@ -29,6 +29,7 @@ Gnocchi -TreeGenerator- is software for generating trees.
 #### ⑫ Manual input enable / disable switching
 0) Ⓐ ① ③ input is invalidated, only accepted from new window
 1) Accept from both old and new
+#### * Output to the background when Ⓐ⑧ is 1), 2)
 ### Ⓑ New window
 #### ①Output when ①Ⓐ⑧ is other than 1) and 2)
 * Left-click, wheel-click : Parallel movement of viewpoint
@@ -38,10 +39,19 @@ Gnocchi -TreeGenerator- is software for generating trees.
 * Click the node to select
 * Right-click a node to display the node menu.
 #### ③ Properties of the selected node
-![a](https://user-images.githubusercontent.com/93573362/158017105-6a48dc4e-a425-49a0-b830-de24e494f68c.png)
+![Properties of the selected node](https://user-images.githubusercontent.com/93573362/158017105-6a48dc4e-a425-49a0-b830-de24e494f68c.png)
 #### ④ Node distribution and fractals
-![z](https://user-images.githubusercontent.com/93573362/158017122-4bfc6de6-0e9d-4aba-89f7-a0ad7d5f40a3.png)
-![x](https://user-images.githubusercontent.com/93573362/158017125-bba73149-1571-4620-bb36-29db15a7f506.png)
+![Fractals](https://user-images.githubusercontent.com/93573362/158017122-4bfc6de6-0e9d-4aba-89f7-a0ad7d5f40a3.png)
+![Node distribution](https://user-images.githubusercontent.com/93573362/158017125-bba73149-1571-4620-bb36-29db15a7f506.png)
+### _Demo videos_
+#### _New window usage example_
+
+#### _Old window usage example_
+
+#### _Property "type" and input in new window_
+
+#### _Property "type" and input in old window_
+
 ## Requirements
 Gnocchi -TreeGenerator- requires the following to run:
 * OpenGL
