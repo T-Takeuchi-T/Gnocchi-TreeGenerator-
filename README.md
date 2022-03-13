@@ -66,7 +66,7 @@ Return the pen to the previous s / [position and rotation
 * Right-click a node to display the node menu.
 #### ③ Properties of the selected node
 ![Properties of the selected node](https://user-images.githubusercontent.com/93573362/158017105-6a48dc4e-a425-49a0-b830-de24e494f68c.png)
-#### ④ Node distribution and fractals
+#### * Node distribution and fractals
 ![Fractals](https://user-images.githubusercontent.com/93573362/158017122-4bfc6de6-0e9d-4aba-89f7-a0ad7d5f40a3.png)
 ![Node distribution](https://user-images.githubusercontent.com/93573362/158017125-bba73149-1571-4620-bb36-29db15a7f506.png)
 ### _Demo videos_
@@ -95,6 +95,7 @@ Gnocchi -TreeGenerator- requires the following to run:
 * OpenGL
 * FBX SDK
 * .Net Framework
+* Microsoft Visual C++ 2015
 
 ## Author
 * Mint0108
