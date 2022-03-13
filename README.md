@@ -95,7 +95,7 @@ Gnocchi -TreeGenerator- requires the following to run:
 * OpenGL
 * FBX SDK
 * .Net Framework
-* Microsoft Visual C++ 2015
+* Microsoft Visual C++ 2015-2022
 
 ## Author
 * Mint0108
