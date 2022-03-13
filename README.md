@@ -11,7 +11,7 @@ Gnocchi -TreeGenerator- is software for generating trees.
 #### ④ Initial position
 #### ⑤ Depth limit in pseudo 3D
 #### ⑥ Rotation of product (°)
-#### ⑦ Pen travel distance, rotation amount, magnification of vertex generation radius (%)
+#### ⑦ Magnification of pen travel distance, rotation amount, vertex generation radius (%)
 #### ⑧ Change generation style
 0) Win32 API Line drawing (pseudo 3D)
 1) Drawing on Win32 API surface (pseudo 3D)
@@ -29,7 +29,7 @@ Gnocchi -TreeGenerator- is software for generating trees.
 #### ⑫ Manual input enable / disable switching
 0) Ⓐ ① ③ input is invalidated, only accepted from new window
 1) Accept from both old and new
-#### * Output to the background when Ⓐ⑧ is 1), 2)
+#### * Output to the background when Ⓐ⑧ is 0, 1
 #### * Role of characters
 The "pen" method of receiving characters as commands was adopted as a method of generating a 3D model based on a character string. The role of the character was given as follows. (Decimal numbers are entered in □ and ■) (s and l are used for leaf formation)
 #### f□c
@@ -57,7 +57,7 @@ Return the pen to the previous s / [position and rotation
 #### {□c / }
 * Between {□ c to} is □ enlarged / reduced
 ### Ⓑ New window
-#### ①Output when ①Ⓐ⑧ is other than 1) and 2)
+#### ①Output when ①Ⓐ⑧ is other than 0 and 1
 * Left-click, wheel-click : Parallel movement of viewpoint
 * Mouse wheel: Viewpoint forward / backward
 * Move while right-clicking: Rotate viewpoint
