@@ -1,6 +1,8 @@
 # Gnocchi -TreeGenerator-
 Gnocchi -TreeGenerator- is software for generating trees.
 
+<img src="https://user-images.githubusercontent.com/72851485/177334321-a9845978-1f1b-4100-9b75-0684dc5e351c.PNG" width="256">
+
 ## DEMO
 ### _How to use Gnocci(β)_
 ![How to use Gnocci(β)](https://user-images.githubusercontent.com/93573362/158017098-645e2b76-dd1a-4926-b184-ea915a2af25c.png)
