@@ -12,14 +12,16 @@
 #include <commctrl.h>
 #include <fbxsdk.h>
 #include "MainForm.h"
+#include "Resource.h"
+//#include "Generator.h"
 using namespace System;
 using namespace System::Windows::Forms;
 using namespace System::Drawing;
-double campx=0, campy=0, campz=10, campxx = 1, campxy = 0, campxz = 0, campyx = 0, campyy = 1, campyz = 0, campzx = 0, campzy = 0, campzz = 1;
-HWND edit[18];
-PTSTR roottext,fractaltext;
+double campx = 0, campy = 0, campz = 10, campxx = 1, campxy = 0, campxz = 0, campyx = 0, campyy = 1, campyz = 0, campzx = 0, campzy = 0, campzz = 1;
+HWND edit[35];
+PTSTR roottext, fractaltext;
 HWND hwnd;
-
+bool cam;
 /*
 void rotate(double posx, double posy, double posz, double argx, double argy, double argz, double* outx, double* outy, double* outz) {
 	*outy = posy * cos(argx) - posz * sin(argx);
@@ -42,8 +44,8 @@ void localrotate(double px, double py, double pz, double a, double nx, double ny
 
 
 void maingraph(vector< vector<double>> v, shared_ptr<Node> node) {
-	if (NULL != node->PathString) {
-		std::free(node->PathString); node->PathString = NULL;
+	if (node->PathString != '\0') {
+		std::free(node->PathString); node->PathString = '\0';
 	}
 	node->PathString = (PTSTR)calloc(100000, sizeof(TCHAR));
 	PTSTR MainText = node->PathString;
@@ -68,98 +70,99 @@ void maingraph(vector< vector<double>> v, shared_ptr<Node> node) {
 		lstrcat(MainText, TEXT("c"));
 	}
 	else
-	if (node->Property->at(114) != 1)
-	{
-		for (int n = 0; n < v.size(); n++) {
-			double rotz;
-			double fowz;
-			double rotx;
-			double fowx;
-			if (n == 0) {
-				rotz = atan2(graphpoint1->at(graphpoint1->at(0) + v[n][0] + 1), graphpoint1->at(v[n][0] + 1)) / M_PI * 180.0;
-				fowz = sqrt(pow(graphpoint1->at(graphpoint1->at(0) + v[n][0] + 1), 2) + pow(graphpoint1->at(v[n][0] + 1), 2))* node->truelength;
-				rotx = atan2(graphpoint2->at(graphpoint2->at(0) + v[n][0] + 1), graphpoint2->at(v[n][0] + 1)) / M_PI * 180.0;
-				fowx = sqrt(pow(graphpoint2->at(graphpoint2->at(0) + v[n][0] + 1), 2) + pow(graphpoint2->at(v[n][0] + 1), 2)) * node->truelength;
-			}
-			else {
-				rotz = atan2(graphpoint1->at(graphpoint1->at(0) + v[n][0] + 1) - graphpoint1->at(graphpoint1->at(0) + v[n - 1][0] + 1), graphpoint1->at(v[n][0] + 1) - graphpoint1->at(v[n - 1][0] + 1)) * 180.0 / M_PI;
-				fowz = sqrt(pow(graphpoint1->at(graphpoint1->at(0) + v[n][0] + 1) - graphpoint1->at(graphpoint1->at(0) + v[n - 1][0] + 1), 2) + pow(graphpoint1->at(v[n][0] + 1) - graphpoint1->at(v[n - 1][0] + 1), 2)) * node->truelength;
-				rotx = atan2(graphpoint2->at(graphpoint2->at(0) + v[n][0] + 1) - graphpoint2->at(graphpoint2->at(0) + v[n - 1][0] + 1), graphpoint2->at(v[n][0] + 1) - graphpoint2->at(v[n - 1][0] + 1)) * 180.0 / M_PI;
-				fowx = sqrt(pow(graphpoint2->at(graphpoint2->at(0) + v[n][0] + 1) - graphpoint2->at(graphpoint2->at(0) + v[n - 1][0] + 1), 2) + pow(graphpoint2->at(v[n][0] + 1) - graphpoint2->at(v[n - 1][0] + 1), 2)) * node->truelength;
-			} 
-			wstring rotztxt = std::to_wstring(rotz);
-			wstring  rotxtxt = std::to_wstring(rotx);
-			wstring  fowztxt = std::to_wstring(fowz);
-			wstring  fowxtxt = std::to_wstring(fowx);
-			wstring rotztxtm = std::to_wstring(-rotz);
-			wstring  rotxtxtm = std::to_wstring(-rotx);
-			wstring  fowztxtm= std::to_wstring(-fowz);
-			wstring  fowxtxtm = std::to_wstring(-fowx);
-			lstrcat(MainText, TEXT("z"));
-			lstrcat(MainText, rotztxt.c_str());
-			lstrcat(MainText, TEXT("ch"));
-			lstrcat(MainText, std::to_wstring(v[n][2] / 10000.0 * node->truebaseRadius).c_str());
-			lstrcat(MainText, TEXT(","));
-			lstrcat(MainText, fowztxt.c_str());
-			lstrcat(MainText, TEXT("cz"));
-			lstrcat(MainText, rotztxtm.c_str());
-			lstrcat(MainText, TEXT("cx"));
-			lstrcat(MainText, rotxtxt.c_str());
-			if (node->Property->at(114) == 3) {
-				lstrcat(MainText, TEXT("cw"));
-				lstrcat(MainText, fowxtxt.c_str());
-				lstrcat(MainText, TEXT("cz"));
-			}
-			else {
-				lstrcat(MainText, TEXT("ch"));
-				lstrcat(MainText, std::to_wstring(v[n][2] / 10000.0 *node->truebaseRadius).c_str());
-				lstrcat(MainText, TEXT(","));
-				lstrcat(MainText, fowxtxt.c_str());
-				lstrcat(MainText, TEXT("cz"));
-			}
-			lstrcat(MainText, rotztxt.c_str());
-			if (n != 0)
-				if (v[n][1] == -1) {
-					lstrcat(MainText, TEXT("cg"));
-					lstrcat(MainText, std::to_wstring(v[n][2] / 10000.0 * node->truebaseRadius).c_str());
-					lstrcat(MainText, TEXT("cz"));
-		}
-			else {
-				lstrcat(MainText, TEXT("c"));
-					if (node->MainChild->at(v[n][1])->Property->at(114) ==3) {
-						lstrcat(MainText, TEXT("s"));
-						lstrcat(MainText, TEXT("w"));
-						lstrcat(MainText, std::to_wstring(v[n][2] / 10000.0  * node->truebaseRadius).c_str());
-						lstrcat(MainText, TEXT("c"));
-							}
-					else {
-						lstrcat(MainText, TEXT("["));
-						lstrcat(MainText, std::to_wstring(node->MainChild->at(v[n][1])->Property->at(1)).c_str());
-						lstrcat(MainText, TEXT("c"));
-				}
-				lstrcat(MainText, node->MainChild->at(v[n][1])->PathString);
-					if (node->MainChild->at(v[n][1])->Property->at(114) == 3) {
+		if (node->Property->at(114) != 1)
+		{
+			for (int n = 0; n < v.size(); n++) {
+				double rotz;
+				double fowz;
+				double rotx;
+				double fowx;
+				if (n == 0) {
+					rotz = atan2(graphpoint1->at(graphpoint1->at(0) + v[n][0] + 1), graphpoint1->at(v[n][0] + 1)) / M_PI * 180.0;
+					fowz = sqrt(pow(graphpoint1->at(graphpoint1->at(0) + v[n][0] + 1), 2) + pow(graphpoint1->at(v[n][0] + 1), 2)) * node->truelength;
+					rotx = atan2(graphpoint2->at(graphpoint2->at(0) + v[n][0] + 1), graphpoint2->at(v[n][0] + 1)) / M_PI * 180.0;
+					fowx = sqrt(pow(graphpoint2->at(graphpoint2->at(0) + v[n][0] + 1), 2) + pow(graphpoint2->at(v[n][0] + 1), 2)) * node->truelength;
 				}
 				else {
-					lstrcat(MainText, TEXT("],5c"));
+					rotz = atan2(graphpoint1->at(graphpoint1->at(0) + v[n][0] + 1) - graphpoint1->at(graphpoint1->at(0) + v[n - 1][0] + 1), graphpoint1->at(v[n][0] + 1) - graphpoint1->at(v[n - 1][0] + 1)) * 180.0 / M_PI;
+					fowz = sqrt(pow(graphpoint1->at(graphpoint1->at(0) + v[n][0] + 1) - graphpoint1->at(graphpoint1->at(0) + v[n - 1][0] + 1), 2) + pow(graphpoint1->at(v[n][0] + 1) - graphpoint1->at(v[n - 1][0] + 1), 2)) * node->truelength;
+					rotx = atan2(graphpoint2->at(graphpoint2->at(0) + v[n][0] + 1) - graphpoint2->at(graphpoint2->at(0) + v[n - 1][0] + 1), graphpoint2->at(v[n][0] + 1) - graphpoint2->at(v[n - 1][0] + 1)) * 180.0 / M_PI;
+					fowx = sqrt(pow(graphpoint2->at(graphpoint2->at(0) + v[n][0] + 1) - graphpoint2->at(graphpoint2->at(0) + v[n - 1][0] + 1), 2) + pow(graphpoint2->at(v[n][0] + 1) - graphpoint2->at(v[n - 1][0] + 1), 2)) * node->truelength;
 				}
+				wstring rotztxt = std::to_wstring(rotz);
+				wstring  rotxtxt = std::to_wstring(rotx);
+				wstring  fowztxt = std::to_wstring(fowz);
+				wstring  fowxtxt = std::to_wstring(fowx);
+				wstring rotztxtm = std::to_wstring(-rotz);
+				wstring  rotxtxtm = std::to_wstring(-rotx);
+				wstring  fowztxtm = std::to_wstring(-fowz);
+				wstring  fowxtxtm = std::to_wstring(-fowx);
 				lstrcat(MainText, TEXT("z"));
+				lstrcat(MainText, rotztxt.c_str());
+				lstrcat(MainText, TEXT("ch"));
+				lstrcat(MainText, std::to_wstring(v[n][2] / 10000.0 * node->truebaseRadius).c_str());
+				lstrcat(MainText, TEXT(","));
+				lstrcat(MainText, fowztxt.c_str());
+				lstrcat(MainText, TEXT("cz"));
+				lstrcat(MainText, rotztxtm.c_str());
+				lstrcat(MainText, TEXT("cx"));
+				lstrcat(MainText, rotxtxt.c_str());
+				if (node->Property->at(114) == 3) {
+					lstrcat(MainText, TEXT("cw"));
+					lstrcat(MainText, fowxtxt.c_str());
+					lstrcat(MainText, TEXT("cz"));
+				}
+				else {
+					lstrcat(MainText, TEXT("ch"));
+					lstrcat(MainText, std::to_wstring(v[n][2] / 10000.0 * node->truebaseRadius).c_str());
+					lstrcat(MainText, TEXT(","));
+					lstrcat(MainText, fowxtxt.c_str());
+					lstrcat(MainText, TEXT("cz"));
+				}
+				lstrcat(MainText, rotztxt.c_str());
+				if (n != 0)
+					if (v[n][1] == -1) {
+						lstrcat(MainText, TEXT("cg"));
+						lstrcat(MainText, std::to_wstring(v[n][2] / 10000.0 * node->truebaseRadius).c_str());
+						lstrcat(MainText, TEXT("cz"));
+					}
+					else {
+						lstrcat(MainText, TEXT("c"));
+						if (node->MainChild->at(v[n][1])->Property->at(114) == 3) {
+							lstrcat(MainText, TEXT("s"));
+							lstrcat(MainText, TEXT("w"));
+							lstrcat(MainText, std::to_wstring(v[n][2] / 10000.0 * node->truebaseRadius).c_str());
+							lstrcat(MainText, TEXT("c"));
+						}
+						else {
+							lstrcat(MainText, TEXT("["));
+							lstrcat(MainText, std::to_wstring(node->MainChild->at(v[n][1])->Property->at(1)).c_str());
+							lstrcat(MainText, TEXT("c"));
+						}
+						lstrcat(MainText, node->MainChild->at(v[n][1])->PathString);
+						if (node->MainChild->at(v[n][1])->Property->at(114) == 3) {
+						}
+						else {
+							lstrcat(MainText, TEXT("],0c"));
+						}
+						lstrcat(MainText, TEXT("z"));
+					}
+				lstrcat(MainText, rotztxtm.c_str());
+				lstrcat(MainText, TEXT("cx"));
+				lstrcat(MainText, rotxtxtm.c_str());
+				lstrcat(MainText, TEXT("c"));
 			}
-			lstrcat(MainText, rotztxtm.c_str());
-			lstrcat(MainText, TEXT("cx"));
-			lstrcat(MainText, rotxtxtm.c_str());
-			lstrcat(MainText, TEXT("c"));
+			if (node->Property->at(114) == 2) {
+				lstrcat(MainText, TEXT("f"));
+				lstrcat(MainText, std::to_wstring(node->fracrate).c_str());
+				lstrcat(MainText, TEXT("c"));
+			}
 		}
-		if (node->Property->at(114) == 2) {
+		else {
 			lstrcat(MainText, TEXT("f"));
-			lstrcat(MainText, std::to_wstring(node->fracrate).c_str());
+			lstrcat(MainText, std::to_wstring(node->Property->at(9) / 10000.0).c_str());
 			lstrcat(MainText, TEXT("c"));
 		}
-}else {
-		lstrcat(MainText, TEXT("f"));
-		lstrcat(MainText, std::to_wstring( node->Property->at(9)/10000.0).c_str());
-		lstrcat(MainText, TEXT("c"));
-	}
 }
 void nodetotext(shared_ptr<Node> n) {
 	shared_ptr<vector<shared_ptr<Node>>> MainOut = MainForm::i.MainTextNodeSearcher(n);
@@ -173,31 +176,33 @@ void nodetotext(shared_ptr<Node> n) {
 				for (int ii = 0; ii < MainOut->at(i)->Group->size(); ii++) {
 					MainOut->at(i)->Group->at(ii)->truelength = n->truelength / 10000.0 * MainOut->at(i)->Group->at(ii)->Property->at(5);
 					MainOut->at(i)->Group->at(ii)->truebaseRadius = n->truebaseRadius / 10000.0 * MainOut->at(i)->Group->at(ii)->Property->at(9);
-			lstrcat(MainText, TEXT("["));
-			lstrcat(MainText, std::to_wstring(MainOut->at(i)->Group->at(ii)->Property->at(1)).c_str());
-			lstrcat(MainText, TEXT("c"));
-			lstrcat(MainText, MainOut->at(i)->Group->at(ii)->PathString);
-			lstrcat(MainText, TEXT("],5c"));
 				}
 				nodetotext(MainOut->at(i));
+				for (int ii = 0; ii < MainOut->at(i)->Group->size(); ii++) {
+				lstrcat(MainText, TEXT("["));
+				lstrcat(MainText, std::to_wstring(MainOut->at(i)->Group->at(ii)->Property->at(1)).c_str());
+				lstrcat(MainText, TEXT("c"));
+				lstrcat(MainText, MainOut->at(i)->Group->at(ii)->PathString);
+				lstrcat(MainText, TEXT("],0c"));
+				}
 			}
-		}		
+		}
 		break; }
 	case 1:
 	{//B
-		int bcount=0;
-		
-		for (int i = MainOut->size() - 1; i > -1; i--) 
+		int bcount = 0;
+
+		for (int i = MainOut->size() - 1; i > -1; i--)
 		{
 			switch (MainOut->at(i)->NodeType)
 			{
 			case 1: {
 				//B Child ☞ b MainChild
-				if(bcount!=0)
-				for (int ii =0; ii < MainOut->at(i)->Group->size(); ii++) {
-					MainOut->at(MainOut->size()-1-ii% bcount)->MainChild->emplace_back(MainOut->at(i)->Group->at(ii));
-					MainOut->at(i)->Group->at(ii)->truelength = MainOut->at(MainOut->size()-1-ii% bcount)->truelength / 10000.0 * MainOut->at(i)->Group->at(ii) ->Property->at(5);
-				}
+				if (bcount != 0)
+					for (int ii = 0; ii < MainOut->at(i)->Group->size(); ii++) {
+						MainOut->at(MainOut->size() - 1 - ii % bcount)->MainChild->emplace_back(MainOut->at(i)->Group->at(ii));
+						MainOut->at(i)->Group->at(ii)->truelength = MainOut->at(MainOut->size() - 1 - ii % bcount)->truelength / 10000.0 * MainOut->at(i)->Group->at(ii)->Property->at(5);
+					}
 				break; }
 			case 2: {
 				bcount++;
@@ -246,10 +251,6 @@ void nodetotext(shared_ptr<Node> n) {
 				}
 			}
 			bpdiv.emplace_back(tmpv);
-			OutputDebugString(L"\nTMPchild num:");
-			OutputDebugString(std::to_wstring(i).c_str());
-			OutputDebugString(L" bp:");
-			OutputDebugString(std::to_wstring(n->MainChild->at(i)->Property->at(4)).c_str());
 		}
 		std::sort(bpdiv.begin(), bpdiv.end(), [](const vector<double>& alpha, const vector<double>& beta) {return alpha[0] < beta[0]; });
 		shared_ptr<vector<int>> graphpoint0 = MainForm::i.MainGraph(0, n);
@@ -279,78 +280,78 @@ void nodetotext(shared_ptr<Node> n) {
 				bpnum++;
 			}
 		}
-		if(n->PropChange) {
-			n->PropChange = false; 
-		OutputDebugString(L"\n-b BEGIN-\n");
-		vector< vector<double>> shapediv(0, vector<double>(2));
-		vector< vector<double>> Radiuspriority(0, vector<double>(2));
-		vector< vector<double>> shapepriority(0, vector<double>(2));
-		n->fracrate = graphpoint0->at(101) / (double)graphpoint0->at(51);
-		for (int n = 1; n < graphpoint0->at(0); n++) {
-			if (n == 1) {
-				vector<double> tmpv = { abs(atan2(graphpoint0->at(graphpoint0->at(0) + n + 1) - graphpoint0->at(graphpoint0->at(0) + n), graphpoint1->at(n + 1))),(double)n };
-				Radiuspriority.emplace_back(tmpv);
-			}
-			else {
-				vector<double> tmpv = { abs(atan2(graphpoint0->at(graphpoint0->at(0) + n + 1) - graphpoint0->at(graphpoint0->at(0) + n), graphpoint1->at(n + 1) - graphpoint1->at(n)) - atan2(graphpoint1->at(graphpoint1->at(0) + n) - graphpoint1->at(graphpoint1->at(0) + n - 1), graphpoint1->at(n) - graphpoint1->at(n - 1))),(double)n };
-				Radiuspriority.emplace_back(tmpv);
-			}
-		}
-		for (int n = 1; n < graphpoint1->at(0) - 1; n++) {
-			vector<double> tmpv;
-			float a1 = (graphpoint1->at(graphpoint1->at(0) + n + 2) - graphpoint1->at(graphpoint1->at(0) + n + 1));
-			float b1 = (graphpoint1->at(graphpoint1->at(0) + n) - graphpoint1->at(graphpoint1->at(0) + n + 1));
-			float a2 = (graphpoint1->at(n + 2) - graphpoint1->at(n + 1));
-			float b2 = (graphpoint1->at(n) - graphpoint1->at(n + 1));
-			float a3 = (graphpoint2->at(graphpoint2->at(0) + n + 2) - graphpoint2->at(graphpoint2->at(0) + n + 1));
-			float b3 = (graphpoint2->at(graphpoint2->at(0) + n) - graphpoint2->at(graphpoint2->at(0) + n + 1));
-			tmpv = {
-				((a1 * b1) + (a2 * b2) + (a3 * b3)) / (sqrt((a1 * a1) + (a2 * a2) + (a3 * a3)) * sqrt((b1 * b1) + (b2 * b2) + (b3 * b3)))
-			 ,(double)n };
-			shapepriority.emplace_back(tmpv);
-		}
-		double sum2 = 0;
-		int tmpn = 0;
-		Radiustoshape.emplace_back(graphpoint0->at(graphpoint0->at(0) + 1));
-		for (int n = 1; n < graphpoint1->at(0); n++) {
-			vector<double> tmpv;
-			float b1 = (graphpoint1->at(graphpoint1->at(0) + n) - graphpoint1->at(graphpoint1->at(0) + n + 1));
-			float b2 = (graphpoint1->at(n) - graphpoint1->at(n + 1));
-			float b3 = (graphpoint2->at(graphpoint2->at(0) + n) - graphpoint2->at(graphpoint2->at(0) + n + 1));
-			sum2 += sqrt((b1 * b1) + (b2 * b2) + (b3 * b3));
-			for (; sum2 > sum / 50 * tmpn; tmpn++) {
-				Radiustoshape.emplace_back(graphpoint0->at(graphpoint0->at(0) + tmpn + 1));
-				if (n < 50) {
-					tmpv = { Radiuspriority[n][0] ,(double)tmpn };
-					Radiuspriority[n] = tmpv;
+		if (n->PropChange) {
+			n->PropChange = false;
+			vector< vector<double>> shapediv(0, vector<double>(2));
+			vector< vector<double>> Radiuspriority(0, vector<double>(2));
+			vector< vector<double>> shapepriority(0, vector<double>(2));
+			n->fracrate = graphpoint0->at(101) / (double)graphpoint0->at(51);
+			for (int n = 1; n < graphpoint0->at(0); n++) {
+				if (n == 1) {
+					vector<double> tmpv = { abs(atan2(graphpoint0->at(graphpoint0->at(0) + n + 1) - graphpoint0->at(graphpoint0->at(0) + n), graphpoint1->at(n + 1))),(double)n };
+					Radiuspriority.emplace_back(tmpv);
+				}
+				else {
+					vector<double> tmpv = { abs(atan2(graphpoint0->at(graphpoint0->at(0) + n + 1) - graphpoint0->at(graphpoint0->at(0) + n), graphpoint1->at(n + 1) - graphpoint1->at(n)) - atan2(graphpoint1->at(graphpoint1->at(0) + n) - graphpoint1->at(graphpoint1->at(0) + n - 1), graphpoint1->at(n) - graphpoint1->at(n - 1))),(double)n };
+					Radiuspriority.emplace_back(tmpv);
 				}
 			}
-		}
+			for (int n = 1; n < graphpoint1->at(0) - 1; n++) {
+				vector<double> tmpv;
+				float a1 = (graphpoint1->at(graphpoint1->at(0) + n + 2) - graphpoint1->at(graphpoint1->at(0) + n + 1));
+				float b1 = (graphpoint1->at(graphpoint1->at(0) + n) - graphpoint1->at(graphpoint1->at(0) + n + 1));
+				float a2 = (graphpoint1->at(n + 2) - graphpoint1->at(n + 1));
+				float b2 = (graphpoint1->at(n) - graphpoint1->at(n + 1));
+				float a3 = (graphpoint2->at(graphpoint2->at(0) + n + 2) - graphpoint2->at(graphpoint2->at(0) + n + 1));
+				float b3 = (graphpoint2->at(graphpoint2->at(0) + n) - graphpoint2->at(graphpoint2->at(0) + n + 1));
+				tmpv = {
+					((a1 * b1) + (a2 * b2) + (a3 * b3)) / (sqrt((a1 * a1) + (a2 * a2) + (a3 * a3)) * sqrt((b1 * b1) + (b2 * b2) + (b3 * b3)))
+				 ,(double)n };
+				shapepriority.emplace_back(tmpv);
+			}
+			double sum2 = 0;
+			int tmpn = 0;
+			Radiustoshape.emplace_back(graphpoint0->at(graphpoint0->at(0) + 1));
+			for (int n = 1; n < graphpoint1->at(0); n++) {
+				vector<double> tmpv;
+				float b1 = (graphpoint1->at(graphpoint1->at(0) + n) - graphpoint1->at(graphpoint1->at(0) + n + 1));
+				float b2 = (graphpoint1->at(n) - graphpoint1->at(n + 1));
+				float b3 = (graphpoint2->at(graphpoint2->at(0) + n) - graphpoint2->at(graphpoint2->at(0) + n + 1));
+				sum2 += sqrt((b1 * b1) + (b2 * b2) + (b3 * b3));
+				for (; sum2 > sum / 50 * tmpn; tmpn++) {
+					Radiustoshape.emplace_back(graphpoint0->at(graphpoint0->at(0) + tmpn + 1));
+					if (n < 50) {
+						tmpv = { Radiuspriority[n][0] ,(double)tmpn };
+						Radiuspriority[n] = tmpv;
+					}
+				}
+			}
 
-		std::sort(Radiuspriority.begin(), Radiuspriority.end(), [](const vector<double>& alpha, const vector<double>& beta) {return alpha[0] < beta[0]; });
-		std::sort(shapepriority.begin(), shapepriority.end(), [](const vector<double>& alpha, const vector<double>& beta) {return alpha[0] > beta[0]; });
+			std::sort(Radiuspriority.begin(), Radiuspriority.end(), [](const vector<double>& alpha, const vector<double>& beta) {return alpha[0] < beta[0]; });
+			std::sort(shapepriority.begin(), shapepriority.end(), [](const vector<double>& alpha, const vector<double>& beta) {return alpha[0] > beta[0]; });
 
 
-		for (int i = 0; i < n->Property->at(3) - 2; i++) {
-			vector<double> tmpv = { Radiuspriority[i][1] ,-1 ,Radiustoshape[Radiuspriority[i][1]] };
+			for (int i = 0; i < n->Property->at(3) - 2; i++) {
+				vector<double> tmpv = { Radiuspriority[i][1] ,-1 ,Radiustoshape[Radiuspriority[i][1]] };
+				divp.emplace_back(tmpv);
+			}
+			for (int i = 0; i < n->Property->at(2) - 2; i++) {
+				vector<double> tmpv = { shapepriority[i][1] ,-1 ,Radiustoshape[shapepriority[i][1]] };
+				divp.emplace_back(tmpv);
+			}
+			vector<double> tmpv = { 0 ,-1,Radiustoshape[0] };
 			divp.emplace_back(tmpv);
-		}
-		for (int i = 0; i < n->Property->at(2) - 2; i++) {
-			vector<double> tmpv = { shapepriority[i][1] ,-1 ,Radiustoshape[shapepriority[i][1]] };
+			tmpv = { 50 ,-1 ,Radiustoshape[50] };
 			divp.emplace_back(tmpv);
-		}
-		vector<double> tmpv = { 0 ,-1,Radiustoshape[0] };
-		divp.emplace_back(tmpv);
-		tmpv = { 50 ,-1 ,Radiustoshape[50] };
-		divp.emplace_back(tmpv);
 
-		sort(divp.begin(), divp.end(), [](const vector<double>& alpha, const vector<double>& beta) {return alpha[0] < beta[0]; });
-		for (int i = 1; i < divp.size(); i++) {
-			if (divp[i][0] == divp[i - 1][0])
-				divp.erase(divp.begin() + i);
+			sort(divp.begin(), divp.end(), [](const vector<double>& alpha, const vector<double>& beta) {return alpha[0] < beta[0]; });
+			for (int i = 1; i < divp.size(); i++) {
+				if (divp[i][0] == divp[i - 1][0])
+					divp.erase(divp.begin() + i);
+			}
+			n->divplist = divp;
+			n->Radiustoshapelist = Radiustoshape;
 		}
-		n->divplist = divp;
-		n->Radiustoshapelist = Radiustoshape; }
 		divp = n->divplist;
 		Radiustoshape = n->Radiustoshapelist;
 		for (int i = 0; i < bpdiv.size(); i++) {
@@ -362,19 +363,19 @@ void nodetotext(shared_ptr<Node> n) {
 			{
 				if (n->MainChild->at(bpdiv[i][1])->Property->at(4) < 0)
 				{
-					tmpv = { 0, (double)bpdiv[i][1],Radiustoshape[bpdiv[i][0]]/ 10000.0 };
+					tmpv = { 0, (double)bpdiv[i][1],Radiustoshape[bpdiv[i][0]] / 10000.0 };
 				}
 				else {
-					tmpv = { bpdiv[i][0],(double)bpdiv[i][1],Radiustoshape[bpdiv[i][0]] /10000.0 };
+					tmpv = { bpdiv[i][0],(double)bpdiv[i][1],Radiustoshape[bpdiv[i][0]] / 10000.0 };
 				}
-		}	
+			}
 			n->MainChild->at(bpdiv[i][1])->truebaseRadius = n->truebaseRadius * Radiustoshape[bpdiv[i][0]] * n->MainChild->at(bpdiv[i][1])->Property->at(9) / 100000000.0;
 
-				bpdiv[i]=tmpv;
-			}
-			divp.insert(divp.end(), bpdiv.begin(), bpdiv.end());
-			sort(divp.begin(), divp.end(), [](const vector<double>& alpha, const vector<double>& beta) {return alpha[0] < beta[0]; });
-			maingraph(divp, n);
+			bpdiv[i] = tmpv;
+		}
+		divp.insert(divp.end(), bpdiv.begin(), bpdiv.end());
+		sort(divp.begin(), divp.end(), [](const vector<double>& alpha, const vector<double>& beta) {return alpha[0] < beta[0]; });
+		maingraph(divp, n);
 		//}
 		break;
 	}
@@ -384,14 +385,148 @@ void nodetotexttrigger() {
 	std::free(roottext);
 	nodetotext(MainForm::i.RootPointer);
 	roottext = MainForm::i.RootPointer->PathString;
-	fractaltext= MainForm::i.RootPointer->Child->at(0)->Group->at(0)->PathString;
-	if (SendMessage(edit[17], TBM_GETPOS, 0, 0)) {
-		SetWindowText(edit[0],roottext);
-		SetWindowText(edit[2], fractaltext);
-	}else{
-		SetWindowText(edit[0], L"");
+	for (int i2 = 0; i2 < MainForm::i.RootPointer->Child->size(); i2++) {
+		if (MainForm::i.RootPointer->Child->at(i2) != nullptr) {
+			fractaltext = MainForm::i.RootPointer->Child->at(i2)->Group->at(0)->PathString;
+			shared_ptr<vector<shared_ptr<Node>>> MainOut = MainForm::i.MainTextNodeSearcher(MainForm::i.RootPointer);
+			for (int i = 0; i < MainOut->size(); i++) {
+				if (MainOut->at(i)->NodeType == 1) {
+					for (int ii = 0; ii < MainOut->at(i)->Group->size(); ii++) {
+						if (i == 0 && ii == 0) {
+							if (MainOut->at(i)->Group->size() > 1) {
+								ii = 1;
+								MainOut->at(i)->Group->at(ii)->truelength = MainForm::i.RootPointer->truelength / 10000.0 * MainOut->at(i)->Group->at(ii)->Property->at(5);
+								MainOut->at(i)->Group->at(ii)->truebaseRadius = MainForm::i.RootPointer->truebaseRadius / 10000.0 * MainOut->at(i)->Group->at(ii)->Property->at(9);
+								lstrcat(fractaltext, TEXT("["));
+								lstrcat(fractaltext, std::to_wstring(MainOut->at(i)->Group->at(ii)->Property->at(1)).c_str());
+								lstrcat(fractaltext, TEXT("c"));
+								lstrcat(fractaltext, MainOut->at(i)->Group->at(ii)->PathString);
+								lstrcat(fractaltext, TEXT("],0c"));
+							}
+						}
+						else {
+							MainOut->at(i)->Group->at(ii)->truelength = MainForm::i.RootPointer->truelength / 10000.0 * MainOut->at(i)->Group->at(ii)->Property->at(5);
+							MainOut->at(i)->Group->at(ii)->truebaseRadius = MainForm::i.RootPointer->truebaseRadius / 10000.0 * MainOut->at(i)->Group->at(ii)->Property->at(9);
+							lstrcat(fractaltext, TEXT("["));
+							lstrcat(fractaltext, std::to_wstring(MainOut->at(i)->Group->at(ii)->Property->at(1)).c_str());
+							lstrcat(fractaltext, TEXT("c"));
+							lstrcat(fractaltext, MainOut->at(i)->Group->at(ii)->PathString);
+							lstrcat(fractaltext, TEXT("],0c"));
+						}
+					}
+				}
+			}
+			if (SendMessage(edit[17], TBM_GETPOS, 0, 0)) {
+				SetWindowText(edit[0], roottext);
+				SetWindowText(edit[2], fractaltext);
+			}
+			else {
+				SetWindowText(edit[0], L"");
+			}
+			break;
+		}
 	}
 }
+struct outbmp {
+	int sizex;
+	int sizey;
+	GLubyte* data;
+};
+outbmp o;
+bool savebmp(char* name, int sizex, int sizey, GLubyte* px/*, char* r, char* g, char* b, char* a*/)
+{
+	unsigned long sizeX = sizex;
+	unsigned long sizeY = sizey;
+	unsigned long tocolor = 122;
+	GLubyte* Data;
+	FILE* File;
+	unsigned long size = sizeX * sizeY * 4;
+	unsigned long size2 = size + 122;
+	unsigned long i;
+	unsigned short int planes = 1;
+	unsigned short int bpp = 32;
+	unsigned short int bmif = 40;
+	char tmp;
+	if ((File = fopen(name, "wb")) == NULL) {
+		OutputDebugStringW(L"ファイルがありません");
+		return false;
+	}
+	//fseek(File, 0, SEEK_CUR);
+	char b = 'B';
+	char m = 'M';
+	fwrite(&b, 1, 1, File);
+	fwrite(&m, 1, 1, File);
+	if ((i = fwrite(&size2, 4, 1, File)) != 1) {
+		OutputDebugStringW(L"読み込みエラー");
+		return false;
+	}
+	fseek(File, 4, SEEK_CUR);
+	if ((i = fwrite(&tocolor, 4, 1, File)) != 1) {
+		OutputDebugStringW(L"読み込みエラー");
+		return false;
+	}
+	if ((i = fwrite(&bmif, 4, 1, File)) != 1) {
+		OutputDebugStringW(L"読み込みエラー");
+		return false;
+	}
+	if ((i = fwrite(&sizeX, 4, 1, File)) != 1) {
+		OutputDebugStringW(L"読み込みエラー");
+		return false;
+	}
+	if ((i = fwrite(&sizeY, 4, 1, File)) != 1) {
+		OutputDebugStringW(L"読み込みエラー");
+		return false;
+	}
+	if ((fwrite(&planes, 2, 1, File)) != 1) {   //bmp->1
+		OutputDebugStringW(L"プレーン数が読み込めません");
+		return false;
+	}
+	if ((i = fwrite(&bpp, 2, 1, File)) != 1) {
+		OutputDebugStringW(L"ビット数が読めません");
+		return false;
+	}
+	fseek(File, 92, SEEK_CUR);
+
+	Data = (GLubyte*)malloc(size);
+	Data = px;
+	if (Data == NULL) {
+		OutputDebugStringW(L"メモリが確保できません");
+		return false;
+	}
+
+	/*for (int i = 0; i < sizeY; i++) {
+		for (int ii = 0; ii < sizeX; ii++)
+		{
+			Data[(i * sizeX + ii) * 4] = (char)i;
+			Data[(i * sizeX + ii) * 4 + 1] = (char)255;
+			Data[(i * sizeX + ii) * 4 + 2] = (char)ii;
+			Data[(i * sizeX + ii) * 4 + 3] = (char)255;
+		}
+	}*/
+	for (i = 0; i < size; i += 4) {//bgr -> rgb
+		tmp = Data[i];
+		Data[i] = Data[i + 2];
+		Data[i + 2] = tmp;
+	}
+	if ((i = fwrite(px, size, 1, File)) != 1) {
+		OutputDebugStringW(L"データが読めません");
+		return false;
+	}
+	o = outbmp{ sizex,sizey,px };
+	/*
+	for (i = 0; i < size; i += 4) {//bgr -> rgb
+		tmp = Data[i];
+		Data[i] = Data[i + 2];
+		Data[i + 2] = tmp;
+	}
+	std::free(Data);*/
+	fclose(File);
+	return true;
+}
+
+
+
+
 bool loadbmp(GLuint texture, char* name)
 {
 	unsigned long sizeX;
@@ -454,7 +589,7 @@ bool loadbmp(GLuint texture, char* name)
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glAlphaFunc(GL_GREATER, 0.5);
 	std::free(Data);
 	fclose(File);
@@ -463,11 +598,11 @@ bool loadbmp(GLuint texture, char* name)
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 
 	static PTSTR  outText;
-	std::vector<double> memx, memy, memz, memxx, memxy, memxz, memyx, memyy, memyz, memzx, memzy, memzz, memv, membx, memby, membz,meme,fracmemrate;
+	std::vector<double> memx, memy, memz, memxx, memxy, memxz, memyx, memyy, memyz, memzx, memzy, memzz, memv, membx, memby, membz, meme, fracmemrate;
 	std::vector<bool>memr;
-	static std::vector<double>  vx, vy, vz, p,uv,m;
+	static std::vector<double>  vx, vy, vz, p, uv, m;
 	std::vector<POINT> pos;
-	int mem = 0, fractalmem = 0; double fracrate=1;
+	int mem = 0, fractalmem = 0; double fracrate = 1;
 	static int vnum = 0, pnum = 0;
 	static double defx, defy, defz;
 
@@ -480,98 +615,103 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 	case    WM_COMMAND:
 	case	WM_HSCROLL:
 	{
-		if ((HWND)lp == edit[16])
-	{
-		FbxManager* manager = FbxManager::Create();
-
-		FbxScene* scene = FbxScene::Create(manager, "");
-
-
-		FbxImporter* importer = FbxImporter::Create(manager, "");
-
-		importer->Initialize("fbxin.fbx", -1, manager->GetIOSettings());
-
-		importer->Import(scene);
-
-
-		importer->Destroy();
-
-		FbxGeometryConverter geometry_converter(manager);
-		geometry_converter.Triangulate(scene, true);
-
-		FbxMesh* mesh = scene->GetSrcObject<FbxMesh>();
-		FbxVector4* cp = mesh->GetControlPoints();
-		int cpl = mesh->GetControlPointsCount();
-		std::vector<double> vx ,vy,vz ;
-		for (int i = 0; i < cpl;  i++) {
-			vx.emplace_back(cp[i][0]);
-			vy.emplace_back(cp[i][1]);
-			vz.emplace_back(cp[i][2]);
+		if ((HWND)lp == edit[20]) {
+			cam=true;
+			SendMessage(hwnd, WM_PAINT, 0, 0);
 		}
-		int* p=mesh->GetPolygonVertices();
-		int pl= mesh->GetPolygonVertexCount();
-		/// 
-				//メイン描画
-		PictureBox^ pictureBox1 = MainForm ::MyForm::pictureBox1;
-		Bitmap^ bmpPicBox;
-		Graphics^ g;
-		HDC oh;
-		int format;
-		HGLRC glRC;
-		GLuint tex[2];
-			PIXELFORMATDESCRIPTOR pfd =
+		else
+			if ((HWND)lp == edit[16])
 			{
-				sizeof(PIXELFORMATDESCRIPTOR),
-				1,                   
-				PFD_DRAW_TO_WINDOW |   
-				PFD_SUPPORT_OPENGL | 
-				PFD_DOUBLEBUFFER,     
-				PFD_TYPE_RGBA,        
-				32,                  
-				0, 0, 0, 0, 0, 0,    
-				0,                   
-				0,                    
-				0,                  
-				0, 0, 0, 0,         
-				32,                   
-				0,                   
-				0,                    
-				PFD_MAIN_PLANE,         
-				0,                   
-				0, 0, 0                
-			};
-			oh = GetDC(((HWND)pictureBox1->Handle.ToInt32()));
-			format = ChoosePixelFormat(oh, &pfd);
-			SetPixelFormat(oh, format, &pfd);
-			glRC = wglCreateContext(oh);
-			wglMakeCurrent(oh, glRC);
-			glClearColor(0.375f, 0.375f, 0.375f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glEnable(GL_DEPTH_TEST);
-			glEnable(GL_ALPHA_TEST);
-			glEnable(GL_LIGHTING);
-			glEnable(GL_LIGHT0);
+				FbxManager* manager = FbxManager::Create();
+
+				FbxScene* scene = FbxScene::Create(manager, "");
+
+
+				FbxImporter* importer = FbxImporter::Create(manager, "");
+
+				importer->Initialize("fbxin.fbx", -1, manager->GetIOSettings());
+
+				importer->Import(scene);
+
+
+				importer->Destroy();
+
+				FbxGeometryConverter geometry_converter(manager);
+				geometry_converter.Triangulate(scene, true);
+
+				FbxMesh* mesh = scene->GetSrcObject<FbxMesh>();
+				FbxVector4* cp = mesh->GetControlPoints();
+				int cpl = mesh->GetControlPointsCount();
+				std::vector<double> vx, vy, vz;
+				for (int i = 0; i < cpl; i++) {
+					vx.emplace_back(cp[i][0]);
+					vy.emplace_back(cp[i][1]);
+					vz.emplace_back(cp[i][2]);
+				}
+				int* p = mesh->GetPolygonVertices();
+				int pl = mesh->GetPolygonVertexCount();
+				/// 
+						//メイン描画
+				PictureBox^ pictureBox1 = MainForm::MyForm::pictureBox1;
+				Bitmap^ bmpPicBox;
+				Graphics^ g;
+				HDC oh;
+				int format;
+				HGLRC glRC;
+				GLuint tex[2];
+				PIXELFORMATDESCRIPTOR pfd =
+				{
+					sizeof(PIXELFORMATDESCRIPTOR),
+					1,
+					PFD_DRAW_TO_WINDOW |
+					PFD_SUPPORT_OPENGL |
+					PFD_DOUBLEBUFFER,
+					PFD_TYPE_RGBA,
+					32,
+					0, 0, 0, 0, 0, 0,
+					0,
+					0,
+					0,
+					0, 0, 0, 0,
+					32,
+					0,
+					0,
+					PFD_MAIN_PLANE,
+					0,
+					0, 0, 0
+				};
+				oh = GetDC(((HWND)pictureBox1->Handle.ToInt32()));
+				format = ChoosePixelFormat(oh, &pfd);
+				SetPixelFormat(oh, format, &pfd);
+				glRC = wglCreateContext(oh);
+				wglMakeCurrent(oh, glRC);
+				glClearColor(SendMessage(edit[22], TBM_GETPOS, 0, 0) / 256.0, SendMessage(edit[23], TBM_GETPOS, 0, 0) / 256.0, SendMessage(edit[24], TBM_GETPOS, 0, 0) / 256.0, SendMessage(edit[25], TBM_GETPOS, 0, 0) / 256.0);
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+				glEnable(GL_DEPTH_TEST);
+				glEnable(GL_ALPHA_TEST);
+				glEnable(GL_LIGHTING);
+				glEnable(GL_LIGHT0);
 
 				glViewport(0, 0, pictureBox1->Width, pictureBox1->Height);
 
-				glMatrixMode(GL_PROJECTION);		
-				glLoadIdentity();						
+				glMatrixMode(GL_PROJECTION);
+				glLoadIdentity();
 				gluPerspective(60.0, (double)pictureBox1->Width / pictureBox1->Height, 1.0, 2000.0);
-	
+
 				glMatrixMode(GL_MODELVIEW);
 				glLoadIdentity();
 				gluLookAt(campx, campy, campz, campx + campzx, campy + campzy, campz + campzz, 0.0, campyy, 0.0);
-			
-			glBegin(GL_LINES);
-			glColor3d(1, 1, 1);
-			for (int x = -500; x <= 500; x += 10) {
-				glVertex3f(x, 0, 500);
-				glVertex3f(x, 0, -500);
-				glVertex3f(500, 0, x);
-				glVertex3f(-500, 0, x);
-			}
-			glEnd();
-			glEnable(GL_TEXTURE_2D);
+
+				glBegin(GL_LINES);
+				glColor3d(1, 1, 1);
+				for (int x = -500; x <= 500; x += 10) {
+					glVertex3f(x, 0, 500);
+					glVertex3f(x, 0, -500);
+					glVertex3f(500, 0, x);
+					glVertex3f(-500, 0, x);
+				}
+				glEnd();
+				glEnable(GL_TEXTURE_2D);
 				glBegin(GL_TRIANGLES);
 
 				for (int i = 0; i < pl; i++) {
@@ -587,1389 +727,1391 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 					glVertex3d(vx[p[i]], -vy[p[i]], vz[p[i]]);
 				}
 
-		//OGL  OWARI
-			glDisable(GL_TEXTURE_2D);
-			glEnd();
-			glFlush();
-			SwapBuffers(oh);
-			wglMakeCurrent(NULL, NULL);
-			wglDeleteContext(glRC);
-		/// 
-		scene->Destroy();
-		manager->Destroy();
-		//import owari
-		}
-		else
-		{
-			if ((HWND)lp == edit[15])
-		{
-
-			FbxManager* fbxmanager = FbxManager::Create();
-		FbxIOSettings* ios_settings = FbxIOSettings::Create(fbxmanager, IOSROOT);
-			//ios_settings->SetBoolProp(EXP_ASCIIFBX, true);
-		fbxmanager->SetIOSettings(ios_settings);
-
-			FbxScene* fbxscene = FbxScene::Create(fbxmanager, "");
-			fbxsdk::FbxNode* root = fbxscene->GetRootNode();
-			fbxsdk::FbxNode* child = fbxsdk::FbxNode::Create(fbxscene, "child");
-			FbxMesh* pMesh = FbxMesh::Create(fbxscene, "mesh");
-			
-		fbxsdk::FbxGeometryElementUV* lUVElement = pMesh->CreateElementUV("uv");
-
-			lUVElement->SetMappingMode(FbxGeometryElement::eByPolygonVertex);
-			lUVElement->SetReferenceMode(FbxGeometryElement::eDirect);
-			lUVElement->GetDirectArray().Resize(pnum);
-			for (int lUVIndex = 0; lUVIndex < pnum; lUVIndex++)
+				//OGL  OWARI
+				glDisable(GL_TEXTURE_2D);
+				glEnd();
+				glFlush();
+				SwapBuffers(oh);
+				wglMakeCurrent(NULL, NULL);
+				wglDeleteContext(glRC);
+				/// 
+				scene->Destroy();
+				manager->Destroy();
+				//import owari
+			}
+			else
 			{
-				FbxVector2 lUV(uv[2 * lUVIndex], uv[2 * lUVIndex + 1]);
-				lUVElement->GetDirectArray().SetAt(lUVIndex, lUV);
-			}
-			//pMesh->GenerateNormals(true,true,false);
-			child->AddNodeAttribute(pMesh);
-			root->AddChild(child);
-			fbxsdk::FbxLayer* lLayer = pMesh->GetLayer(0);
-			fbxsdk::FbxLayerElementMaterial* lLayerElementMaterial = fbxsdk::FbxLayerElementMaterial::Create(pMesh, "");
-			lLayerElementMaterial->SetMappingMode(fbxsdk::FbxLayerElement::eByPolygon);
-			lLayerElementMaterial->SetReferenceMode(fbxsdk::FbxLayerElement::eIndexToDirect);
-			lLayer->SetMaterials(lLayerElementMaterial);
-			
-		
-			for (int i = 0; i < 2; i++) {
-				FbxSurfacePhong* lMaterial = NULL;
-				FbxString lMaterialName = "toto";
-				FbxString lShadingName = "Phong";
-				FbxDouble3 lBlack(0.0, 0.0, 0.0);
-				FbxDouble3 lRed(1.0, 0.0, 0.0);
-				FbxDouble3 lDiffuseColor(0, 0, 0.0);
-				lMaterial = FbxSurfacePhong::Create(fbxscene, lMaterialName.Buffer());
-				fbxsdk::FbxNode* lNode = pMesh->GetNode();
-				lMaterial->Emissive.Set(lBlack);
-				lMaterial->Ambient.Set(lRed);
-				lMaterial->AmbientFactor.Set(1.);
-				lMaterial->Diffuse.Set(lDiffuseColor);
-				lMaterial->DiffuseFactor.Set(1.);
-				lMaterial->TransparencyFactor.Set(0.4);
-				lMaterial->ShadingModel.Set(lShadingName);
-				lMaterial->Shininess.Set(0.5);
-				lMaterial->Specular.Set(lBlack);
-				lMaterial->SpecularFactor.Set(0.3);
-				lNode->AddMaterial(lMaterial);
+				if ((HWND)lp == edit[15])
+				{
+
+					FbxManager* fbxmanager = FbxManager::Create();
+					FbxIOSettings* ios_settings = FbxIOSettings::Create(fbxmanager, IOSROOT);
+					//ios_settings->SetBoolProp(EXP_ASCIIFBX, true);
+					fbxmanager->SetIOSettings(ios_settings);
+
+					FbxScene* fbxscene = FbxScene::Create(fbxmanager, "");
+					fbxsdk::FbxNode* root = fbxscene->GetRootNode();
+					fbxsdk::FbxNode* child = fbxsdk::FbxNode::Create(fbxscene, "child");
+					FbxMesh* pMesh = FbxMesh::Create(fbxscene, "mesh");
+
+					fbxsdk::FbxGeometryElementUV* lUVElement = pMesh->CreateElementUV("uv");
+
+					lUVElement->SetMappingMode(FbxGeometryElement::eByPolygonVertex);
+					lUVElement->SetReferenceMode(FbxGeometryElement::eDirect);
+					lUVElement->GetDirectArray().Resize(pnum);
+					for (int lUVIndex = 0; lUVIndex < pnum; lUVIndex++)
+					{
+						FbxVector2 lUV(uv[2 * lUVIndex], uv[2 * lUVIndex + 1]);
+						lUVElement->GetDirectArray().SetAt(lUVIndex, lUV);
+					}
+					//pMesh->GenerateNormals(true,true,false);
+					child->AddNodeAttribute(pMesh);
+					root->AddChild(child);
+					fbxsdk::FbxLayer* lLayer = pMesh->GetLayer(0);
+					fbxsdk::FbxLayerElementMaterial* lLayerElementMaterial = fbxsdk::FbxLayerElementMaterial::Create(pMesh, "");
+					lLayerElementMaterial->SetMappingMode(fbxsdk::FbxLayerElement::eByPolygon);
+					lLayerElementMaterial->SetReferenceMode(fbxsdk::FbxLayerElement::eIndexToDirect);
+					lLayer->SetMaterials(lLayerElementMaterial);
 
 
-				FbxFileTexture* lTexture = FbxFileTexture::Create(fbxscene, "Diffuse Texture");
+					for (int i = 0; i < 2; i++) {
+						FbxSurfacePhong* lMaterial = NULL;
+						FbxString lMaterialName = "toto";
+						FbxString lShadingName = "Phong";
+						FbxDouble3 lBlack(0.0, 0.0, 0.0);
+						FbxDouble3 lRed(1.0, 0.0, 0.0);
+						FbxDouble3 lDiffuseColor(0, 0, 0.0);
+						lMaterial = FbxSurfacePhong::Create(fbxscene, lMaterialName.Buffer());
+						fbxsdk::FbxNode* lNode = pMesh->GetNode();
+						lMaterial->Emissive.Set(lBlack);
+						lMaterial->Ambient.Set(lRed);
+						lMaterial->AmbientFactor.Set(1.);
+						lMaterial->Diffuse.Set(lDiffuseColor);
+						lMaterial->DiffuseFactor.Set(1.);
+						lMaterial->TransparencyFactor.Set(0.4);
+						lMaterial->ShadingModel.Set(lShadingName);
+						lMaterial->Shininess.Set(0.5);
+						lMaterial->Specular.Set(lBlack);
+						lMaterial->SpecularFactor.Set(0.3);
+						lNode->AddMaterial(lMaterial);
 
-				if(i)
-				lTexture->SetFileName("bmp.bmp");
+
+						FbxFileTexture* lTexture = FbxFileTexture::Create(fbxscene, "Diffuse Texture");
+
+						if (i)
+							lTexture->SetFileName("bmp.bmp");
+						else
+							lTexture->SetFileName("bmp2.bmp");
+						lTexture->SetTextureUse(FbxTexture::eStandard);
+						lTexture->SetMappingType(FbxTexture::eUV);
+						lTexture->SetMaterialUse(FbxFileTexture::eModelMaterial);
+						lTexture->SetSwapUV(false);
+						lTexture->SetTranslation(0.0, 0.0);
+						lTexture->SetScale(1.0, 1.0);
+						lTexture->SetRotation(0.0, 0.0);
+
+						lMaterial->Diffuse.ConnectSrcObject(lTexture);
+
+						lTexture = FbxFileTexture::Create(fbxscene, "Ambient Texture");
+						/*
+						lTexture->SetFileName("bmp.bmp");
+						lTexture->SetTextureUse(FbxTexture::eStandard);
+						lTexture->SetMappingType(FbxTexture::eUV);
+						lTexture->SetMaterialUse(FbxFileTexture::eModelMaterial);
+						lTexture->SetSwapUV(false);
+						lTexture->SetTranslation(0.0, 0.0);
+						lTexture->SetScale(1.0, 1.0);
+						lTexture->SetRotation(0.0, 0.0);
+
+						lMaterial->Ambient.ConnectSrcObject(lTexture);
+
+						lTexture = FbxFileTexture::Create(fbxscene, "Emissive Texture");
+
+						lTexture->SetTextureUse(FbxTexture::eStandard);
+						lTexture->SetMappingType(FbxTexture::eUV);
+						lTexture->SetMaterialUse(FbxFileTexture::eModelMaterial);
+						lTexture->SetSwapUV(false);
+						lTexture->SetTranslation(0.0, 0.0);
+						lTexture->SetScale(1.0, 1.0);
+						lTexture->SetRotation(0.0, 0.0);
+							lMaterial->Emissive.ConnectSrcObject(lTexture);
+
+						// /////
+							// lNode = pMesh->GetNode();
+						*/
+					}
+					pMesh->InitControlPoints(vnum);
+					FbxVector4* pCtrlPoint = pMesh->GetControlPoints();
+					for (int i = 0; i < vnum; i++) {
+						pCtrlPoint[i] = FbxVector4(vx[i] - defx, -vy[i] + defy, vz[i] - defz);
+					}
+					for (int i = 0; i < pnum;) {
+						pMesh->BeginPolygon(1 - m[i / 3]);
+						pMesh->AddPolygon(p[i]);
+						i++;
+						pMesh->AddPolygon(p[i]);
+						i++;
+						pMesh->AddPolygon(p[i]);
+						i++;
+						pMesh->EndPolygon();
+					}
+					pMesh->GenerateNormals(false, false, false);
+
+
+					const char* fbx_path = "fbxout.fbx";
+
+					FbxExporter* fbxexporter = FbxExporter::Create(fbxmanager, "");
+
+					fbxexporter->Initialize(fbx_path, -1, fbxmanager->GetIOSettings());
+
+					fbxexporter->Export(fbxscene);
+				}
 				else
-					lTexture->SetFileName("bmp2.bmp");
-				lTexture->SetTextureUse(FbxTexture::eStandard);
-				lTexture->SetMappingType(FbxTexture::eUV);
-				lTexture->SetMaterialUse(FbxFileTexture::eModelMaterial);
-				lTexture->SetSwapUV(false);
-				lTexture->SetTranslation(0.0, 0.0);
-				lTexture->SetScale(1.0, 1.0);
-				lTexture->SetRotation(0.0, 0.0);
-
-				lMaterial->Diffuse.ConnectSrcObject(lTexture);
-
-				lTexture = FbxFileTexture::Create(fbxscene, "Ambient Texture");
-				/*
-				lTexture->SetFileName("bmp.bmp");
-				lTexture->SetTextureUse(FbxTexture::eStandard);
-				lTexture->SetMappingType(FbxTexture::eUV);
-				lTexture->SetMaterialUse(FbxFileTexture::eModelMaterial);
-				lTexture->SetSwapUV(false);
-				lTexture->SetTranslation(0.0, 0.0);
-				lTexture->SetScale(1.0, 1.0);
-				lTexture->SetRotation(0.0, 0.0);
-
-				lMaterial->Ambient.ConnectSrcObject(lTexture);
-
-				lTexture = FbxFileTexture::Create(fbxscene, "Emissive Texture");
-
-				lTexture->SetTextureUse(FbxTexture::eStandard);
-				lTexture->SetMappingType(FbxTexture::eUV);
-				lTexture->SetMaterialUse(FbxFileTexture::eModelMaterial);
-				lTexture->SetSwapUV(false);
-				lTexture->SetTranslation(0.0, 0.0);
-				lTexture->SetScale(1.0, 1.0);
-				lTexture->SetRotation(0.0, 0.0);
-					lMaterial->Emissive.ConnectSrcObject(lTexture);
-
-				// /////
-					// lNode = pMesh->GetNode();
-				*/
-			}
-			pMesh->InitControlPoints(vnum);
-			FbxVector4* pCtrlPoint = pMesh->GetControlPoints();
-			for (int i = 0; i < vnum; i++) {
-				pCtrlPoint[i] = FbxVector4(vx[i] - defx, -vy[i] + defy, vz[i] - defz);
-			}
-			for (int i = 0; i < pnum;) {
-				pMesh->BeginPolygon(1-m[i/3]);
-				pMesh->AddPolygon(p[i]);
-				i++;
-				pMesh->AddPolygon(p[i]);
-				i++;
-				pMesh->AddPolygon(p[i]);
-				i++;
-				pMesh->EndPolygon();
-			}
-			pMesh->GenerateNormals(false, false,false);
-	
-	
-			const char* fbx_path = "fbxout.fbx";
-
-			FbxExporter* fbxexporter = FbxExporter::Create(fbxmanager, "");
-
-			fbxexporter->Initialize(fbx_path, -1, fbxmanager->GetIOSettings());
-
-			fbxexporter->Export(fbxscene);
-		}
-		else
-		{
-			if ((HWND)lp == edit[0] || (HWND)lp == edit[1] || (HWND)lp == edit[2]) {
-				PTSTR strText,strText2;
-				PTSTR inText = (PTSTR)calloc(100000, sizeof(TCHAR));
-				if(SendMessage(edit[17], TBM_GETPOS, 0, 0)){
-					strText = (PTSTR)calloc((GetWindowTextLength(edit[0]) + 1), sizeof(TCHAR));
-					strText2 = (PTSTR)calloc((GetWindowTextLength(edit[2]) + 1), sizeof(TCHAR));
-					GetWindowText(edit[0], strText, (GetWindowTextLength(edit[0]) + 1));
-					GetWindowText(edit[2], strText2, (GetWindowTextLength(edit[2]) + 1));
-				}
-				else {
-					strText = roottext;
-					strText2 = fractaltext;
-				}
-				lstrcat(inText, strText);
-				int rep= SendMessage(edit[1], TBM_GETPOS, 0, 0);
-				for (int i = 1; i <= rep; i++) {
-					std::free(outText);
-					outText = (PTSTR)calloc(100000, sizeof(TCHAR));
-					int tmp = lstrlen(inText);
-					int tmplen = 0;
-					for (int i = 0; i < tmp; i++) {
-						switch (inText[i]) {
-						case 'f': {
-							memcpy(outText + i + tmplen, L"{", 1); tmplen++;
-							PTSTR num = (PTSTR)calloc(100, sizeof(TCHAR));
-							while (inText[i] != 'c' && i < tmp) {
-								i++;
+				{
+					if ((HWND)lp == edit[0] || (HWND)lp == edit[1] || (HWND)lp == edit[2]) {
+						PTSTR strText, strText2;
+						PTSTR inText = (PTSTR)calloc(100000, sizeof(TCHAR));
+						if (SendMessage(edit[17], TBM_GETPOS, 0, 0)) {
+							strText = (PTSTR)calloc((GetWindowTextLength(edit[0]) + 1), sizeof(TCHAR));
+							strText2 = (PTSTR)calloc((GetWindowTextLength(edit[2]) + 1), sizeof(TCHAR));
+							GetWindowText(edit[0], strText, (GetWindowTextLength(edit[0]) + 1));
+							GetWindowText(edit[2], strText2, (GetWindowTextLength(edit[2]) + 1));
+						}
+						else {
+							strText = roottext;
+							strText2 = fractaltext;
+						}
+						lstrcat(inText, strText);
+						int rep = SendMessage(edit[1], TBM_GETPOS, 0, 0);
+						for (int i = 1; i <= rep; i++) {
+							std::free(outText);
+							outText = (PTSTR)calloc(100000, sizeof(TCHAR));
+							int tmp = lstrlen(inText);
+							int tmplen = 0;
+							for (int i = 0; i < tmp; i++) {
 								switch (inText[i]) {
+								case 'f': {
+									memcpy(outText + i + tmplen, L"{", 1); tmplen++;
+									PTSTR num = (PTSTR)calloc(100, sizeof(TCHAR));
+									while (inText[i] != 'c' && i < tmp) {
+										i++;
+										switch (inText[i]) {
+										case '.':
+											lstrcat(num, TEXT("."));
+											break;
+										case '1':
+											lstrcat(num, TEXT("1"));
+											break;
+										case '2':
+											lstrcat(num, TEXT("2"));
+											break;
+										case '3':
+											lstrcat(num, TEXT("3"));
+											break;
+										case '4':
+											lstrcat(num, TEXT("4"));
+											break;
+										case '5':
+											lstrcat(num, TEXT("5"));
+											break;
+										case '6':
+											lstrcat(num, TEXT("6"));
+											break;
+										case '7':
+											lstrcat(num, TEXT("7"));
+											break;
+										case '8':
+											lstrcat(num, TEXT("8"));
+											break;
+										case '9':
+											lstrcat(num, TEXT("9"));
+											break;
+										case '0':
+											lstrcat(num, TEXT("0"));
+											break;
+										}
+									}
+									lstrcat(outText, num); i--;
+									std::free(num);
+									memcpy(outText + i + tmplen, L"c", 1); i++;
+									lstrcat(outText, strText2); tmplen += lstrlen(strText2);
+									memcpy(outText + i + tmplen, L"}", 1);
+									break;
+								}
+								case 'g':
+									memcpy(outText + i + tmplen, L"g", 1);
+									break;
+								case '[':
+									memcpy(outText + i + tmplen, L"[", 1);
+									break;
+								case ']':
+									memcpy(outText + i + tmplen, L"]", 1);
+									break;
+								case 'x':
+									memcpy(outText + i + tmplen, L"x", 1);
+									break;
+								case 'y':
+									memcpy(outText + i + tmplen, L"y", 1);
+									break;
+								case 'z':
+									memcpy(outText + i + tmplen, L"z", 1);
+									break;
+								case 'h':
+									memcpy(outText + i + tmplen, L"h", 1);
+									break;
+								case 'c':
+									memcpy(outText + i + tmplen, L"c", 1);
+									break;
+								case '-':
+									memcpy(outText + i + tmplen, L"-", 1);
+									break;
 								case '.':
-									lstrcat(num, TEXT("."));
+									memcpy(outText + i + tmplen, L".", 1);
+									break;
+								case ',':
+									memcpy(outText + i + tmplen, L",", 1);
 									break;
 								case '1':
-									lstrcat(num, TEXT("1"));
+									memcpy(outText + i + tmplen, L"1", 1);
 									break;
 								case '2':
-									lstrcat(num, TEXT("2"));
+									memcpy(outText + i + tmplen, L"2", 1);
 									break;
 								case '3':
-									lstrcat(num, TEXT("3"));
+									memcpy(outText + i + tmplen, L"3", 1);
 									break;
 								case '4':
-									lstrcat(num, TEXT("4"));
+									memcpy(outText + i + tmplen, L"4", 1);
 									break;
 								case '5':
-									lstrcat(num, TEXT("5"));
+									memcpy(outText + i + tmplen, L"5", 1);
 									break;
 								case '6':
-									lstrcat(num, TEXT("6"));
+									memcpy(outText + i + tmplen, L"6", 1);
 									break;
 								case '7':
-									lstrcat(num, TEXT("7"));
+									memcpy(outText + i + tmplen, L"7", 1);
 									break;
 								case '8':
-									lstrcat(num, TEXT("8"));
+									memcpy(outText + i + tmplen, L"8", 1);
 									break;
 								case '9':
-									lstrcat(num, TEXT("9"));
+									memcpy(outText + i + tmplen, L"9", 1);
 									break;
 								case '0':
-									lstrcat(num, TEXT("0"));
+									memcpy(outText + i + tmplen, L"0", 1);
+									break;
+								case 's':
+									memcpy(outText + i + tmplen, L"s", 1);
+									break;
+								case 'l':
+									memcpy(outText + i + tmplen, L"l", 1);
+									break;
+								case 'w':
+									memcpy(outText + i + tmplen, L"w", 1);
+									break;
+								case '{':
+									memcpy(outText + i + tmplen, L"{", 1);
+									break;
+								case '}':
+									memcpy(outText + i + tmplen, L"}", 1);
 									break;
 								}
 							}
-							lstrcat(outText, num); i--;
-							std::free(num);
-							memcpy(outText + i + tmplen, L"c", 1); i++;
-							lstrcat(outText, strText2); tmplen += lstrlen(strText2);
-							memcpy(outText + i + tmplen, L"}", 1); 
-							break;
-						}
-						case 'g':
-							memcpy(outText + i + tmplen, L"g", 1);
-							break;
-						case '[':
-							memcpy(outText + i + tmplen, L"[", 1);
-							break;
-						case ']':
-							memcpy(outText + i + tmplen, L"]", 1);
-							break;
-						case 'x':
-							memcpy(outText + i + tmplen, L"x", 1);
-							break;
-						case 'y':
-							memcpy(outText + i + tmplen, L"y", 1);
-							break;
-						case 'z':
-							memcpy(outText + i + tmplen, L"z", 1);
-							break;
-						case 'h':
-							memcpy(outText + i + tmplen, L"h", 1);
-							break;
-						case 'c':
-							memcpy(outText + i + tmplen, L"c", 1);
-							break;
-						case '-':
-							memcpy(outText + i + tmplen, L"-", 1);
-							break;
-						case '.':
-							memcpy(outText + i + tmplen, L".", 1);
-							break;
-						case ',':
-							memcpy(outText + i + tmplen, L",", 1);
-							break;
-						case '1':
-							memcpy(outText + i + tmplen, L"1", 1);
-							break;
-						case '2':
-							memcpy(outText + i + tmplen, L"2", 1);
-							break;
-						case '3':
-							memcpy(outText + i + tmplen, L"3", 1);
-							break;
-						case '4':
-							memcpy(outText + i + tmplen, L"4", 1);
-							break;
-						case '5':
-							memcpy(outText + i + tmplen, L"5", 1);
-							break;
-						case '6':
-							memcpy(outText + i + tmplen, L"6", 1);
-							break;
-						case '7':
-							memcpy(outText + i + tmplen, L"7", 1);
-							break;
-						case '8':
-							memcpy(outText + i + tmplen, L"8", 1);
-							break;
-						case '9':
-							memcpy(outText + i + tmplen, L"9", 1);
-							break;
-						case '0':
-							memcpy(outText + i + tmplen, L"0", 1);
-							break;
-						case 's':
-							memcpy(outText + i + tmplen, L"s", 1);
-							break;
-						case 'l':
-							memcpy(outText + i + tmplen, L"l", 1);
-							break;
-						case 'w':
-							memcpy(outText + i + tmplen, L"w", 1);
-							break;
-						case '{':
-							memcpy(outText + i + tmplen, L"{", 1);
-							break;
-						case '}':
-							memcpy(outText + i + tmplen, L"}", 1);
-							break;
-						}
-					}
-					std::free(inText);
-					inText = (PTSTR)calloc(100000, sizeof(TCHAR));
-					lstrcat(inText, outText);
+							std::free(inText);
+							inText = (PTSTR)calloc(100000, sizeof(TCHAR));
+							lstrcat(inText, outText);
 
-				}
-				if (SendMessage(edit[17], TBM_GETPOS, 0, 0)) {
-					std::free(strText);
-					std::free(strText2);
-				}
-				std::free(inText);
-			}
-			if ((HWND)lp == edit[0] || (HWND)lp == edit[1] || (HWND)lp == edit[2] || (HWND)lp == edit[3] || (HWND)lp == edit[4] || (HWND)lp == edit[5] || (HWND)lp == edit[6] || (HWND)lp == edit[10] || (HWND)lp == edit[11] || (HWND)lp == edit[12] || (HWND)lp == edit[13] || (HWND)lp == edit[14]) {
-				vx.clear();
-				vy.clear();
-				vz.clear();
-				p.clear();
-				m.clear();
-				uv.clear();
-				vnum = 0;
-				pnum = 0;
-				double x;
-				double y;
-				double z;
-				double localxx = 1;
-				double localxy = 0;
-				double localxz = 0;
-				double localyx = 0;
-				double localyy = -1;
-				double localyz = 0;
-				double localzx = 0;
-				double localzy = 0;
-				double localzz = 1;
-				defx = SendMessage(edit[3], TBM_GETPOS, 0, 0);
-				defy = SendMessage(edit[4], TBM_GETPOS, 0, 0);
-				defz = SendMessage(edit[5], TBM_GETPOS, 0, 0);
-				double zmax = SendMessage(edit[6], TBM_GETPOS, 0, 0);
-				double fow = SendMessage(edit[10], TBM_GETPOS, 0, 0) / 100.0;
-				double rotarg = SendMessage(edit[11], TBM_GETPOS, 0, 0) / 100.0;
-				double r = SendMessage(edit[12], TBM_GETPOS, 0, 0) / 100.0;
-				double s = SendMessage(edit[14], TBM_GETPOS, 0, 0) / 100.0;
-				int d = SendMessage(edit[13], TBM_GETPOS, 0, 0);
-				memr.emplace_back(1);
-				memv.emplace_back(0);	
-				meme.emplace_back(3);
-				x = defx;
-				y = defy;
-				z = defz;
-				membx.emplace_back(0);
-				memby.emplace_back(0);
-				membz.emplace_back(0);
-				int olen =lstrlen(outText);
-				for (int i = 0; i < olen; i++) {
-					switch (outText[i]) {
-					case '{':
-					{
-					
-						PTSTR num = (PTSTR)calloc(100, sizeof(TCHAR));
-						while (outText[i] != 'c' && i < olen) {
-							i++;
-							switch (outText[i]) {
-							case '-':
-								lstrcat(num, TEXT("-"));
-								break;
-							case '.':
-								lstrcat(num, TEXT("."));
-								break;
-							case '1':
-								lstrcat(num, TEXT("1"));
-								break;
-							case '2':
-								lstrcat(num, TEXT("2"));
-								break;
-							case '3':
-								lstrcat(num, TEXT("3"));
-								break;
-							case '4':
-								lstrcat(num, TEXT("4"));
-								break;
-							case '5':
-								lstrcat(num, TEXT("5"));
-								break;
-							case '6':
-								lstrcat(num, TEXT("6"));
-								break;
-							case '7':
-								lstrcat(num, TEXT("7"));
-								break;
-							case '8':
-								lstrcat(num, TEXT("8"));
-								break;
-							case '9':
-								lstrcat(num, TEXT("9"));
-								break;
-							case '0':
-								lstrcat(num, TEXT("0"));
-								break;
-							}
 						}
-						double c = wcstod(num, NULL); std::free(num);
-						fractalmem++;
-						fracmemrate.emplace_back(c);
-						fracrate *= c;
-						break;
+						if (SendMessage(edit[17], TBM_GETPOS, 0, 0)) {
+							std::free(strText);
+							std::free(strText2);
+						}
+						std::free(inText);
 					}
-					case '}':
-					{
-						fractalmem--;
-						fracrate /= fracmemrate[fractalmem];
-						fracmemrate.pop_back();
-						break; }
-					case 'h':
-					{
-					
-						PTSTR num = (PTSTR)calloc(100, sizeof(TCHAR));
-						while (outText[i] != ',' && i < olen) {
-							i++;
+					if ((HWND)lp == edit[0] || (HWND)lp == edit[1] || (HWND)lp == edit[2] || (HWND)lp == edit[3] || (HWND)lp == edit[4] || (HWND)lp == edit[5] || (HWND)lp == edit[6] || (HWND)lp == edit[10] || (HWND)lp == edit[11] || (HWND)lp == edit[12] || (HWND)lp == edit[13] || (HWND)lp == edit[14]) {
+						vx.clear();
+						vy.clear();
+						vz.clear();
+						p.clear();
+						m.clear();
+						uv.clear();
+						vnum = 0;
+						pnum = 0;
+						double x;
+						double y;
+						double z;
+						double localxx = 1;
+						double localxy = 0;
+						double localxz = 0;
+						double localyx = 0;
+						double localyy = -1;
+						double localyz = 0;
+						double localzx = 0;
+						double localzy = 0;
+						double localzz = 1;
+						defx = SendMessage(edit[3], TBM_GETPOS, 0, 0);
+						defy = SendMessage(edit[4], TBM_GETPOS, 0, 0);
+						defz = SendMessage(edit[5], TBM_GETPOS, 0, 0);
+						double zmax = SendMessage(edit[6], TBM_GETPOS, 0, 0);
+						double fow = SendMessage(edit[10], TBM_GETPOS, 0, 0) / 100.0;
+						double rotarg = SendMessage(edit[11], TBM_GETPOS, 0, 0) / 100.0;
+						double r = SendMessage(edit[12], TBM_GETPOS, 0, 0) / 100.0;
+						double s = SendMessage(edit[14], TBM_GETPOS, 0, 0) / 100.0;
+						int d = SendMessage(edit[13], TBM_GETPOS, 0, 0);
+						memr.emplace_back(1);
+						memv.emplace_back(0);
+						meme.emplace_back(3);
+						x = defx;
+						y = defy;
+						z = defz;
+						membx.emplace_back(0);
+						memby.emplace_back(0);
+						membz.emplace_back(0);
+						int olen = lstrlen(outText);
+						for (int i = 0; i < olen; i++) {
 							switch (outText[i]) {
-							case '-':
-								lstrcat(num, TEXT("-"));
-								break;
-							case '.':
-								lstrcat(num, TEXT("."));
-								break;
-							case '1':
-								lstrcat(num, TEXT("1"));
-								break;
-							case '2':
-								lstrcat(num, TEXT("2"));
-								break;
-							case '3':
-								lstrcat(num, TEXT("3"));
-								break;
-							case '4':
-								lstrcat(num, TEXT("4"));
-								break;
-							case '5':
-								lstrcat(num, TEXT("5"));
-								break;
-							case '6':
-								lstrcat(num, TEXT("6"));
-								break;
-							case '7':
-								lstrcat(num, TEXT("7"));
-								break;
-							case '8':
-								lstrcat(num, TEXT("8"));
-								break;
-							case '9':
-								lstrcat(num, TEXT("9"));
-								break;
-							case '0':
-								lstrcat(num, TEXT("0"));
-								break;
-							}
-						}
-						double c2 = wcstod(num, NULL); std::free(num);
-						num = (PTSTR)calloc(100, sizeof(TCHAR));
-						while (outText[i] != 'c' && i < olen) {
-							i++;
-							switch (outText[i]) {
-							case '-':
-								lstrcat(num, TEXT("-"));
-								break;
-							case '.':
-								lstrcat(num, TEXT("."));
-								break;
-							case '1':
-								lstrcat(num, TEXT("1"));
-								break;
-							case '2':
-								lstrcat(num, TEXT("2"));
-								break;
-							case '3':
-								lstrcat(num, TEXT("3"));
-								break;
-							case '4':
-								lstrcat(num, TEXT("4"));
-								break;
-							case '5':
-								lstrcat(num, TEXT("5"));
-								break;
-							case '6':
-								lstrcat(num, TEXT("6"));
-								break;
-							case '7':
-								lstrcat(num, TEXT("7"));
-								break;
-							case '8':
-								lstrcat(num, TEXT("8"));
-								break;
-							case '9':
-								lstrcat(num, TEXT("9"));
-								break;
-							case '0':
-								lstrcat(num, TEXT("0"));
-								break;
-							}
-						}
-						double c = wcstod(num, NULL);std::free(num);
+							case '{':
+							{
 
-					
-						if (memr[mem]) {
-							membx[mem] = x;
-							memby[mem] = y;
-							membz[mem] = z;
-							memr[mem] = false;
-							if (d % 2) {
-								//最初p+z
-								vx.emplace_back(membx[mem] + (localzx * c2 * r * fracrate));
-								vy.emplace_back(memby[mem] + (localzy * c2 * r * fracrate));
-								vz.emplace_back(membz[mem] + (localzz * c2 * r * fracrate));
-								vnum++;
-								//最終p+z60do
-								for (int i = 0; i < meme[mem] - 1; ++i) {
-									localrotate(localzx, localzy, localzz, M_PI / (meme[mem] / 2), localyx, localyy, localyz, &localzx, &localzy, &localzz);
-									vx.emplace_back(membx[mem] + (localzx * c2 * r * fracrate));
-									vy.emplace_back(memby[mem] + (localzy * c2 * r * fracrate));
-									vz.emplace_back(membz[mem] + (localzz * c2 * r * fracrate));
-									vnum++;
+								PTSTR num = (PTSTR)calloc(100, sizeof(TCHAR));
+								while (outText[i] != 'c' && i < olen) {
+									i++;
+									switch (outText[i]) {
+									case '-':
+										lstrcat(num, TEXT("-"));
+										break;
+									case '.':
+										lstrcat(num, TEXT("."));
+										break;
+									case '1':
+										lstrcat(num, TEXT("1"));
+										break;
+									case '2':
+										lstrcat(num, TEXT("2"));
+										break;
+									case '3':
+										lstrcat(num, TEXT("3"));
+										break;
+									case '4':
+										lstrcat(num, TEXT("4"));
+										break;
+									case '5':
+										lstrcat(num, TEXT("5"));
+										break;
+									case '6':
+										lstrcat(num, TEXT("6"));
+										break;
+									case '7':
+										lstrcat(num, TEXT("7"));
+										break;
+									case '8':
+										lstrcat(num, TEXT("8"));
+										break;
+									case '9':
+										lstrcat(num, TEXT("9"));
+										break;
+									case '0':
+										lstrcat(num, TEXT("0"));
+										break;
+									}
 								}
-								localrotate(localzx, localzy, localzz, -M_PI / (meme[mem] / 2) * (meme[mem] - 1), localyx, localyy, localyz, &localzx, &localzy, &localzz);
+								double c = wcstod(num, NULL); std::free(num);
+								fractalmem++;
+								fracmemrate.emplace_back(c);
+								fracrate *= c;
+								break;
+							}
+							case '}':
+							{
+								fractalmem--;
+								fracrate /= fracmemrate[fractalmem];
+								fracmemrate.pop_back();
+								break; }
+							case 'h':
+							{
 
-								for (int i = 0; i < memv.size() - 1; ++i)
-									memv[i] += meme[mem];
+								PTSTR num = (PTSTR)calloc(100, sizeof(TCHAR));
+								while (outText[i] != ',' && i < olen) {
+									i++;
+									switch (outText[i]) {
+									case '-':
+										lstrcat(num, TEXT("-"));
+										break;
+									case '.':
+										lstrcat(num, TEXT("."));
+										break;
+									case '1':
+										lstrcat(num, TEXT("1"));
+										break;
+									case '2':
+										lstrcat(num, TEXT("2"));
+										break;
+									case '3':
+										lstrcat(num, TEXT("3"));
+										break;
+									case '4':
+										lstrcat(num, TEXT("4"));
+										break;
+									case '5':
+										lstrcat(num, TEXT("5"));
+										break;
+									case '6':
+										lstrcat(num, TEXT("6"));
+										break;
+									case '7':
+										lstrcat(num, TEXT("7"));
+										break;
+									case '8':
+										lstrcat(num, TEXT("8"));
+										break;
+									case '9':
+										lstrcat(num, TEXT("9"));
+										break;
+									case '0':
+										lstrcat(num, TEXT("0"));
+										break;
+									}
+								}
+								double c2 = wcstod(num, NULL); std::free(num);
+								num = (PTSTR)calloc(100, sizeof(TCHAR));
+								while (outText[i] != 'c' && i < olen) {
+									i++;
+									switch (outText[i]) {
+									case '-':
+										lstrcat(num, TEXT("-"));
+										break;
+									case '.':
+										lstrcat(num, TEXT("."));
+										break;
+									case '1':
+										lstrcat(num, TEXT("1"));
+										break;
+									case '2':
+										lstrcat(num, TEXT("2"));
+										break;
+									case '3':
+										lstrcat(num, TEXT("3"));
+										break;
+									case '4':
+										lstrcat(num, TEXT("4"));
+										break;
+									case '5':
+										lstrcat(num, TEXT("5"));
+										break;
+									case '6':
+										lstrcat(num, TEXT("6"));
+										break;
+									case '7':
+										lstrcat(num, TEXT("7"));
+										break;
+									case '8':
+										lstrcat(num, TEXT("8"));
+										break;
+									case '9':
+										lstrcat(num, TEXT("9"));
+										break;
+									case '0':
+										lstrcat(num, TEXT("0"));
+										break;
+									}
+								}
+								double c = wcstod(num, NULL); std::free(num);
+
+
+								if (memr[mem]) {
+									membx[mem] = x;
+									memby[mem] = y;
+									membz[mem] = z;
+									memr[mem] = false;
+									if (d % 2) {
+										//最初p+z
+										vx.emplace_back(membx[mem] + (localzx * c2 * r * fracrate));
+										vy.emplace_back(memby[mem] + (localzy * c2 * r * fracrate));
+										vz.emplace_back(membz[mem] + (localzz * c2 * r * fracrate));
+										vnum++;
+										//最終p+z60do
+										for (int i = 0; i < meme[mem] - 1; ++i) {
+											localrotate(localzx, localzy, localzz, M_PI / (meme[mem] / 2), localyx, localyy, localyz, &localzx, &localzy, &localzz);
+											vx.emplace_back(membx[mem] + (localzx * c2 * r * fracrate));
+											vy.emplace_back(memby[mem] + (localzy * c2 * r * fracrate));
+											vz.emplace_back(membz[mem] + (localzz * c2 * r * fracrate));
+											vnum++;
+										}
+										localrotate(localzx, localzy, localzz, -M_PI / (meme[mem] / 2) * (meme[mem] - 1), localyx, localyy, localyz, &localzx, &localzy, &localzz);
+
+										for (int i = 0; i < memv.size() - 1; ++i)
+											memv[i] += meme[mem];
+									}
+								}
+								x += c * fow * fracrate * localyx;
+								y += c * fow * fracrate * localyy;
+								z += c * fow * fracrate * localyz;
+								break;
 							}
-						}
-						x += c * fow * fracrate * localyx;
-						y += c * fow * fracrate * localyy;
-						z += c * fow * fracrate * localyz;
-						break;
-					}
-					case 'w': {
-						PTSTR num = (PTSTR)calloc(100, sizeof(TCHAR));
-						while (outText[i] != 'c' && i < olen) {
-							i++;
-							switch (outText[i]) {
-							case '-':
-								lstrcat(num, TEXT("-"));
-								break;
-							case '.':
-								lstrcat(num, TEXT("."));
-								break;
-							case '1':
-								lstrcat(num, TEXT("1"));
-								break;
-							case '2':
-								lstrcat(num, TEXT("2"));
-								break;
-							case '3':
-								lstrcat(num, TEXT("3"));
-								break;
-							case '4':
-								lstrcat(num, TEXT("4"));
-								break;
-							case '5':
-								lstrcat(num, TEXT("5"));
-								break;
-							case '6':
-								lstrcat(num, TEXT("6"));
-								break;
-							case '7':
-								lstrcat(num, TEXT("7"));
-								break;
-							case '8':
-								lstrcat(num, TEXT("8"));
-								break;
-							case '9':
-								lstrcat(num, TEXT("9"));
-								break;
-							case '0':
-								lstrcat(num, TEXT("0"));
-								break;
-							}
-						}
-						double c = wcstod(num, NULL);std::free(num);
-						x += c * fow * fracrate * localyx;
-						y += c * fow * fracrate * localyy;
-						z += c * fow * fracrate * localyz;
-						break;
-					}
-					case 'g': {
-					
-						PTSTR num = (PTSTR)calloc(100, sizeof(TCHAR));
-						while (outText[i] != 'c' && i < olen) {
-							i++;
-							switch (outText[i]) {
-							case '-':
-								lstrcat(num, TEXT("-"));
-								break;
-							case '.':
-								lstrcat(num, TEXT("."));
-								break;
-							case '1':
-								lstrcat(num, TEXT("1"));
-								break;
-							case '2':
-								lstrcat(num, TEXT("2"));
-								break;
-							case '3':
-								lstrcat(num, TEXT("3"));
-								break;
-							case '4':
-								lstrcat(num, TEXT("4"));
-								break;
-							case '5':
-								lstrcat(num, TEXT("5"));
-								break;
-							case '6':
-								lstrcat(num, TEXT("6"));
-								break;
-							case '7':
-								lstrcat(num, TEXT("7"));
-								break;
-							case '8':
-								lstrcat(num, TEXT("8"));
-								break;
-							case '9':
-								lstrcat(num, TEXT("9"));
-								break;
-							case '0':
-								lstrcat(num, TEXT("0"));
+							case 'w': {
+								PTSTR num = (PTSTR)calloc(100, sizeof(TCHAR));
+								while (outText[i] != 'c' && i < olen) {
+									i++;
+									switch (outText[i]) {
+									case '-':
+										lstrcat(num, TEXT("-"));
+										break;
+									case '.':
+										lstrcat(num, TEXT("."));
+										break;
+									case '1':
+										lstrcat(num, TEXT("1"));
+										break;
+									case '2':
+										lstrcat(num, TEXT("2"));
+										break;
+									case '3':
+										lstrcat(num, TEXT("3"));
+										break;
+									case '4':
+										lstrcat(num, TEXT("4"));
+										break;
+									case '5':
+										lstrcat(num, TEXT("5"));
+										break;
+									case '6':
+										lstrcat(num, TEXT("6"));
+										break;
+									case '7':
+										lstrcat(num, TEXT("7"));
+										break;
+									case '8':
+										lstrcat(num, TEXT("8"));
+										break;
+									case '9':
+										lstrcat(num, TEXT("9"));
+										break;
+									case '0':
+										lstrcat(num, TEXT("0"));
+										break;
+									}
+								}
+								double c = wcstod(num, NULL); std::free(num);
+								x += c * fow * fracrate * localyx;
+								y += c * fow * fracrate * localyy;
+								z += c * fow * fracrate * localyz;
 								break;
 							}
-						}
-						double c = wcstod(num, NULL);std::free(num);
-					
-						if (d % 2) {
-							//ポリゴン
-							if (memr[mem]) {
-								//最初p+z
-								vx.emplace_back(membx[mem] + (localzx * c * r * fracrate));
-								vy.emplace_back(memby[mem] + (localzy * c * r * fracrate));
-								vz.emplace_back(membz[mem] + (localzz * c * r * fracrate));
-								vnum++;
-								//最終p+z60do
-								for (int i = 0; i < meme[mem] - 1; ++i) {
-									localrotate(localzx, localzy, localzz, M_PI / (meme[mem] / 2), localyx, localyy, localyz, &localzx, &localzy, &localzz);
+							case 'g': {
+
+								PTSTR num = (PTSTR)calloc(100, sizeof(TCHAR));
+								while (outText[i] != 'c' && i < olen) {
+									i++;
+									switch (outText[i]) {
+									case '-':
+										lstrcat(num, TEXT("-"));
+										break;
+									case '.':
+										lstrcat(num, TEXT("."));
+										break;
+									case '1':
+										lstrcat(num, TEXT("1"));
+										break;
+									case '2':
+										lstrcat(num, TEXT("2"));
+										break;
+									case '3':
+										lstrcat(num, TEXT("3"));
+										break;
+									case '4':
+										lstrcat(num, TEXT("4"));
+										break;
+									case '5':
+										lstrcat(num, TEXT("5"));
+										break;
+									case '6':
+										lstrcat(num, TEXT("6"));
+										break;
+									case '7':
+										lstrcat(num, TEXT("7"));
+										break;
+									case '8':
+										lstrcat(num, TEXT("8"));
+										break;
+									case '9':
+										lstrcat(num, TEXT("9"));
+										break;
+									case '0':
+										lstrcat(num, TEXT("0"));
+										break;
+									}
+								}
+								double c = wcstod(num, NULL); std::free(num);
+
+								if (d % 2) {
+									//ポリゴン
+									if (memr[mem]) {
+										//最初p+z
+										vx.emplace_back(membx[mem] + (localzx * c * r * fracrate));
+										vy.emplace_back(memby[mem] + (localzy * c * r * fracrate));
+										vz.emplace_back(membz[mem] + (localzz * c * r * fracrate));
+										vnum++;
+										//最終p+z60do
+										for (int i = 0; i < meme[mem] - 1; ++i) {
+											localrotate(localzx, localzy, localzz, M_PI / (meme[mem] / 2), localyx, localyy, localyz, &localzx, &localzy, &localzz);
+											vx.emplace_back(membx[mem] + (localzx * c * r * fracrate));
+											vy.emplace_back(memby[mem] + (localzy * c * r * fracrate));
+											vz.emplace_back(membz[mem] + (localzz * c * r * fracrate));
+											vnum++;
+										}
+										localrotate(localzx, localzy, localzz, -M_PI / (meme[mem] / 2) * (meme[mem] - 1), localyx, localyy, localyz, &localzx, &localzy, &localzz);
+
+										for (int i = 0; i < memv.size() - 1; ++i)
+											memv[i] += meme[mem];
+										memr[mem] = false;
+									}
+
+									membx[mem] = x;
+									memby[mem] = y;
+									membz[mem] = z;
+									//最終p+z
 									vx.emplace_back(membx[mem] + (localzx * c * r * fracrate));
 									vy.emplace_back(memby[mem] + (localzy * c * r * fracrate));
 									vz.emplace_back(membz[mem] + (localzz * c * r * fracrate));
 									vnum++;
+									//最終p+z60do
+									for (int i = 0; i < meme[mem] - 1; ++i) {
+										localrotate(localzx, localzy, localzz, M_PI / (meme[mem] / 2), localyx, localyy, localyz, &localzx, &localzy, &localzz);
+										vx.emplace_back(membx[mem] + (localzx * c * r * fracrate));
+										vy.emplace_back(memby[mem] + (localzy * c * r * fracrate));
+										vz.emplace_back(membz[mem] + (localzz * c * r * fracrate));
+										vnum++;
+									}
+									for (int i = 0; i < meme[mem] - 1; ++i) {
+										m.emplace_back(0);
+										p.emplace_back(vnum - (i + 1 + meme[mem]) - memv[mem]);
+										pnum++;
+										p.emplace_back(vnum - 2 - i);
+										pnum++;
+										p.emplace_back(vnum - 1 - i);
+										pnum++;
+										uv.emplace_back(i / meme[mem]);
+										uv.emplace_back(0);
+										uv.emplace_back((i + 1) / meme[mem]);
+										uv.emplace_back(1);
+										uv.emplace_back(i / meme[mem]);
+										uv.emplace_back(1);
+										m.emplace_back(0);
+										p.emplace_back(vnum - (i + 1 + meme[mem]) - memv[mem]);
+										pnum++;
+										p.emplace_back(vnum - (i + 2 + meme[mem]) - memv[mem]);
+										pnum++;
+										p.emplace_back(vnum - 2 - i);
+										pnum++;
+										uv.emplace_back(i / meme[mem]);
+										uv.emplace_back(0);
+										uv.emplace_back((i + 1) / meme[mem]);
+										uv.emplace_back(0);
+										uv.emplace_back((i + 1) / meme[mem]);
+										uv.emplace_back(1);
+									}
+									m.emplace_back(0);
+									p.emplace_back(vnum - (meme[mem] * 2) - memv[mem]);
+									pnum++;
+									p.emplace_back(vnum - 1);
+									pnum++;
+									p.emplace_back(vnum - meme[mem]);
+									pnum++;
+									uv.emplace_back((meme[mem] - 1) / meme[mem]);
+									uv.emplace_back(0);
+									uv.emplace_back(1);
+									uv.emplace_back(1);
+									uv.emplace_back((meme[mem] - 1) / meme[mem]);
+									uv.emplace_back(1);
+									m.emplace_back(0);
+									p.emplace_back(vnum - (meme[mem] * 2) - memv[mem]);
+									pnum++;
+									p.emplace_back(vnum - (meme[mem] + 1) - memv[mem]);
+									pnum++;
+									p.emplace_back(vnum - 1);
+									pnum++;
+									uv.emplace_back((meme[mem] - 1) / meme[mem]);
+									uv.emplace_back(0);
+									uv.emplace_back(1);
+									uv.emplace_back(0);
+									uv.emplace_back(1);
+									uv.emplace_back(1);
+									localrotate(localzx, localzy, localzz, -M_PI / (meme[mem] / 2) * (meme[mem] - 1), localyx, localyy, localyz, &localzx, &localzy, &localzz);
+
+									for (int i = 0; i < memv.size() - 1; ++i)
+										memv[i] += meme[mem];
+									memv[mem] = 0;
 								}
-								localrotate(localzx, localzy, localzz, -M_PI / (meme[mem] / 2) * (meme[mem] - 1), localyx, localyy, localyz, &localzx, &localzy, &localzz);
+								else {
 
-								for (int i = 0; i < memv.size() - 1; ++i)
-									memv[i] += meme[mem];
-								memr[mem] = false;
-							}
+									vx.emplace_back(membx[mem]);
+									vy.emplace_back(memby[mem]);
+									vz.emplace_back(membz[mem]);
+									vnum++;
 
-							membx[mem] = x;
-							memby[mem] = y;
-							membz[mem] = z;
-							//最終p+z
-							vx.emplace_back(membx[mem] + (localzx * c * r * fracrate));
-							vy.emplace_back(memby[mem] + (localzy * c * r * fracrate));
-							vz.emplace_back(membz[mem] + (localzz * c * r * fracrate));
-							vnum++;
-							//最終p+z60do
-							for (int i = 0; i < meme[mem] - 1; ++i){
-								localrotate(localzx, localzy, localzz, M_PI / ( meme[mem]/2), localyx, localyy, localyz, &localzx, &localzy, &localzz);
-							vx.emplace_back(membx[mem] + (localzx * c * r * fracrate));
-							vy.emplace_back(memby[mem] + (localzy * c * r * fracrate));
-							vz.emplace_back(membz[mem] + (localzz * c * r * fracrate));
-							vnum++;
-						}
-							for (int i = 0; i < meme[mem] - 1; ++i) {
-								m.emplace_back(0);
-								p.emplace_back(vnum - (i + 1 + meme[mem]) - memv[mem]);
-								pnum++;
-								p.emplace_back(vnum - 2 - i);
-								pnum++;
-								p.emplace_back(vnum - 1 - i);
-								pnum++;
-								uv.emplace_back(i / meme[mem]);
-								uv.emplace_back(0);
-								uv.emplace_back((i + 1) / meme[mem]);
-								uv.emplace_back(1);
-								uv.emplace_back(i / meme[mem]);
-								uv.emplace_back(1);
-								m.emplace_back(0);
-								p.emplace_back(vnum - (i + 1 + meme[mem]) - memv[mem]);
-								pnum++;
-								p.emplace_back(vnum - (i + 2 + meme[mem]) - memv[mem]);
-								pnum++;
-								p.emplace_back(vnum - 2 - i);
-								pnum++;
-								uv.emplace_back(i / meme[mem]);
-								uv.emplace_back(0);
-								uv.emplace_back((i + 1) / meme[mem]);
-								uv.emplace_back(0);
-								uv.emplace_back((i + 1) / meme[mem]);
-								uv.emplace_back(1);
-							}
-							m.emplace_back(0);
-							p.emplace_back(vnum - (meme[mem] * 2) - memv[mem]);
-							pnum++;
-							p.emplace_back(vnum - 1);
-							pnum++;
-							p.emplace_back(vnum - meme[mem]);
-							pnum++;
-							uv.emplace_back((meme[mem] - 1) / meme[mem]);
-							uv.emplace_back(0);
-							uv.emplace_back(1);
-							uv.emplace_back(1);
-							uv.emplace_back((meme[mem] - 1) / meme[mem]);
-							uv.emplace_back(1);
-							m.emplace_back(0);
-							p.emplace_back(vnum - (meme[mem] * 2) - memv[mem]);
-							pnum++;
-							p.emplace_back(vnum - (meme[mem] + 1) - memv[mem]);
-							pnum++;
-							p.emplace_back(vnum - 1);
-							pnum++;
-								uv.emplace_back((meme[mem] - 1) / meme[mem]);
-								uv.emplace_back(0);
-								uv.emplace_back(1);
-								uv.emplace_back(0);
-								uv.emplace_back(1);
-								uv.emplace_back(1);
-							localrotate(localzx, localzy, localzz, -M_PI / (meme[mem] / 2)*(meme[mem]-1), localyx, localyy, localyz, &localzx, &localzy, &localzz);
+									vx.emplace_back(x);
+									vy.emplace_back(y);
+									vz.emplace_back(z);
+									vnum++;
 
-							for (int i = 0; i < memv.size() - 1; ++i)
-								memv[i] += meme[mem];
-							memv[mem] = 0;
-						}
-						else {
-
-							vx.emplace_back(membx[mem]);
-							vy.emplace_back(memby[mem]);
-							vz.emplace_back(membz[mem]);
-							vnum++;
-
-							vx.emplace_back(x);
-							vy.emplace_back(y);
-							vz.emplace_back(z);
-							vnum++;
-
-							membx[mem] = x;
-							memby[mem] = y;
-							membz[mem] = z;
-						}
-						break;
-					}
-					case 's': {
-						meme.emplace_back(2);
-						memx.emplace_back(x);
-						memy.emplace_back(y);
-						memz.emplace_back(z);
-						memxx.emplace_back(localxx);
-						memxy.emplace_back(localxy);
-						memxz.emplace_back(localxz);
-						memyx.emplace_back(localyx);
-						memyy.emplace_back(localyy);
-						memyz.emplace_back(localyz);
-						memzx.emplace_back(localzx);
-						memzy.emplace_back(localzy);
-						memzz.emplace_back(localzz);
-						membx.emplace_back(0);
-						memby.emplace_back(0);
-						membz.emplace_back(0);
-						memv.emplace_back(0);
-						memr.emplace_back(1);
-						mem++;
-						break; }
-					case '[': {
-						PTSTR num = (PTSTR)calloc(100, sizeof(TCHAR));
-						while (outText[i] != 'c' && i < olen) {
-							i++;
-							switch (outText[i]) {
-							case '-':
-								lstrcat(num, TEXT("-"));
-								break;
-							case '.':
-								lstrcat(num, TEXT("."));
-								break;
-							case '1':
-								lstrcat(num, TEXT("1"));
-								break;
-							case '2':
-								lstrcat(num, TEXT("2"));
-								break;
-							case '3':
-								lstrcat(num, TEXT("3"));
-								break;
-							case '4':
-								lstrcat(num, TEXT("4"));
-								break;
-							case '5':
-								lstrcat(num, TEXT("5"));
-								break;
-							case '6':
-								lstrcat(num, TEXT("6"));
-								break;
-							case '7':
-								lstrcat(num, TEXT("7"));
-								break;
-							case '8':
-								lstrcat(num, TEXT("8"));
-								break;
-							case '9':
-								lstrcat(num, TEXT("9"));
-								break;
-							case '0':
-								lstrcat(num, TEXT("0"));
+									membx[mem] = x;
+									memby[mem] = y;
+									membz[mem] = z;
+								}
 								break;
 							}
-						}
-						meme.emplace_back(wcstod(num, NULL));
-						memx.emplace_back(x);
-						memy.emplace_back(y);
-						memz.emplace_back(z);
-						memxx.emplace_back(localxx);
-						memxy.emplace_back(localxy);
-						memxz.emplace_back(localxz);
-						memyx.emplace_back(localyx);
-						memyy.emplace_back(localyy);
-						memyz.emplace_back(localyz);
-						memzx.emplace_back(localzx);
-						memzy.emplace_back(localzy);
-						memzz.emplace_back(localzz);
-						membx.emplace_back(0);
-						memby.emplace_back(0);
-						membz.emplace_back(0);
-						memv.emplace_back(0);
-						memr.emplace_back(1);
-						mem++;
-						break;
-					}
-					case 'l': {
-					
-						PTSTR num = (PTSTR)calloc(100, sizeof(TCHAR));
-						while (outText[i] != ',' && i < olen) {
-							i++;
-							switch (outText[i]) {
-							case '-':
-								lstrcat(num, TEXT("-"));
-								break;
-							case '.':
-								lstrcat(num, TEXT("."));
-								break;
-							case '1':
-								lstrcat(num, TEXT("1"));
-								break;
-							case '2':
-								lstrcat(num, TEXT("2"));
-								break;
-							case '3':
-								lstrcat(num, TEXT("3"));
-								break;
-							case '4':
-								lstrcat(num, TEXT("4"));
-								break;
-							case '5':
-								lstrcat(num, TEXT("5"));
-								break;
-							case '6':
-								lstrcat(num, TEXT("6"));
-								break;
-							case '7':
-								lstrcat(num, TEXT("7"));
-								break;
-							case '8':
-								lstrcat(num, TEXT("8"));
-								break;
-							case '9':
-								lstrcat(num, TEXT("9"));
-								break;
-							case '0':
-								lstrcat(num, TEXT("0"));
-								break;
-							}
-						}
-						double c2 = wcstod(num, NULL); std::free(num);
-						num = (PTSTR)calloc(100, sizeof(TCHAR));
-						while (outText[i] != 'c' && i < olen) {
-							i++;
-							switch (outText[i]) {
-							case '-':
-								lstrcat(num, TEXT("-"));
-								break;
-							case '.':
-								lstrcat(num, TEXT("."));
-								break;
-							case '1':
-								lstrcat(num, TEXT("1"));
-								break;
-							case '2':
-								lstrcat(num, TEXT("2"));
-								break;
-							case '3':
-								lstrcat(num, TEXT("3"));
-								break;
-							case '4':
-								lstrcat(num, TEXT("4"));
-								break;
-							case '5':
-								lstrcat(num, TEXT("5"));
-								break;
-							case '6':
-								lstrcat(num, TEXT("6"));
-								break;
-							case '7':
-								lstrcat(num, TEXT("7"));
-								break;
-							case '8':
-								lstrcat(num, TEXT("8"));
-								break;
-							case '9':
-								lstrcat(num, TEXT("9"));
-								break;
-							case '0':
-								lstrcat(num, TEXT("0"));
+							case 's': {
+								meme.emplace_back(2);
+								memx.emplace_back(x);
+								memy.emplace_back(y);
+								memz.emplace_back(z);
+								memxx.emplace_back(localxx);
+								memxy.emplace_back(localxy);
+								memxz.emplace_back(localxz);
+								memyx.emplace_back(localyx);
+								memyy.emplace_back(localyy);
+								memyz.emplace_back(localyz);
+								memzx.emplace_back(localzx);
+								memzy.emplace_back(localzy);
+								memzz.emplace_back(localzz);
+								membx.emplace_back(0);
+								memby.emplace_back(0);
+								membz.emplace_back(0);
+								memv.emplace_back(0);
+								memr.emplace_back(1);
+								mem++;
+								break; }
+							case '[': {
+								PTSTR num = (PTSTR)calloc(100, sizeof(TCHAR));
+								while (outText[i] != 'c' && i < olen) {
+									i++;
+									switch (outText[i]) {
+									case '-':
+										lstrcat(num, TEXT("-"));
+										break;
+									case '.':
+										lstrcat(num, TEXT("."));
+										break;
+									case '1':
+										lstrcat(num, TEXT("1"));
+										break;
+									case '2':
+										lstrcat(num, TEXT("2"));
+										break;
+									case '3':
+										lstrcat(num, TEXT("3"));
+										break;
+									case '4':
+										lstrcat(num, TEXT("4"));
+										break;
+									case '5':
+										lstrcat(num, TEXT("5"));
+										break;
+									case '6':
+										lstrcat(num, TEXT("6"));
+										break;
+									case '7':
+										lstrcat(num, TEXT("7"));
+										break;
+									case '8':
+										lstrcat(num, TEXT("8"));
+										break;
+									case '9':
+										lstrcat(num, TEXT("9"));
+										break;
+									case '0':
+										lstrcat(num, TEXT("0"));
+										break;
+									}
+								}
+								meme.emplace_back(wcstod(num, NULL));
+								memx.emplace_back(x);
+								memy.emplace_back(y);
+								memz.emplace_back(z);
+								memxx.emplace_back(localxx);
+								memxy.emplace_back(localxy);
+								memxz.emplace_back(localxz);
+								memyx.emplace_back(localyx);
+								memyy.emplace_back(localyy);
+								memyz.emplace_back(localyz);
+								memzx.emplace_back(localzx);
+								memzy.emplace_back(localzy);
+								memzz.emplace_back(localzz);
+								membx.emplace_back(0);
+								memby.emplace_back(0);
+								membz.emplace_back(0);
+								memv.emplace_back(0);
+								memr.emplace_back(1);
+								mem++;
 								break;
 							}
-						}
-						double c = wcstod(num, NULL);std::free(num);
+							case 'l': {
 
-					
+								PTSTR num = (PTSTR)calloc(100, sizeof(TCHAR));
+								while (outText[i] != ',' && i < olen) {
+									i++;
+									switch (outText[i]) {
+									case '-':
+										lstrcat(num, TEXT("-"));
+										break;
+									case '.':
+										lstrcat(num, TEXT("."));
+										break;
+									case '1':
+										lstrcat(num, TEXT("1"));
+										break;
+									case '2':
+										lstrcat(num, TEXT("2"));
+										break;
+									case '3':
+										lstrcat(num, TEXT("3"));
+										break;
+									case '4':
+										lstrcat(num, TEXT("4"));
+										break;
+									case '5':
+										lstrcat(num, TEXT("5"));
+										break;
+									case '6':
+										lstrcat(num, TEXT("6"));
+										break;
+									case '7':
+										lstrcat(num, TEXT("7"));
+										break;
+									case '8':
+										lstrcat(num, TEXT("8"));
+										break;
+									case '9':
+										lstrcat(num, TEXT("9"));
+										break;
+									case '0':
+										lstrcat(num, TEXT("0"));
+										break;
+									}
+								}
+								double c2 = wcstod(num, NULL); std::free(num);
+								num = (PTSTR)calloc(100, sizeof(TCHAR));
+								while (outText[i] != 'c' && i < olen) {
+									i++;
+									switch (outText[i]) {
+									case '-':
+										lstrcat(num, TEXT("-"));
+										break;
+									case '.':
+										lstrcat(num, TEXT("."));
+										break;
+									case '1':
+										lstrcat(num, TEXT("1"));
+										break;
+									case '2':
+										lstrcat(num, TEXT("2"));
+										break;
+									case '3':
+										lstrcat(num, TEXT("3"));
+										break;
+									case '4':
+										lstrcat(num, TEXT("4"));
+										break;
+									case '5':
+										lstrcat(num, TEXT("5"));
+										break;
+									case '6':
+										lstrcat(num, TEXT("6"));
+										break;
+									case '7':
+										lstrcat(num, TEXT("7"));
+										break;
+									case '8':
+										lstrcat(num, TEXT("8"));
+										break;
+									case '9':
+										lstrcat(num, TEXT("9"));
+										break;
+									case '0':
+										lstrcat(num, TEXT("0"));
+										break;
+									}
+								}
+								double c = wcstod(num, NULL); std::free(num);
 
-							if (d % 2) {
-							//ポリゴン
-							if (memr[mem]) {
-								membx[mem] = x;
-								memby[mem] = y;
-								membz[mem] = z;
-								//最初p+z
-								vx.emplace_back(membx[mem] + (localzx * c2 * r * fracrate));
-								vy.emplace_back(memby[mem] + (localzy * c2 * r * fracrate));
-								vz.emplace_back(membz[mem] + (localzz * c2 * r * fracrate));
-								vnum++;
-								//最終p+z60do
-								for (int i = 0; i < meme[mem] - 1; ++i) {
-									localrotate(localzx, localzy, localzz, M_PI / (meme[mem] / 2), localyx, localyy, localyz, &localzx, &localzy, &localzz);
-									vx.emplace_back(membx[mem] + (localzx * c2 * r * fracrate));
-									vy.emplace_back(memby[mem] + (localzy * c2 * r * fracrate));
-									vz.emplace_back(membz[mem] + (localzz * c2 * r * fracrate));
+
+
+								if (d % 2) {
+									//ポリゴン
+									if (memr[mem]) {
+										membx[mem] = x;
+										memby[mem] = y;
+										membz[mem] = z;
+										//最初p+z
+										vx.emplace_back(membx[mem] + (localzx * c2 * r * fracrate));
+										vy.emplace_back(memby[mem] + (localzy * c2 * r * fracrate));
+										vz.emplace_back(membz[mem] + (localzz * c2 * r * fracrate));
+										vnum++;
+										//最終p+z60do
+										for (int i = 0; i < meme[mem] - 1; ++i) {
+											localrotate(localzx, localzy, localzz, M_PI / (meme[mem] / 2), localyx, localyy, localyz, &localzx, &localzy, &localzz);
+											vx.emplace_back(membx[mem] + (localzx * c2 * r * fracrate));
+											vy.emplace_back(memby[mem] + (localzy * c2 * r * fracrate));
+											vz.emplace_back(membz[mem] + (localzz * c2 * r * fracrate));
+											vnum++;
+										}
+										localrotate(localzx, localzy, localzz, -M_PI / (meme[mem] / 2) * (meme[mem] - 1), localyx, localyy, localyz, &localzx, &localzy, &localzz);
+
+										for (int i = 0; i < memv.size() - 1; ++i)
+											memv[i] += meme[mem];
+										memr[mem] = false;
+									}
+
+									//最終p
+									vx.emplace_back(x + fow * c * localyx * fracrate);
+									vy.emplace_back(y + fow * c * localyy * fracrate);
+									vz.emplace_back(z + fow * c * localyz * fracrate);
+									vnum++;
+									for (int i = 0; i < memv.size() - 1; ++i)
+										memv[i] += 1;
+									for (int i = 0; i < meme[mem] - 1; ++i) {
+										m.emplace_back(1);
+										p.emplace_back(vnum - 1);
+										pnum++;
+										p.emplace_back(vnum - (i + 2) - memv[mem]);
+										pnum++;
+										p.emplace_back(vnum - (i + 3) - memv[mem]);
+										pnum++;
+										uv.emplace_back(0.5);
+										uv.emplace_back(1);
+										uv.emplace_back(0);
+										uv.emplace_back(0);
+										uv.emplace_back(1);
+										uv.emplace_back(0);
+									}
+									m.emplace_back(1);
+									p.emplace_back(vnum - 1);
+									pnum++;
+									p.emplace_back(vnum - (1 + meme[mem]) - memv[mem]);
+									pnum++;
+									p.emplace_back(vnum - 2 - memv[mem]);
+									pnum++;
+									uv.emplace_back(-0.5);
+									uv.emplace_back(1);
+									uv.emplace_back(0);
+									uv.emplace_back(0);
+									uv.emplace_back(-1);
+									uv.emplace_back(0);
+								}
+								else {
+
+									vx.emplace_back(x + fow * c * localyx * fracrate);
+									vy.emplace_back(y + fow * c * localyy * fracrate);
+									vz.emplace_back(z + fow * c * localyz * fracrate);
+									vnum++;
+
+									vx.emplace_back(x);
+									vy.emplace_back(y);
+									vz.emplace_back(z);
 									vnum++;
 								}
-								localrotate(localzx, localzy, localzz, -M_PI / (meme[mem] / 2) * (meme[mem] - 1), localyx, localyy, localyz, &localzx, &localzy, &localzz);
 
-								for (int i = 0; i < memv.size() - 1; ++i)
-									memv[i] += meme[mem];
-								memr[mem] = false;
-							}
+								if (mem > 0) {
+									x = memx[mem - 1];
+									y = memy[mem - 1];
+									z = memz[mem - 1];
+									localxx = memxx[mem - 1];
+									localxy = memxy[mem - 1];
+									localxz = memxz[mem - 1];
+									localyx = memyx[mem - 1];
+									localyy = memyy[mem - 1];
+									localyz = memyz[mem - 1];
+									localzx = memzx[mem - 1];
+									localzy = memzy[mem - 1];
+									localzz = memzz[mem - 1];
+									memx.pop_back();
+									memy.pop_back();
+									memz.pop_back();
+									memxx.pop_back();
+									memxy.pop_back();
+									memxz.pop_back();
+									memyx.pop_back();
+									memyy.pop_back();
+									memyz.pop_back();
+									memzx.pop_back();
+									memzy.pop_back();
+									memzz.pop_back();
+									membx.pop_back();
+									memby.pop_back();
+									membz.pop_back();
+									memv.pop_back();
+									memr.pop_back();
+									meme.pop_back();
+									mem--;
+								}
+								break; }
+							case ']': {
 
-							//最終p
-							vx.emplace_back(x + fow * c * localyx * fracrate);
-							vy.emplace_back(y + fow * c * localyy * fracrate);
-							vz.emplace_back(z + fow * c * localyz * fracrate);
-							vnum++;
-							for (int i = 0; i < memv.size() - 1; ++i)
-								memv[i] += 1;
-							for (int i = 0; i < meme[mem] - 1; ++i) {
-								m.emplace_back(1);
-								p.emplace_back(vnum - 1);
-								pnum++;
-								p.emplace_back(vnum - (i + 2) - memv[mem]);
-								pnum++;
-								p.emplace_back(vnum - (i + 3) - memv[mem]);
-								pnum++;
-								uv.emplace_back(0.5);
-								uv.emplace_back(1);
-								uv.emplace_back(0);
-								uv.emplace_back(0);
-								uv.emplace_back(1);
-								uv.emplace_back(0);
-							}
-							m.emplace_back(1);
-							p.emplace_back(vnum - 1);
-							pnum++;
-							p.emplace_back(vnum - (1 + meme[mem]) - memv[mem]);
-							pnum++;
-							p.emplace_back(vnum - 2 - memv[mem]);
-							pnum++;
-							uv.emplace_back(-0.5);
-							uv.emplace_back(1);
-							uv.emplace_back(0);
-							uv.emplace_back(0);
-							uv.emplace_back(-1);
-							uv.emplace_back(0);
-						}
-						else {
+								PTSTR num = (PTSTR)calloc(100, sizeof(TCHAR));
+								while (outText[i] != ',' && i < olen) {
+									i++;
+									switch (outText[i]) {
+									case '-':
+										lstrcat(num, TEXT("-"));
+										break;
+									case '.':
+										lstrcat(num, TEXT("."));
+										break;
+									case '1':
+										lstrcat(num, TEXT("1"));
+										break;
+									case '2':
+										lstrcat(num, TEXT("2"));
+										break;
+									case '3':
+										lstrcat(num, TEXT("3"));
+										break;
+									case '4':
+										lstrcat(num, TEXT("4"));
+										break;
+									case '5':
+										lstrcat(num, TEXT("5"));
+										break;
+									case '6':
+										lstrcat(num, TEXT("6"));
+										break;
+									case '7':
+										lstrcat(num, TEXT("7"));
+										break;
+									case '8':
+										lstrcat(num, TEXT("8"));
+										break;
+									case '9':
+										lstrcat(num, TEXT("9"));
+										break;
+									case '0':
+										lstrcat(num, TEXT("0"));
+										break;
+									}
+								}
+								double c2 = wcstod(num, NULL); std::free(num);
+								num = (PTSTR)calloc(100, sizeof(TCHAR));
+								while (outText[i] != 'c' && i < olen) {
+									i++;
+									switch (outText[i]) {
+									case '-':
+										lstrcat(num, TEXT("-"));
+										break;
+									case '.':
+										lstrcat(num, TEXT("."));
+										break;
+									case '1':
+										lstrcat(num, TEXT("1"));
+										break;
+									case '2':
+										lstrcat(num, TEXT("2"));
+										break;
+									case '3':
+										lstrcat(num, TEXT("3"));
+										break;
+									case '4':
+										lstrcat(num, TEXT("4"));
+										break;
+									case '5':
+										lstrcat(num, TEXT("5"));
+										break;
+									case '6':
+										lstrcat(num, TEXT("6"));
+										break;
+									case '7':
+										lstrcat(num, TEXT("7"));
+										break;
+									case '8':
+										lstrcat(num, TEXT("8"));
+										break;
+									case '9':
+										lstrcat(num, TEXT("9"));
+										break;
+									case '0':
+										lstrcat(num, TEXT("0"));
+										break;
+									}
+								}
+								double c = wcstod(num, NULL); std::free(num);
 
-							vx.emplace_back(x + fow * c * localyx * fracrate);
-							vy.emplace_back(y + fow * c * localyy * fracrate);
-							vz.emplace_back(z + fow * c * localyz * fracrate);
-							vnum++;
 
-							vx.emplace_back(x);
-							vy.emplace_back(y);
-							vz.emplace_back(z);
-							vnum++;
-						}
 
-						if (mem > 0) {
-							x = memx[mem - 1];
-							y = memy[mem - 1];
-							z = memz[mem - 1];
-							localxx = memxx[mem - 1];
-							localxy = memxy[mem - 1];
-							localxz = memxz[mem - 1];
-							localyx = memyx[mem - 1];
-							localyy = memyy[mem - 1];
-							localyz = memyz[mem - 1];
-							localzx = memzx[mem - 1];
-							localzy = memzy[mem - 1];
-							localzz = memzz[mem - 1];
-							memx.pop_back();
-							memy.pop_back();
-							memz.pop_back();
-							memxx.pop_back();
-							memxy.pop_back();
-							memxz.pop_back();
-							memyx.pop_back();
-							memyy.pop_back();
-							memyz.pop_back();
-							memzx.pop_back();
-							memzy.pop_back();
-							memzz.pop_back();
-							membx.pop_back();
-							memby.pop_back();
-							membz.pop_back();
-							memv.pop_back();
-							memr.pop_back();
-							meme.pop_back();
-							mem--;
-						}
-						break; }
-					case ']': {
-					
-						PTSTR num = (PTSTR)calloc(100, sizeof(TCHAR));
-						while (outText[i] != ',' && i < olen) {
-							i++;
-							switch (outText[i]) {
-							case '-':
-								lstrcat(num, TEXT("-"));
-								break;
-							case '.':
-								lstrcat(num, TEXT("."));
-								break;
-							case '1':
-								lstrcat(num, TEXT("1"));
-								break;
-							case '2':
-								lstrcat(num, TEXT("2"));
-								break;
-							case '3':
-								lstrcat(num, TEXT("3"));
-								break;
-							case '4':
-								lstrcat(num, TEXT("4"));
-								break;
-							case '5':
-								lstrcat(num, TEXT("5"));
-								break;
-							case '6':
-								lstrcat(num, TEXT("6"));
-								break;
-							case '7':
-								lstrcat(num, TEXT("7"));
-								break;
-							case '8':
-								lstrcat(num, TEXT("8"));
-								break;
-							case '9':
-								lstrcat(num, TEXT("9"));
-								break;
-							case '0':
-								lstrcat(num, TEXT("0"));
-								break;
-							}
-						}
-						double c2 = wcstod(num, NULL); std::free(num);
-						num = (PTSTR)calloc(100, sizeof(TCHAR));
-						while (outText[i] != 'c' && i < olen) {
-							i++;
-							switch (outText[i]) {
-							case '-':
-								lstrcat(num, TEXT("-"));
-								break;
-							case '.':
-								lstrcat(num, TEXT("."));
-								break;
-							case '1':
-								lstrcat(num, TEXT("1"));
-								break;
-							case '2':
-								lstrcat(num, TEXT("2"));
-								break;
-							case '3':
-								lstrcat(num, TEXT("3"));
-								break;
-							case '4':
-								lstrcat(num, TEXT("4"));
-								break;
-							case '5':
-								lstrcat(num, TEXT("5"));
-								break;
-							case '6':
-								lstrcat(num, TEXT("6"));
-								break;
-							case '7':
-								lstrcat(num, TEXT("7"));
-								break;
-							case '8':
-								lstrcat(num, TEXT("8"));
-								break;
-							case '9':
-								lstrcat(num, TEXT("9"));
-								break;
-							case '0':
-								lstrcat(num, TEXT("0"));
-								break;
-							}
-						}
-						double c = wcstod(num, NULL);std::free(num);
+								if (d % 2) {
+									//ポリゴン
+									if (memr[mem]) {
+										membx[mem] = x;
+										memby[mem] = y;
+										membz[mem] = z;
+										//最初p+z
+										vx.emplace_back(membx[mem] + (localzx * c2 * r * fracrate));
+										vy.emplace_back(memby[mem] + (localzy * c2 * r * fracrate));
+										vz.emplace_back(membz[mem] + (localzz * c2 * r * fracrate));
+										vnum++;
+										//最終p+z60do
+										for (int i = 0; i < meme[mem] - 1; ++i) {
+											localrotate(localzx, localzy, localzz, M_PI / (meme[mem] / 2), localyx, localyy, localyz, &localzx, &localzy, &localzz);
+											vx.emplace_back(membx[mem] + (localzx * c2 * r * fracrate));
+											vy.emplace_back(memby[mem] + (localzy * c2 * r * fracrate));
+											vz.emplace_back(membz[mem] + (localzz * c2 * r * fracrate));
+											vnum++;
+										}
+										localrotate(localzx, localzy, localzz, -M_PI / (meme[mem] / 2) * (meme[mem] - 1), localyx, localyy, localyz, &localzx, &localzy, &localzz);
 
-					
+										for (int i = 0; i < memv.size() - 1; ++i)
+											memv[i] += meme[mem];
+										memr[mem] = false;
+									}
 
-							if (d % 2) {
-							//ポリゴン
-							if (memr[mem]) {
-								membx[mem] = x;
-								memby[mem] = y;
-								membz[mem] = z;
-								//最初p+z
-								vx.emplace_back(membx[mem] + (localzx * c2 * r * fracrate));
-								vy.emplace_back(memby[mem] + (localzy * c2 * r * fracrate));
-								vz.emplace_back(membz[mem] + (localzz * c2 * r * fracrate));
-								vnum++;
-								//最終p+z60do
-								for (int i = 0; i < meme[mem] - 1; ++i) {
-									localrotate(localzx, localzy, localzz, M_PI / (meme[mem] / 2), localyx, localyy, localyz, &localzx, &localzy, &localzz);
-									vx.emplace_back(membx[mem] + (localzx * c2 * r * fracrate));
-									vy.emplace_back(memby[mem] + (localzy * c2 * r * fracrate));
-									vz.emplace_back(membz[mem] + (localzz * c2 * r * fracrate));
+									//最終p
+									vx.emplace_back(x + fow * c * localyx * fracrate);
+									vy.emplace_back(y + fow * c * localyy * fracrate);
+									vz.emplace_back(z + fow * c * localyz * fracrate);
+									vnum++;
+									for (int i = 0; i < memv.size() - 1; ++i)
+										memv[i] += 1;
+									for (int i = 0; i < meme[mem] - 1; ++i) {
+										m.emplace_back(0);
+										p.emplace_back(vnum - 1);
+										pnum++;
+										p.emplace_back(vnum - (i + 2) - memv[mem]);
+										pnum++;
+										p.emplace_back(vnum - (i + 3) - memv[mem]);
+										pnum++;
+										uv.emplace_back((i + 0.5) / meme[mem]);
+										uv.emplace_back(1);
+										uv.emplace_back(i / meme[mem]);
+										uv.emplace_back(0);
+										uv.emplace_back((i + 1) / meme[mem]);
+										uv.emplace_back(0);
+									}
+									m.emplace_back(0);
+									p.emplace_back(vnum - 1);
+									pnum++;
+									p.emplace_back(vnum - (1 + meme[mem]) - memv[mem]);
+									pnum++;
+									p.emplace_back(vnum - 2 - memv[mem]);
+									pnum++;
+									uv.emplace_back((meme[mem] - 1 + 0.5) / meme[mem]);
+									uv.emplace_back(1);
+									uv.emplace_back((meme[mem] - 1) / meme[mem]);
+									uv.emplace_back(0);
+									uv.emplace_back(1);
+									uv.emplace_back(0);
+								}
+								else {
+
+									vx.emplace_back(x + fow * c * localyx * fracrate);
+									vy.emplace_back(y + fow * c * localyy * fracrate);
+									vz.emplace_back(z + fow * c * localyz * fracrate);
+									vnum++;
+
+									vx.emplace_back(x);
+									vy.emplace_back(y);
+									vz.emplace_back(z);
 									vnum++;
 								}
-								localrotate(localzx, localzy, localzz, -M_PI / (meme[mem] / 2) * (meme[mem] - 1), localyx, localyy, localyz, &localzx, &localzy, &localzz);
-
-								for (int i = 0; i < memv.size() - 1; ++i)
-									memv[i] += meme[mem];
-								memr[mem] = false;
+								if (mem > 0) {
+									x = memx[mem - 1];
+									y = memy[mem - 1];
+									z = memz[mem - 1];
+									localxx = memxx[mem - 1];
+									localxy = memxy[mem - 1];
+									localxz = memxz[mem - 1];
+									localyx = memyx[mem - 1];
+									localyy = memyy[mem - 1];
+									localyz = memyz[mem - 1];
+									localzx = memzx[mem - 1];
+									localzy = memzy[mem - 1];
+									localzz = memzz[mem - 1];
+									memx.pop_back();
+									memy.pop_back();
+									memz.pop_back();
+									memxx.pop_back();
+									memxy.pop_back();
+									memxz.pop_back();
+									memyx.pop_back();
+									memyy.pop_back();
+									memyz.pop_back();
+									memzx.pop_back();
+									memzy.pop_back();
+									memzz.pop_back();
+									membx.pop_back();
+									memby.pop_back();
+									membz.pop_back();
+									memv.pop_back();
+									memr.pop_back();
+									meme.pop_back();
+									mem--;
+								}
+								break;
 							}
+							case 'z': {
 
-							//最終p
-							vx.emplace_back(x + fow * c * localyx * fracrate);
-							vy.emplace_back(y + fow * c * localyy * fracrate);
-							vz.emplace_back(z + fow * c * localyz * fracrate);
-							vnum++;
-							for (int i = 0; i < memv.size() - 1; ++i)
-								memv[i] += 1;
-							for (int i = 0; i < meme[mem] - 1; ++i) {
-								m.emplace_back(0);
-								p.emplace_back(vnum - 1);
-								pnum++;
-								p.emplace_back(vnum - (i + 2) - memv[mem]);
-								pnum++;
-								p.emplace_back(vnum - (i + 3) - memv[mem]);
-								pnum++;
-								uv.emplace_back((i+0.5) / meme[mem]);
-								uv.emplace_back(1);
-								uv.emplace_back(i / meme[mem]);
-								uv.emplace_back(0);
-								uv.emplace_back((i + 1) / meme[mem]);
-								uv.emplace_back(0);
+								PTSTR num = (PTSTR)calloc(100, sizeof(TCHAR));
+								while (outText[i] != 'c' && i < olen) {
+									i++;
+									switch (outText[i]) {
+									case '-':
+										lstrcat(num, TEXT("-"));
+										break;
+									case '.':
+										lstrcat(num, TEXT("."));
+										break;
+									case '1':
+										lstrcat(num, TEXT("1"));
+										break;
+									case '2':
+										lstrcat(num, TEXT("2"));
+										break;
+									case '3':
+										lstrcat(num, TEXT("3"));
+										break;
+									case '4':
+										lstrcat(num, TEXT("4"));
+										break;
+									case '5':
+										lstrcat(num, TEXT("5"));
+										break;
+									case '6':
+										lstrcat(num, TEXT("6"));
+										break;
+									case '7':
+										lstrcat(num, TEXT("7"));
+										break;
+									case '8':
+										lstrcat(num, TEXT("8"));
+										break;
+									case '9':
+										lstrcat(num, TEXT("9"));
+										break;
+									case '0':
+										lstrcat(num, TEXT("0"));
+										break;
+									}
+								}
+								double c = wcstod(num, NULL); std::free(num);
+
+								localrotate(localxx, localxy, localxz, rotarg * c / 180.0 * M_PI, localzx, localzy, localzz, &localxx, &localxy, &localxz);
+								localrotate(localyx, localyy, localyz, rotarg * c / 180.0 * M_PI, localzx, localzy, localzz, &localyx, &localyy, &localyz);
+								localrotate(localzx, localzy, localzz, rotarg * c / 180.0 * M_PI, localzx, localzy, localzz, &localzx, &localzy, &localzz);
+								break;
 							}
-							m.emplace_back(0);
-							p.emplace_back(vnum - 1);
-							pnum++;
-							p.emplace_back(vnum - (1+meme[mem]) - memv[mem]);
-							pnum++;
-							p.emplace_back(vnum - 2 - memv[mem]);
-							pnum++;
-							uv.emplace_back((meme[mem] - 1 + 0.5) / meme[mem]);
-							uv.emplace_back(1);
-							uv.emplace_back((meme[mem] - 1) / meme[mem]);
-							uv.emplace_back(0);
-							uv.emplace_back(1);
-							uv.emplace_back(0);
+							case 'y': {
+								PTSTR num = (PTSTR)calloc(100, sizeof(TCHAR));
+								while (outText[i] != 'c' && i < olen) {
+									i++;
+									switch (outText[i]) {
+									case '-':
+										lstrcat(num, TEXT("-"));
+										break;
+									case '.':
+										lstrcat(num, TEXT("."));
+										break;
+									case '1':
+										lstrcat(num, TEXT("1"));
+										break;
+									case '2':
+										lstrcat(num, TEXT("2"));
+										break;
+									case '3':
+										lstrcat(num, TEXT("3"));
+										break;
+									case '4':
+										lstrcat(num, TEXT("4"));
+										break;
+									case '5':
+										lstrcat(num, TEXT("5"));
+										break;
+									case '6':
+										lstrcat(num, TEXT("6"));
+										break;
+									case '7':
+										lstrcat(num, TEXT("7"));
+										break;
+									case '8':
+										lstrcat(num, TEXT("8"));
+										break;
+									case '9':
+										lstrcat(num, TEXT("9"));
+										break;
+									case '0':
+										lstrcat(num, TEXT("0"));
+										break;
+									}
+								}
+								double c = wcstod(num, NULL); std::free(num);
+
+								localrotate(localxx, localxy, localxz, rotarg * c / 180.0 * M_PI, localyx, localyy, localyz, &localxx, &localxy, &localxz);
+								localrotate(localzx, localzy, localzz, rotarg * c / 180.0 * M_PI, localyx, localyy, localyz, &localzx, &localzy, &localzz);
+								localrotate(localyx, localyy, localyz, rotarg * c / 180.0 * M_PI, localyx, localyy, localyz, &localyx, &localyy, &localyz);
+								break;
+							}
+							case 'x': {
+								PTSTR num = (PTSTR)calloc(100, sizeof(TCHAR));
+								while (outText[i] != 'c' && i < olen) {
+									i++;
+									switch (outText[i]) {
+									case '-':
+										lstrcat(num, TEXT("-"));
+										break;
+									case '.':
+										lstrcat(num, TEXT("."));
+										break;
+									case '1':
+										lstrcat(num, TEXT("1"));
+										break;
+									case '2':
+										lstrcat(num, TEXT("2"));
+										break;
+									case '3':
+										lstrcat(num, TEXT("3"));
+										break;
+									case '4':
+										lstrcat(num, TEXT("4"));
+										break;
+									case '5':
+										lstrcat(num, TEXT("5"));
+										break;
+									case '6':
+										lstrcat(num, TEXT("6"));
+										break;
+									case '7':
+										lstrcat(num, TEXT("7"));
+										break;
+									case '8':
+										lstrcat(num, TEXT("8"));
+										break;
+									case '9':
+										lstrcat(num, TEXT("9"));
+										break;
+									case '0':
+										lstrcat(num, TEXT("0"));
+										break;
+									}
+								}
+								double c = wcstod(num, NULL); std::free(num);
+
+								localrotate(localyx, localyy, localyz, rotarg * c / 180.0 * M_PI, localxx, localxy, localxz, &localyx, &localyy, &localyz);
+								localrotate(localzx, localzy, localzz, rotarg * c / 180.0 * M_PI, localxx, localxy, localxz, &localzx, &localzy, &localzz);
+								localrotate(localxx, localxy, localxz, rotarg * c / 180.0 * M_PI, localxx, localxy, localxz, &localxx, &localxy, &localxz);
+								break; }
+							}
+						}
+					}
+					if ((HWND)lp == edit[0] || (HWND)lp == edit[1] || (HWND)lp == edit[2] || (HWND)lp == edit[3] || (HWND)lp == edit[4] || (HWND)lp == edit[5] || (HWND)lp == edit[6] || (HWND)lp == edit[7] || (HWND)lp == edit[8] || (HWND)lp == edit[9] || (HWND)lp == edit[10] || (HWND)lp == edit[11] || (HWND)lp == edit[12] || (HWND)lp == edit[13] || (HWND)lp == edit[14] || (HWND)lp == edit[15])
+					{
+						if (SendMessage(edit[13], TBM_GETPOS, 0, 0) == 0 || SendMessage(edit[13], TBM_GETPOS, 0, 0) == 1) {
+							InvalidateRect(hwnd, NULL, TRUE);
+							SendMessage(hwnd, WM_PAINT, 0, 0);
 						}
 						else {
 
-							vx.emplace_back(x + fow * c * localyx * fracrate);
-							vy.emplace_back(y + fow * c * localyy * fracrate);
-							vz.emplace_back(z + fow * c * localyz * fracrate);
-							vnum++;
+						}
+					}
 
-							vx.emplace_back(x);
-							vy.emplace_back(y);
-							vz.emplace_back(z);
-							vnum++;
-						}
-						if (mem > 0) {
-							x = memx[mem - 1];
-							y = memy[mem - 1];
-							z = memz[mem - 1];
-							localxx = memxx[mem - 1];
-							localxy = memxy[mem - 1];
-							localxz = memxz[mem - 1];
-							localyx = memyx[mem - 1];
-							localyy = memyy[mem - 1];
-							localyz = memyz[mem - 1];
-							localzx = memzx[mem - 1];
-							localzy = memzy[mem - 1];
-							localzz = memzz[mem - 1];
-							memx.pop_back();
-							memy.pop_back();
-							memz.pop_back();
-							memxx.pop_back();
-							memxy.pop_back();
-							memxz.pop_back();
-							memyx.pop_back();
-							memyy.pop_back();
-							memyz.pop_back();
-							memzx.pop_back();
-							memzy.pop_back();
-							memzz.pop_back();
-							membx.pop_back();
-							memby.pop_back();
-							membz.pop_back();
-							memv.pop_back();
-							memr.pop_back();
-							meme.pop_back();
-							mem--;
-						}
-						break;
-					}
-					case 'z': {
-					
-						PTSTR num = (PTSTR)calloc(100, sizeof(TCHAR));
-						while (outText[i] != 'c' && i < olen) {
-							i++;
-							switch (outText[i]) {
-							case '-':
-								lstrcat(num, TEXT("-"));
-								break;
-							case '.':
-								lstrcat(num, TEXT("."));
-								break;
-							case '1':
-								lstrcat(num, TEXT("1"));
-								break;
-							case '2':
-								lstrcat(num, TEXT("2"));
-								break;
-							case '3':
-								lstrcat(num, TEXT("3"));
-								break;
-							case '4':
-								lstrcat(num, TEXT("4"));
-								break;
-							case '5':
-								lstrcat(num, TEXT("5"));
-								break;
-							case '6':
-								lstrcat(num, TEXT("6"));
-								break;
-							case '7':
-								lstrcat(num, TEXT("7"));
-								break;
-							case '8':
-								lstrcat(num, TEXT("8"));
-								break;
-							case '9':
-								lstrcat(num, TEXT("9"));
-								break;
-							case '0':
-								lstrcat(num, TEXT("0"));
-								break;
-							}
-						}
-						double c = wcstod(num, NULL);std::free(num);
-					
-						localrotate(localxx, localxy, localxz, rotarg * c / 180.0 * M_PI, localzx, localzy, localzz, &localxx, &localxy, &localxz);
-						localrotate(localyx, localyy, localyz, rotarg * c / 180.0 * M_PI, localzx, localzy, localzz, &localyx, &localyy, &localyz);
-						localrotate(localzx, localzy, localzz, rotarg * c / 180.0 * M_PI, localzx, localzy, localzz, &localzx, &localzy, &localzz);
-						break;
-					}
-					case 'y': {
-						PTSTR num = (PTSTR)calloc(100, sizeof(TCHAR));
-						while (outText[i] != 'c' && i < olen) {
-							i++;
-							switch (outText[i]) {
-							case '-':
-								lstrcat(num, TEXT("-"));
-								break;
-							case '.':
-								lstrcat(num, TEXT("."));
-								break;
-							case '1':
-								lstrcat(num, TEXT("1"));
-								break;
-							case '2':
-								lstrcat(num, TEXT("2"));
-								break;
-							case '3':
-								lstrcat(num, TEXT("3"));
-								break;
-							case '4':
-								lstrcat(num, TEXT("4"));
-								break;
-							case '5':
-								lstrcat(num, TEXT("5"));
-								break;
-							case '6':
-								lstrcat(num, TEXT("6"));
-								break;
-							case '7':
-								lstrcat(num, TEXT("7"));
-								break;
-							case '8':
-								lstrcat(num, TEXT("8"));
-								break;
-							case '9':
-								lstrcat(num, TEXT("9"));
-								break;
-							case '0':
-								lstrcat(num, TEXT("0"));
-								break;
-							}
-						}
-						double c = wcstod(num, NULL);std::free(num);
-					
-						localrotate(localxx, localxy, localxz, rotarg * c / 180.0 * M_PI, localyx, localyy, localyz, &localxx, &localxy, &localxz);
-						localrotate(localzx, localzy, localzz, rotarg * c / 180.0 * M_PI, localyx, localyy, localyz, &localzx, &localzy, &localzz);
-						localrotate(localyx, localyy, localyz, rotarg * c / 180.0 * M_PI, localyx, localyy, localyz, &localyx, &localyy, &localyz);
-						break;
-					}
-					case 'x': {
-						PTSTR num = (PTSTR)calloc(100, sizeof(TCHAR));
-						while (outText[i] != 'c' && i < olen) {
-							i++;
-							switch (outText[i]) {
-							case '-':
-								lstrcat(num, TEXT("-"));
-								break;
-							case '.':
-								lstrcat(num, TEXT("."));
-								break;
-							case '1':
-								lstrcat(num, TEXT("1"));
-								break;
-							case '2':
-								lstrcat(num, TEXT("2"));
-								break;
-							case '3':
-								lstrcat(num, TEXT("3"));
-								break;
-							case '4':
-								lstrcat(num, TEXT("4"));
-								break;
-							case '5':
-								lstrcat(num, TEXT("5"));
-								break;
-							case '6':
-								lstrcat(num, TEXT("6"));
-								break;
-							case '7':
-								lstrcat(num, TEXT("7"));
-								break;
-							case '8':
-								lstrcat(num, TEXT("8"));
-								break;
-							case '9':
-								lstrcat(num, TEXT("9"));
-								break;
-							case '0':
-								lstrcat(num, TEXT("0"));
-								break;
-							}
-						}
-						double c = wcstod(num, NULL);std::free(num);
-					
-						localrotate(localyx, localyy, localyz, rotarg * c / 180.0 * M_PI, localxx, localxy, localxz, &localyx, &localyy, &localyz);
-						localrotate(localzx, localzy, localzz, rotarg * c / 180.0 * M_PI, localxx, localxy, localxz, &localzx, &localzy, &localzz);
-						localrotate(localxx, localxy, localxz, rotarg * c / 180.0 * M_PI, localxx, localxy, localxz, &localxx, &localxy, &localxz);
-						break; }
-					}
 				}
 			}
-			if ((HWND)lp == edit[0] || (HWND)lp == edit[1] || (HWND)lp == edit[2] || (HWND)lp == edit[3] || (HWND)lp == edit[4] || (HWND)lp == edit[5] || (HWND)lp == edit[6] || (HWND)lp == edit[7] || (HWND)lp == edit[8] || (HWND)lp == edit[9] || (HWND)lp == edit[10] || (HWND)lp == edit[11] || (HWND)lp == edit[12] || (HWND)lp == edit[13] || (HWND)lp == edit[14] || (HWND)lp == edit[15])
-			{
-				if(SendMessage(edit[13], TBM_GETPOS, 0, 0) == 0 || SendMessage(edit[13], TBM_GETPOS, 0, 0) == 1){
-				InvalidateRect(hwnd, NULL, TRUE);
-				}
-				else {
-					SendMessage(hwnd , WM_PAINT , 0 , 0);
-				}
-			}
-			
-		}}
 		return 0;
 	case WM_PAINT: {
 		hdc = BeginPaint(hwnd, &ps);
@@ -1989,6 +2131,13 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 		TextOut(hdc, 200, 260, TEXT("type"), 4);
 		TextOut(hdc, 200, 280, TEXT("フラクタル比率"), 7);
 		TextOut(hdc, 200, 340, TEXT("manual input"), 12);
+		TextOut(hdc, 200, 360, TEXT("ヨコ"), 2);
+		TextOut(hdc, 200, 380, TEXT("タテ"), 2);
+		TextOut(hdc, 200, 420, TEXT("TEX/COLOR"), 6);
+		TextOut(hdc, 200, 440, TEXT("background_rgba"), 15);
+		TextOut(hdc, 200, 520, TEXT("tree_rgba"), 9);
+		TextOut(hdc, 200, 600, TEXT("leaf_rgba"), 9);
+		TextOut(hdc, 200, 680, TEXT("grid"), 4);
 		TextOut(hdc, 40, 300, outText, lstrlen(outText));
 		double defx = SendMessage(edit[3], TBM_GETPOS, 0, 0);
 		double defy = SendMessage(edit[4], TBM_GETPOS, 0, 0);
@@ -1999,8 +2148,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 		double  viewz = SendMessage(edit[9], TBM_GETPOS, 0, 0);
 		int d = SendMessage(edit[13], TBM_GETPOS, 0, 0);
 		//メイン描画
-		PictureBox^ pictureBox1 = MainForm ::MyForm::pictureBox1;
-	    Bitmap^ bmpPicBox;
+		PictureBox^ pictureBox1 = MainForm::MyForm::pictureBox1;
+		Bitmap^ bmpPicBox;
 		Graphics^ g;
 		if (d == 2 || d == 3) {
 			delete(pictureBox1->Image);
@@ -2014,64 +2163,76 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 		if (d > 3) {
 			PIXELFORMATDESCRIPTOR pfd =
 			{
-				sizeof(PIXELFORMATDESCRIPTOR),   
-				1,                    
-				PFD_DRAW_TO_WINDOW |   
-				PFD_SUPPORT_OPENGL |  
-				PFD_DOUBLEBUFFER, 
-				PFD_TYPE_RGBA,       
-				32,                   
-				0, 0, 0, 0, 0, 0,     
-				0,                  
-				0,                    
-				0,                    
-				0, 0, 0, 0,          
-				32,                 
-				0,                     
-				0,                    
-				PFD_MAIN_PLANE,       
-				0,                    
-				0, 0, 0               
+				sizeof(PIXELFORMATDESCRIPTOR),
+				1,
+				PFD_DRAW_TO_WINDOW |
+				PFD_SUPPORT_OPENGL |
+				PFD_DOUBLEBUFFER,
+				PFD_TYPE_RGBA,
+				32,
+				0, 0, 0, 0, 0, 0,
+				0,
+				0,
+				0,
+				0, 0, 0, 0,
+				32,
+				0,
+				0,
+				PFD_MAIN_PLANE,
+				0,
+				0, 0, 0
 			};
 			oh = GetDC(((HWND)pictureBox1->Handle.ToInt32()));
 			int format = ChoosePixelFormat(oh, &pfd);
 			SetPixelFormat(oh, format, &pfd);
 			glRC = wglCreateContext(oh);
 			wglMakeCurrent(oh, glRC);
-			glClearColor(0.375f, 0.375f, 0.375f, 1.0f);
+			glClearColor(SendMessage(edit[22], TBM_GETPOS, 0, 0) / 256.0, SendMessage(edit[23], TBM_GETPOS, 0, 0) / 256.0, SendMessage(edit[24], TBM_GETPOS, 0, 0) / 256.0, SendMessage(edit[25], TBM_GETPOS, 0, 0) / 256.0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glEnable(GL_DEPTH_TEST);
-			glEnable(GL_ALPHA_TEST);
-		    glEnable(GL_LIGHTING);
-			glEnable(GL_LIGHT0);
+			if (!SendMessage(edit[21], TBM_GETPOS, 0, 0)) {
+				glEnable(GL_ALPHA_TEST);
+				glEnable(GL_LIGHTING);
+				glEnable(GL_LIGHT0);
+			}
 
 			if (d > 5) {
 				if (d > 7) {
-					glGenTextures(2, tex);
-					loadbmp(tex[0], "bmp.bmp");
-					loadbmp(tex[1], "bmp2.bmp");
+					if (!SendMessage(edit[21], TBM_GETPOS, 0, 0)) {
+						glGenTextures(2, tex);
+						loadbmp(tex[0], "bmp.bmp");
+						loadbmp(tex[1], "bmp2.bmp");
+					}
 				}
 				glViewport(0, 0, pictureBox1->Width, pictureBox1->Height);
 				glMatrixMode(GL_PROJECTION);
 				glLoadIdentity();
-				gluPerspective(60.0, (double)pictureBox1->Width / pictureBox1->Height, 1.0, 2000.0);		
+				gluPerspective(60.0, (double)pictureBox1->Width / pictureBox1->Height, 1.0, 2000.0);
 				glMatrixMode(GL_MODELVIEW);
 				glLoadIdentity();
-				gluLookAt(campx, campy, campz, campx+ campzx, campy+ campzy, campz+ campzz, 0.0, campyy, 0.0);
+				if (!cam)
+					gluLookAt(campx, campy, campz, campx + campzx, campy + campzy, campz + campzz, 0.0, campyy, 0.0);
+				else {
+					float ran= rand() % 360 / 360.0;
+					gluLookAt(200 * sin(ran * 2 * M_PI), 100, 200 * cos(ran * 2 * M_PI), 0, 100, 0, 0, 1, 0);
+					cam = false;
+				}
 			}
+
 		}
 
 		if (d > 5) {
-			glBegin(GL_LINES);	
-			glColor3d(1, 1, 1);
-			for (int x = -500; x <= 500; x += 10) {
-				glVertex3f(x, 0, 500);
-				glVertex3f(x, 0, -500);
-				glVertex3f(500, 0, x);
-				glVertex3f(-500, 0, x);
+			if (SendMessage(edit[34], TBM_GETPOS, 0, 0)) {
+				glBegin(GL_LINES);
+				glColor3d(1, 1, 1);
+				for (int x = -500; x <= 500; x += 10) {
+					glVertex3f(x, 0, 500);
+					glVertex3f(x, 0, -500);
+					glVertex3f(500, 0, x);
+					glVertex3f(-500, 0, x);
+				}
+				glEnd();
 			}
-			glEnd();
-			glEnable(GL_TEXTURE_2D);
 			if (d == 6) {
 				glBegin(GL_LINES);
 				for (int i = 0; i < vnum; i++) {
@@ -2080,18 +2241,25 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 				}
 			}
 			else {
+
+				glEnable(GL_TEXTURE_2D);
 				glBegin(GL_TRIANGLES);
-				
 				for (int i = 0; i < pnum; i++) {
 					if (d > 7) {
 						if (i % 3 == 0) {
 							glEnd();
-							if (m[i/3]) {
+							if (m[i / 3]) {
+								if (SendMessage(edit[21], TBM_GETPOS, 0, 0))
+									glColor4d(SendMessage(edit[30], TBM_GETPOS, 0, 0) / 256.0, SendMessage(edit[31], TBM_GETPOS, 0, 0) / 256.0, SendMessage(edit[32], TBM_GETPOS, 0, 0) / 256.0, SendMessage(edit[33], TBM_GETPOS, 0, 0) / 256.0);
+								else
 								glBindTexture(GL_TEXTURE_2D, tex[1]);
 							}
-							else{
+							else {
+								if (SendMessage(edit[21], TBM_GETPOS, 0, 0))
+									glColor4d(SendMessage(edit[27], TBM_GETPOS, 0, 0) / 256.0, SendMessage(edit[28], TBM_GETPOS, 0, 0) / 256.0, SendMessage(edit[29], TBM_GETPOS, 0, 0) / 256.0, SendMessage(edit[30], TBM_GETPOS, 0, 0) / 256.0);
+								else
 								glBindTexture(GL_TEXTURE_2D, tex[0]);
-						}
+							}
 							glBegin(GL_TRIANGLES);
 						}
 						glTexCoord2f(uv[i * 2], uv[i * 2 + 1]);
@@ -2100,17 +2268,18 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 						glColor3d(vx[p[i]] / 50, -vy[p[i]] / 50, vz[p[i]] / 50);
 					}
 					if (i % 3 == 0) {
-						double d =sqrt(((((vy[p[i]] - vy[p[i + 2]]) * (vz[p[i]] - vz[p[i + 1]])) - ((vz[p[i]] - vz[p[i + 2]]) * (vy[p[i]] - vy[p[i + 1]]))) * (((vy[p[i]] - vy[p[i + 2]]) * (vz[p[i]] - vz[p[i + 1]])) - ((vz[p[i]] - vz[p[i + 2]]) * (vy[p[i]] - vy[p[i + 1]]))))
-								+ ((((vz[p[i]] - vz[p[i + 2]]) * (vx[p[i]] - vx[p[i + 1]])) - ((vx[p[i]] - vx[p[i + 2]]) * (vz[p[i]] - vz[p[i + 1]]))) * (((vz[p[i]] - vz[p[i + 2]]) * (vx[p[i]] - vx[p[i + 1]])) - ((vx[p[i]] - vx[p[i + 2]]) * (vz[p[i]] - vz[p[i + 1]]))))
-								+ ((((vx[p[i]] - vx[p[i + 2]]) * (vy[p[i]] - vy[p[i + 1]])) - ((vy[p[i]] - vy[p[i + 2]]) * (vx[p[i]] - vx[p[i + 1]]))) * (((vx[p[i]] - vx[p[i + 2]]) * (vy[p[i]] - vy[p[i + 1]])) - ((vy[p[i]] - vy[p[i + 2]]) * (vx[p[i]] - vx[p[i + 1]])))));
-						glNormal3d((((vy[p[i]] - vy[p[i + 2]]) * (vz[p[i]] - vz[p[i + 1]])) - ((vz[p[i]] - vz[p[i + 2]]) * (vy[p[i]] - vy[p[i + 1]])))/d, 
-							(((vz[p[i]] - vz[p[i + 2]]) * (vx[p[i]] - vx[p[i + 1]])) - ((vx[p[i]] - vx[p[i + 2]]) * (vz[p[i]] - vz[p[i + 1]])))/d,
-							(((vx[p[i]] - vx[p[i + 2]]) * (vy[p[i]] - vy[p[i + 1]])) - ((vy[p[i]] - vy[p[i + 2]]) * (vx[p[i]] - vx[p[i + 1]])))/d);
+						double d = sqrt(((((vy[p[i]] - vy[p[i + 2]]) * (vz[p[i]] - vz[p[i + 1]])) - ((vz[p[i]] - vz[p[i + 2]]) * (vy[p[i]] - vy[p[i + 1]]))) * (((vy[p[i]] - vy[p[i + 2]]) * (vz[p[i]] - vz[p[i + 1]])) - ((vz[p[i]] - vz[p[i + 2]]) * (vy[p[i]] - vy[p[i + 1]]))))
+							+ ((((vz[p[i]] - vz[p[i + 2]]) * (vx[p[i]] - vx[p[i + 1]])) - ((vx[p[i]] - vx[p[i + 2]]) * (vz[p[i]] - vz[p[i + 1]]))) * (((vz[p[i]] - vz[p[i + 2]]) * (vx[p[i]] - vx[p[i + 1]])) - ((vx[p[i]] - vx[p[i + 2]]) * (vz[p[i]] - vz[p[i + 1]]))))
+							+ ((((vx[p[i]] - vx[p[i + 2]]) * (vy[p[i]] - vy[p[i + 1]])) - ((vy[p[i]] - vy[p[i + 2]]) * (vx[p[i]] - vx[p[i + 1]]))) * (((vx[p[i]] - vx[p[i + 2]]) * (vy[p[i]] - vy[p[i + 1]])) - ((vy[p[i]] - vy[p[i + 2]]) * (vx[p[i]] - vx[p[i + 1]])))));
+						glNormal3d((((vy[p[i]] - vy[p[i + 2]]) * (vz[p[i]] - vz[p[i + 1]])) - ((vz[p[i]] - vz[p[i + 2]]) * (vy[p[i]] - vy[p[i + 1]]))) / d,
+							(((vz[p[i]] - vz[p[i + 2]]) * (vx[p[i]] - vx[p[i + 1]])) - ((vx[p[i]] - vx[p[i + 2]]) * (vz[p[i]] - vz[p[i + 1]]))) / d,
+							(((vx[p[i]] - vx[p[i + 2]]) * (vy[p[i]] - vy[p[i + 1]])) - ((vy[p[i]] - vy[p[i + 2]]) * (vx[p[i]] - vx[p[i + 1]]))) / d);
 					}
 					glVertex3d(vx[p[i]], -vy[p[i]], vz[p[i]]);
-	
+
 				}
 			}
+			glEnd();
 		}
 		else
 			if (d % 2) {
@@ -2212,7 +2381,17 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 			}
 		//OGL  OWARI
 		if (d > 3) {
-			glDeleteTextures(2,tex);
+			GLubyte* pixel_data = (GLubyte*)malloc(pictureBox1->Width * pictureBox1->Height * 4 * (sizeof(GLubyte*)));
+			glReadPixels(
+				0, 0, pictureBox1->Width,
+				pictureBox1->Height,
+				GL_RGBA,
+				GL_UNSIGNED_BYTE,
+				pixel_data);
+			// ここでデータをビットマップファイルへ書き込む
+			savebmp("bmpout.bmp", pictureBox1->Width, pictureBox1->Height, pixel_data);
+			free(pixel_data);
+			glDeleteTextures(2, tex);
 			glEnd();
 			glFlush();
 			SwapBuffers(oh);
@@ -2220,7 +2399,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 			wglDeleteContext(glRC);
 			DeleteDC(oh);
 		}
-		if (d ==3||d==2) pictureBox1->Image = bmpPicBox;
+		if (d == 3 || d == 2) pictureBox1->Image = bmpPicBox;
 		delete(g);
 		EndPaint(hwnd, &ps);
 		ReleaseDC(hwnd, hdc); }
@@ -2231,11 +2410,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 		edit[0] = CreateWindow(
 			TEXT("EDIT"), TEXT("[5cf1c],25c"),
 			WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT,
-			0, 0, 100000, 20, hwnd, NULL,
+			0, 0, 100000000, 20, hwnd, NULL,
 			NULL, NULL
 		);
 		edit[1] = CreateWindow(TRACKBAR_CLASS, TEXT(""), WS_VISIBLE | WS_CHILD | TBS_AUTOTICKS | TBS_TOOLTIPS,
-			0, 20,200, 20, hwnd, NULL, NULL, NULL);
+			0, 20, 200, 20, hwnd, NULL, NULL, NULL);
 		SendMessage(edit[1], TBM_SETRANGE, TRUE, MAKELPARAM(0, 10));
 		SendMessage(edit[1], TBM_SETTICFREQ, 1, 0);
 		SendMessage(edit[1], TBM_SETPOS, TRUE, 3);
@@ -2329,16 +2508,118 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
 			0, 320, 100, 20,
 			hwnd, NULL, NULL, NULL
-		); 
+		);
 		edit[17] = CreateWindow(TRACKBAR_CLASS, TEXT(""), WS_VISIBLE | WS_CHILD | TBS_AUTOTICKS | TBS_TOOLTIPS,
 			0, 340, 200, 20, hwnd, NULL, NULL, NULL);
 		SendMessage(edit[17], TBM_SETRANGE, TRUE, MAKELPARAM(0, 1));
 		SendMessage(edit[17], TBM_SETTICFREQ, 1, 0);
 		SendMessage(edit[17], TBM_SETPOS, TRUE, 1);
 		SendMessage(edit[17], TBM_SETPAGESIZE, 0, 1);
+		edit[18] = CreateWindow(TRACKBAR_CLASS, TEXT(""), WS_VISIBLE | WS_CHILD | TBS_AUTOTICKS | TBS_TOOLTIPS,
+			0, 360, 200, 20, hwnd, NULL, NULL, NULL);
+		SendMessage(edit[18], TBM_SETRANGE, TRUE, MAKELPARAM(-1000, 1000));
+		SendMessage(edit[18], TBM_SETTICFREQ, 100, 0);
+		SendMessage(edit[18], TBM_SETPOS, TRUE, 1000);
+		SendMessage(edit[18], TBM_SETPAGESIZE, 0, 1);
+		edit[19] = CreateWindow(TRACKBAR_CLASS, TEXT(""), WS_VISIBLE | WS_CHILD | TBS_AUTOTICKS | TBS_TOOLTIPS,
+			0, 380, 200, 20, hwnd, NULL, NULL, NULL);
+		SendMessage(edit[19], TBM_SETRANGE, TRUE, MAKELPARAM(-1000, 1000));
+		SendMessage(edit[19], TBM_SETTICFREQ, 100, 0);
+		SendMessage(edit[19], TBM_SETPOS, TRUE, 1000);
+		SendMessage(edit[19], TBM_SETPAGESIZE, 0, 1);
+		edit[20] = CreateWindow(
+			TEXT("BUTTON"), TEXT("bmp出力"),
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			0, 400, 80, 20,
+			hwnd, NULL, NULL, NULL
+		);
+		edit[21] = CreateWindow(TRACKBAR_CLASS, TEXT(""), WS_VISIBLE | WS_CHILD | TBS_AUTOTICKS | TBS_TOOLTIPS,
+			0, 420, 200, 20, hwnd, NULL, NULL, NULL);
+		SendMessage(edit[21], TBM_SETRANGE, TRUE, MAKELPARAM(0, 1));
+		SendMessage(edit[21], TBM_SETTICFREQ, 1, 0);
+		SendMessage(edit[21], TBM_SETPOS, TRUE, 1);
+		SendMessage(edit[21], TBM_SETPAGESIZE, 0, 1);
+		edit[22] = CreateWindow(TRACKBAR_CLASS, TEXT(""), WS_VISIBLE | WS_CHILD | TBS_AUTOTICKS | TBS_TOOLTIPS,
+			0, 440, 200, 20, hwnd, NULL, NULL, NULL);
+		SendMessage(edit[22], TBM_SETRANGE, TRUE, MAKELPARAM(0, 255));
+		SendMessage(edit[22], TBM_SETTICFREQ, 32, 0);
+		SendMessage(edit[22], TBM_SETPOS, TRUE, 96);
+		SendMessage(edit[22], TBM_SETPAGESIZE, 0, 1);
+		edit[23] = CreateWindow(TRACKBAR_CLASS, TEXT(""), WS_VISIBLE | WS_CHILD | TBS_AUTOTICKS | TBS_TOOLTIPS,
+			0, 460, 200, 20, hwnd, NULL, NULL, NULL);
+		SendMessage(edit[23], TBM_SETRANGE, TRUE, MAKELPARAM(0, 255));
+		SendMessage(edit[23], TBM_SETTICFREQ, 32, 0);
+		SendMessage(edit[23], TBM_SETPOS, TRUE, 96);
+		SendMessage(edit[23], TBM_SETPAGESIZE, 0, 1);
+		edit[24] = CreateWindow(TRACKBAR_CLASS, TEXT(""), WS_VISIBLE | WS_CHILD | TBS_AUTOTICKS | TBS_TOOLTIPS,
+			0, 480, 200, 20, hwnd, NULL, NULL, NULL);
+		SendMessage(edit[24], TBM_SETRANGE, TRUE, MAKELPARAM(0, 255));
+		SendMessage(edit[24], TBM_SETTICFREQ, 32, 0);
+		SendMessage(edit[24], TBM_SETPOS, TRUE, 96);
+		SendMessage(edit[24], TBM_SETPAGESIZE, 0, 1);
+		edit[25] = CreateWindow(TRACKBAR_CLASS, TEXT(""), WS_VISIBLE | WS_CHILD | TBS_AUTOTICKS | TBS_TOOLTIPS,
+			0,500, 200, 20, hwnd, NULL, NULL, NULL);
+		SendMessage(edit[25], TBM_SETRANGE, TRUE, MAKELPARAM(0, 255));
+		SendMessage(edit[25], TBM_SETTICFREQ, 32, 0);
+		SendMessage(edit[25], TBM_SETPOS, TRUE, 255);
+		SendMessage(edit[25], TBM_SETPAGESIZE, 0, 1);
+		edit[26] = CreateWindow(TRACKBAR_CLASS, TEXT(""), WS_VISIBLE | WS_CHILD | TBS_AUTOTICKS | TBS_TOOLTIPS,
+			0, 520, 200, 20, hwnd, NULL, NULL, NULL);
+		SendMessage(edit[26], TBM_SETRANGE, TRUE, MAKELPARAM(0, 255));
+		SendMessage(edit[26], TBM_SETTICFREQ, 32, 0);
+		SendMessage(edit[26], TBM_SETPOS, TRUE, 255);
+		SendMessage(edit[26], TBM_SETPAGESIZE, 0, 1);
+		edit[27] = CreateWindow(TRACKBAR_CLASS, TEXT(""), WS_VISIBLE | WS_CHILD | TBS_AUTOTICKS | TBS_TOOLTIPS,
+			0, 540, 200, 20, hwnd, NULL, NULL, NULL);
+		SendMessage(edit[27], TBM_SETRANGE, TRUE, MAKELPARAM(0, 255));
+		SendMessage(edit[27], TBM_SETTICFREQ, 32, 0);
+		SendMessage(edit[27], TBM_SETPOS, TRUE, 255);
+		SendMessage(edit[27], TBM_SETPAGESIZE, 0, 1);
+		edit[28] = CreateWindow(TRACKBAR_CLASS, TEXT(""), WS_VISIBLE | WS_CHILD | TBS_AUTOTICKS | TBS_TOOLTIPS,
+			0, 560, 200, 20, hwnd, NULL, NULL, NULL);
+		SendMessage(edit[28], TBM_SETRANGE, TRUE, MAKELPARAM(0, 255));
+		SendMessage(edit[28], TBM_SETTICFREQ, 32, 0);
+		SendMessage(edit[28], TBM_SETPOS, TRUE, 0);
+		SendMessage(edit[28], TBM_SETPAGESIZE, 0, 1);
+		edit[29] = CreateWindow(TRACKBAR_CLASS, TEXT(""), WS_VISIBLE | WS_CHILD | TBS_AUTOTICKS | TBS_TOOLTIPS,
+			0, 580, 200, 20, hwnd, NULL, NULL, NULL);
+		SendMessage(edit[29], TBM_SETRANGE, TRUE, MAKELPARAM(0, 255));
+		SendMessage(edit[29], TBM_SETTICFREQ, 32, 0);
+		SendMessage(edit[29], TBM_SETPOS, TRUE, 0);
+		SendMessage(edit[29], TBM_SETPAGESIZE, 0, 1);
+		edit[30] = CreateWindow(TRACKBAR_CLASS, TEXT(""), WS_VISIBLE | WS_CHILD | TBS_AUTOTICKS | TBS_TOOLTIPS,
+			0, 600, 200, 20, hwnd, NULL, NULL, NULL);
+		SendMessage(edit[30], TBM_SETRANGE, TRUE, MAKELPARAM(0, 255));
+		SendMessage(edit[30], TBM_SETTICFREQ, 32, 0);
+		SendMessage(edit[30], TBM_SETPOS, TRUE, 255);
+		SendMessage(edit[30], TBM_SETPAGESIZE, 0, 1);
+		edit[31] = CreateWindow(TRACKBAR_CLASS, TEXT(""), WS_VISIBLE | WS_CHILD | TBS_AUTOTICKS | TBS_TOOLTIPS,
+			0, 620, 200, 20, hwnd, NULL, NULL, NULL);
+		SendMessage(edit[31], TBM_SETRANGE, TRUE, MAKELPARAM(0, 255));
+		SendMessage(edit[31], TBM_SETTICFREQ, 32, 0);
+		SendMessage(edit[31], TBM_SETPOS, TRUE,255);
+		edit[32] = CreateWindow(TRACKBAR_CLASS, TEXT(""), WS_VISIBLE | WS_CHILD | TBS_AUTOTICKS | TBS_TOOLTIPS,
+			0, 640, 200, 20, hwnd, NULL, NULL, NULL);
+		SendMessage(edit[32], TBM_SETRANGE, TRUE, MAKELPARAM(0, 255));
+		SendMessage(edit[32], TBM_SETTICFREQ, 32, 0);
+		SendMessage(edit[32], TBM_SETPOS, TRUE, 0);
+		SendMessage(edit[32], TBM_SETPAGESIZE, 0, 1);
+		edit[33] = CreateWindow(TRACKBAR_CLASS, TEXT(""), WS_VISIBLE | WS_CHILD | TBS_AUTOTICKS | TBS_TOOLTIPS,
+			0, 660, 200, 20, hwnd, NULL, NULL, NULL);
+		SendMessage(edit[33], TBM_SETRANGE, TRUE, MAKELPARAM(0, 255));
+		SendMessage(edit[33], TBM_SETTICFREQ, 32, 0);
+		SendMessage(edit[33], TBM_SETPOS, TRUE, 255);
+		SendMessage(edit[33], TBM_SETPAGESIZE, 0, 1);
+		edit[34] = CreateWindow(TRACKBAR_CLASS, TEXT(""), WS_VISIBLE | WS_CHILD | TBS_AUTOTICKS | TBS_TOOLTIPS,
+			0, 680, 200, 20, hwnd, NULL, NULL, NULL);
+		SendMessage(edit[34], TBM_SETRANGE, TRUE, MAKELPARAM(0, 1));
+		SendMessage(edit[34], TBM_SETTICFREQ, 1, 0);
+		SendMessage(edit[34], TBM_SETPOS, TRUE,1);
+		SendMessage(edit[34], TBM_SETPAGESIZE, 0, 1);
 	}
 	return DefWindowProc(hwnd, msg, wp, lp);
 }
+[STAThread]
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	PSTR lpCmdLine, int nCmdShow) {
 	MSG msg;
@@ -2347,11 +2628,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	winc.lpfnWndProc = WndProc;
 	winc.cbClsExtra = winc.cbWndExtra = 0;
 	winc.hInstance = hInstance;
-	winc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 	winc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	winc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	winc.lpszMenuName = NULL;
 	winc.lpszClassName = TEXT("MAIN");
+	winc.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
+	//winc.hIconSm = LoadIcon(winc.hInstance, MAKEINTRESOURCE(IDI_ICON1));
 
 	if (!RegisterClass(&winc)) return 0;
 

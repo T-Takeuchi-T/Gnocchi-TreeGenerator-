@@ -128,5 +128,3 @@ public:
 	shared_ptr<vector<shared_ptr<Node>>>MainTextNodeSearcher(shared_ptr<struct Node> Seacher);
     shared_ptr<vector<int>> MainGraph(int gnum, shared_ptr<Node> selectPointer);
 };
-
-

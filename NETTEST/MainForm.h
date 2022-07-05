@@ -1,10 +1,16 @@
-#pragma once
+﻿#pragma once
 #include "Item.h"
+#include "Texture.h"
+#include "Material.h"
+#include "Twig.h"
+#include "Generator.h"
+#include "Info.h"
 #include<string>
 
 namespace MainForm {			
 
 	using namespace System;
+	using namespace System::IO;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
 	using namespace System::Windows::Forms;
@@ -12,9 +18,14 @@ namespace MainForm {
 	using namespace System::Drawing;
 
 	class Item i;
+	class Texture tr;
+	class Material mt;
+	class Twig tw;
+	class Generator gn;
+	class Info in;
 
 	/// <summary>
-	/// MyForm �̊T�v
+	/// MyForm の概要
 	/// </summary>
 	public ref class MyForm : public System::Windows::Forms::Form
 	{
@@ -26,16 +37,22 @@ namespace MainForm {
 		MyForm(void)
 		{
 			i.NodeStartRoot();
+			tr.SetUp();
+			mt.SetUp();
+			tw.SetUp();
+			gn.SetUp();
 			InitializeComponent();
 			setTableLayoutPanelControlComponent ();
+			SetTableLayoutPanelE();
+			SetIcon();
 			//
-			//TODO: �����ɃR���X�g���N�^�[ �R�[�h��ǉ����܂�
+			//TODO: ここにコンストラクター コードを追加します
 			//
 		}
 
 	protected:
 		/// <summary>
-		/// �g�p���̃��\�[�X�����ׂăN���[���A�b�v���܂��B
+		/// 使用中のリソースをすべてクリーンアップします。
 		/// </summary>
 		~MyForm()
 		{
@@ -45,26 +62,92 @@ namespace MainForm {
 			}
 		}
 	private: System::Windows::Forms::TabControl^ tabControl1;
+
 	protected:
 	private: System::Windows::Forms::TabPage^ tabPage1;
 	private: System::Windows::Forms::TabPage^ tabPage2;
 	private: System::Windows::Forms::TabPage^ tabPage3;
 	private: System::Windows::Forms::TabPage^ tabPage4;
+	private: System::Windows::Forms::TabPage^ tabPage5;
+	private: System::Windows::Forms::TabPage^ tabPage6;
+
 	private: System::Windows::Forms::SplitContainer^ splitContainer1;
 	private: System::Windows::Forms::SplitContainer^ splitContainer2;
+	private: System::Windows::Forms::SplitContainer^ splitContainerA1;
+	private: System::Windows::Forms::SplitContainer^ splitContainerA2;
+	private: System::Windows::Forms::SplitContainer^ splitContainerA3;
+	private: System::Windows::Forms::SplitContainer^ splitContainerB1;
+	private: System::Windows::Forms::SplitContainer^ splitContainerB2;
+	private: System::Windows::Forms::SplitContainer^ splitContainerB3;
+	private: System::Windows::Forms::SplitContainer^ splitContainerC1;
+	private: System::Windows::Forms::SplitContainer^ splitContainerC2;
+	private: System::Windows::Forms::SplitContainer^ splitContainerC3;
+	private: System::Windows::Forms::SplitContainer^ splitContainerD1;
+	private: System::Windows::Forms::SplitContainer^ splitContainerD2;
 		   
 	public:static System::Windows::Forms::PictureBox^ pictureBox1;
+
 	private: System::Windows::Forms::TreeView^ treeView1;
+	private: System::Windows::Forms::TreeView^ treeViewB1;
+
+	private: System::Windows::Forms::ListView^ listViewA1;
+	private: System::Windows::Forms::ListView^ listViewA2;
+	private: System::Windows::Forms::ListView^ listViewB1;
+	private: System::Windows::Forms::ListView^ listViewC1;
+	private: System::Windows::Forms::ListView^ listViewC2;
+	private: System::Windows::Forms::ListView^ listViewD1;
+
 	private: System::Windows::Forms::TableLayoutPanel^ tableLayoutPanel;
+	private: System::Windows::Forms::TableLayoutPanel^ tableLayoutPanelA;
+	private: System::Windows::Forms::TableLayoutPanel^ tableLayoutPanelB;
+	private: System::Windows::Forms::TableLayoutPanel^ tableLayoutPanelC;
+	private: System::Windows::Forms::TableLayoutPanel^ tableLayoutPanelD;
+	private: System::Windows::Forms::TableLayoutPanel^ tableLayoutPanelE;
 
 	private: System::Windows::Forms::ContextMenuStrip^ contextMenuStripOfTreeView;
+	private: System::Windows::Forms::ContextMenuStrip^ contextMenuStripOfTreeViewA1;
+	private: System::Windows::Forms::ContextMenuStrip^ contextMenuStripOfTreeViewA2;
+	private: System::Windows::Forms::ContextMenuStrip^ contextMenuStripOfTreeViewB1;
+	private: System::Windows::Forms::ContextMenuStrip^ contextMenuStripOfTreeViewB2;
+	private: System::Windows::Forms::ContextMenuStrip^ contextMenuStripOfTreeViewC1;
+	private: System::Windows::Forms::ContextMenuStrip^ contextMenuStripOfTreeViewC2;
+	private: System::Windows::Forms::ContextMenuStrip^ contextMenuStripOfTreeViewD1;
+
 	private: System::Windows::Forms::ToolStripMenuItem^ toolStripMenuItem1;
 	private: System::Windows::Forms::ToolStripMenuItem^ makeTwigToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^ deleteToolStripMenuItem;
 
+	private: System::Windows::Forms::ToolStripMenuItem^ addNewTextureToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ duplicateTextureToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ deleteTextureToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ addNewTextureLayerToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ duplicateTextureLayerToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ deleteTextureLayerToolStripMenuItem;
+
+	private: System::Windows::Forms::ToolStripMenuItem^ addNewMaterialToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ duplicateMaterialToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ deleteMaterialToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ addNewMaterialLayerToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ duplicateMaterialLayerToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ deleteMaterialLayerToolStripMenuItem;
+
+	private: System::Windows::Forms::ToolStripMenuItem^ addNewTwigToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ duplicateTwigToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ deleteTwigToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ addNewTwigLayerToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ duplicateTwigLayerToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ deleteTwigLayerToolStripMenuItem;
+
+	private: System::Windows::Forms::ToolStripMenuItem^ addObjectToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ addTreeToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ duplicateObjTreToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ deleteObjTreToolStripMenuItem;
+
      //ForPropControl
 	private:
 		   Label^ NonFocus;
+
+		   //ForItem
 		   Label^ label0;
 		   Label^ label1;
 		   Label^ label2;
@@ -92,13 +175,16 @@ namespace MainForm {
 		   Label^ label24;
 		   Label^ label25;//btgryou
 		   Label^ label26;
+
 		   ComboBox^ comboBox0;
 		   ComboBox^ comboBox1;
 		   ComboBox^ comboBox2;
 		   ComboBox^ comboBox3;
+
 		   DataVisualization::Charting::Chart^ chart0;
 		   DataVisualization::Charting::Chart^ chart1;
 		   DataVisualization::Charting::Chart^ chart2;
+
 		   TextBox^ textBox0;
 		   TextBox^ textBox1;
 		   TextBox^ textBox2;
@@ -145,6 +231,84 @@ namespace MainForm {
 		   TrackBar^ trackBar23;
 		   TrackBar^ trackBar24;
 		   TrackBar^ trackBar25;//btgryou
+
+
+		   //ForTexture
+
+
+
+
+
+		   //ForMaterial
+
+
+
+
+
+		   //ForTwig
+
+
+
+
+
+		   //ForGenerator
+		   Label^ labelD0;
+		   Label^ labelD1;
+		   Label^ labelD2;
+		   Label^ labelD3;
+		   Label^ labelD4;
+		   Label^ labelD5;
+		   Label^ labelD6;
+		   Label^ labelD7;
+		   Label^ labelD8;
+		   Label^ labelD9;
+		   Label^ labelD10;
+		   Label^ labelD11;
+		   Label^ labelD12;
+		   Label^ labelD13;
+		   Label^ labelD14;
+
+		   ComboBox^ comboBoxD0;
+
+		   TextBox^ textBoxD0;
+		   TextBox^ textBoxD1;
+		   TextBox^ textBoxD2;
+		   TextBox^ textBoxD3;
+		   TextBox^ textBoxD4;
+		   TextBox^ textBoxD5;
+		   TextBox^ textBoxD6;
+		   TextBox^ textBoxD7;
+		   TextBox^ textBoxD8;
+		   TextBox^ textBoxD9;
+		   TextBox^ textBoxD10;
+		   TextBox^ textBoxD11;
+		   TextBox^ textBoxD12;
+		   TextBox^ textBoxD13;
+		   TextBox^ textBoxD14;
+		   TextBox^ textBoxD15;
+
+		   TrackBar^ trackBarD0;
+		   TrackBar^ trackBarD1;
+		   TrackBar^ trackBarD2;
+		   TrackBar^ trackBarD3;
+		   TrackBar^ trackBarD4;
+		   TrackBar^ trackBarD5;
+		   TrackBar^ trackBarD6;
+		   TrackBar^ trackBarD7;
+		   TrackBar^ trackBarD8;
+		   TrackBar^ trackBarD9;
+		   TrackBar^ trackBarD10;
+		   TrackBar^ trackBarD11;
+		   TrackBar^ trackBarD12;
+		   TrackBar^ trackBarD13;
+
+		   Button^ buttonD0;
+		   Button^ buttonD1;
+
+		   //ForGenerator
+		   Button^ buttonE0;
+		   Button^ buttonE1;
+
 private: System::Windows::Forms::ToolStripMenuItem^ makeFractalToolStripMenuItem;
 
 
@@ -159,19 +323,20 @@ private: System::Windows::Forms::ToolStripMenuItem^ makeFractalToolStripMenuItem
 
 	private:
 		/// <summary>
-		/// �K�v�ȃf�U�C�i�[�ϐ��ł��B
+		/// 必要なデザイナー変数です。
 		/// </summary>
 
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
-		/// �f�U�C�i�[ �T�|�[�g�ɕK�v�ȃ��\�b�h�ł��B���̃��\�b�h�̓��e��
-		/// �R�[�h �G�f�B�^�[�ŕύX���Ȃ��ł��������B
+		/// デザイナー サポートに必要なメソッドです。このメソッドの内容を
+		/// コード エディターで変更しないでください。
 		/// </summary>
 		void InitializeComponent(void)
 		{
 			this->components = (gcnew System::ComponentModel::Container());
 			System::Windows::Forms::TreeNode^ treeNode1 = (gcnew System::Windows::Forms::TreeNode(L"R"));
+
 			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
 			this->tabPage1 = (gcnew System::Windows::Forms::TabPage());
 			this->splitContainer1 = (gcnew System::Windows::Forms::SplitContainer());
@@ -189,10 +354,71 @@ private: System::Windows::Forms::ToolStripMenuItem^ makeFractalToolStripMenuItem
 			this->makeFractalToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->deleteToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->tableLayoutPanel = (gcnew System::Windows::Forms::TableLayoutPanel());
+
 			this->tabPage2 = (gcnew System::Windows::Forms::TabPage());
+			this->splitContainerA1 = (gcnew System::Windows::Forms::SplitContainer());
+			this->splitContainerA2 = (gcnew System::Windows::Forms::SplitContainer());
+			this->splitContainerA3 = (gcnew System::Windows::Forms::SplitContainer());
+			this->listViewA1 = (gcnew System::Windows::Forms::ListView());
+			this->listViewA2 = (gcnew System::Windows::Forms::ListView());
+			this->contextMenuStripOfTreeViewA1 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
+			this->contextMenuStripOfTreeViewA2 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
+			this->addNewTextureToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->duplicateTextureToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->deleteTextureToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->addNewTextureLayerToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->duplicateTextureLayerToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->deleteTextureLayerToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->tableLayoutPanelA = (gcnew System::Windows::Forms::TableLayoutPanel());
+
 			this->tabPage3 = (gcnew System::Windows::Forms::TabPage());
+			this->splitContainerB1 = (gcnew System::Windows::Forms::SplitContainer());
+			this->splitContainerB2 = (gcnew System::Windows::Forms::SplitContainer());
+			this->splitContainerB3 = (gcnew System::Windows::Forms::SplitContainer());
+			this->treeViewB1 = (gcnew System::Windows::Forms::TreeView());
+			this->listViewB1 = (gcnew System::Windows::Forms::ListView());
+			this->contextMenuStripOfTreeViewB1 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
+			this->contextMenuStripOfTreeViewB2 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
+			this->addNewMaterialToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->duplicateMaterialToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->deleteMaterialToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->addNewMaterialLayerToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->duplicateMaterialLayerToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->deleteMaterialLayerToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->tableLayoutPanelB = (gcnew System::Windows::Forms::TableLayoutPanel());
+
 			this->tabPage4 = (gcnew System::Windows::Forms::TabPage());
+			this->splitContainerC1 = (gcnew System::Windows::Forms::SplitContainer());
+			this->splitContainerC2 = (gcnew System::Windows::Forms::SplitContainer());
+			this->splitContainerC3 = (gcnew System::Windows::Forms::SplitContainer());
+			this->listViewC1 = (gcnew System::Windows::Forms::ListView());
+			this->listViewC2 = (gcnew System::Windows::Forms::ListView());
+			this->contextMenuStripOfTreeViewC1 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
+			this->contextMenuStripOfTreeViewC2 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
+			this->addNewTwigToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->duplicateTwigToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->deleteTwigToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->addNewTwigLayerToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->duplicateTwigLayerToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->deleteTwigLayerToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->tableLayoutPanelC = (gcnew System::Windows::Forms::TableLayoutPanel());
+
+			this->tabPage5 = (gcnew System::Windows::Forms::TabPage());
+			this->splitContainerD1 = (gcnew System::Windows::Forms::SplitContainer());
+			this->splitContainerD2 = (gcnew System::Windows::Forms::SplitContainer());
+			this->listViewD1 = (gcnew System::Windows::Forms::ListView());
+			this->contextMenuStripOfTreeViewD1 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
+			this->addObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->addTreeToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->duplicateObjTreToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->deleteObjTreToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->tableLayoutPanelD = (gcnew System::Windows::Forms::TableLayoutPanel());
+
+			this->tabPage6 = (gcnew System::Windows::Forms::TabPage());
+			this->tableLayoutPanelE = (gcnew System::Windows::Forms::TableLayoutPanel());
+
 			this->tabControl1->SuspendLayout();
+
 			this->tabPage1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainer1))->BeginInit();
 			this->splitContainer1->Panel1->SuspendLayout();
@@ -203,7 +429,69 @@ private: System::Windows::Forms::ToolStripMenuItem^ makeFractalToolStripMenuItem
 			this->splitContainer2->Panel1->SuspendLayout();
 			this->splitContainer2->Panel2->SuspendLayout();
 			this->splitContainer2->SuspendLayout();
-			this->contextMenuStripOfTreeView->SuspendLayout();
+            this->contextMenuStripOfTreeView->SuspendLayout();
+
+			this->tabPage2->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainerA1))->BeginInit();
+			this->splitContainerA1->Panel1->SuspendLayout();
+			this->splitContainerA1->Panel2->SuspendLayout();
+			this->splitContainerA1->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainerA2))->BeginInit();
+			this->splitContainerA2->Panel1->SuspendLayout();
+			this->splitContainerA2->Panel2->SuspendLayout();
+			this->splitContainerA2->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainerA3))->BeginInit();
+			this->splitContainerA3->Panel1->SuspendLayout();
+			this->splitContainerA3->Panel2->SuspendLayout();
+			this->splitContainerA3->SuspendLayout();
+			this->contextMenuStripOfTreeViewA1->SuspendLayout();
+			this->contextMenuStripOfTreeViewA2->SuspendLayout();
+
+			this->tabPage3->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainerB1))->BeginInit();
+			this->splitContainerB1->Panel1->SuspendLayout();
+			this->splitContainerB1->Panel2->SuspendLayout();
+			this->splitContainerB1->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainerB2))->BeginInit();
+			this->splitContainerB2->Panel1->SuspendLayout();
+			this->splitContainerB2->Panel2->SuspendLayout();
+			this->splitContainerB2->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainerB3))->BeginInit();
+			this->splitContainerB3->Panel1->SuspendLayout();
+			this->splitContainerB3->Panel2->SuspendLayout();
+			this->splitContainerB3->SuspendLayout();
+			this->contextMenuStripOfTreeViewB1->SuspendLayout();
+			this->contextMenuStripOfTreeViewB2->SuspendLayout();
+
+			this->tabPage4->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainerC1))->BeginInit();
+			this->splitContainerC1->Panel1->SuspendLayout();
+			this->splitContainerC1->Panel2->SuspendLayout();
+			this->splitContainerC1->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainerC2))->BeginInit();
+			this->splitContainerC2->Panel1->SuspendLayout();
+			this->splitContainerC2->Panel2->SuspendLayout();
+			this->splitContainerC2->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainerC3))->BeginInit();
+			this->splitContainerC3->Panel1->SuspendLayout();
+			this->splitContainerC3->Panel2->SuspendLayout();
+			this->splitContainerC3->SuspendLayout();
+			this->contextMenuStripOfTreeViewC1->SuspendLayout();
+			this->contextMenuStripOfTreeViewC2->SuspendLayout();
+
+			this->tabPage5->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainerD1))->BeginInit();
+			this->splitContainerD1->Panel1->SuspendLayout();
+			this->splitContainerD1->Panel2->SuspendLayout();
+			this->splitContainerD1->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainerD2))->BeginInit();
+			this->splitContainerD2->Panel1->SuspendLayout();
+			this->splitContainerD2->Panel2->SuspendLayout();
+			this->splitContainerD2->SuspendLayout();
+			this->contextMenuStripOfTreeViewD1->SuspendLayout();
+
+			this->tabPage6->SuspendLayout();
+
 			this->SuspendLayout();
 			// 
 			// tabControl1
@@ -212,6 +500,8 @@ private: System::Windows::Forms::ToolStripMenuItem^ makeFractalToolStripMenuItem
 			this->tabControl1->Controls->Add(this->tabPage2);
 			this->tabControl1->Controls->Add(this->tabPage3);
 			this->tabControl1->Controls->Add(this->tabPage4);
+			this->tabControl1->Controls->Add(this->tabPage5);
+			this->tabControl1->Controls->Add(this->tabPage6);
 			this->tabControl1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->tabControl1->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(128)));
@@ -247,7 +537,7 @@ private: System::Windows::Forms::ToolStripMenuItem^ makeFractalToolStripMenuItem
 			// 
 			// splitContainer1.Panel1
 			// 
-			this->splitContainer1->Panel1->BackColor = System::Drawing::Color::White;
+			this->splitContainer1->Panel1->BackColor = System::Drawing::Color::Gray;
 			this->splitContainer1->Panel1->Controls->Add(this->pictureBox1);
 			this->splitContainer1->Panel1MinSize = 0;
 			// 
@@ -358,9 +648,12 @@ private: System::Windows::Forms::ToolStripMenuItem^ makeFractalToolStripMenuItem
 			this->tableLayoutPanel->TabIndex = 0;
 			this->tableLayoutPanel->Scroll += gcnew System::Windows::Forms::ScrollEventHandler(this, &MyForm::tableLayoutPanel_Scroll);
 			this->tableLayoutPanel->MouseWheel += gcnew System::Windows::Forms::MouseEventHandler(this, &MyForm::tableLayoutPanel_MouseWheel);
+
+
 			// 
 			// tabPage2
 			// 
+			this->tabPage2->Controls->Add(this->splitContainerA1);
 			this->tabPage2->Location = System::Drawing::Point(4, 24);
 			this->tabPage2->Name = L"tabPage2";
 			this->tabPage2->Padding = System::Windows::Forms::Padding(3);
@@ -369,8 +662,158 @@ private: System::Windows::Forms::ToolStripMenuItem^ makeFractalToolStripMenuItem
 			this->tabPage2->Text = L"   Texture    ";
 			this->tabPage2->UseVisualStyleBackColor = true;
 			// 
+			// splitContainerA1
+			// 
+			this->splitContainerA1->BackColor = System::Drawing::Color::Gray;
+			this->splitContainerA1->Cursor = System::Windows::Forms::Cursors::Default;
+			this->splitContainerA1->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->splitContainerA1->Location = System::Drawing::Point(3, 3);
+			this->splitContainerA1->Margin = System::Windows::Forms::Padding(0);
+			// 
+			// splitContainerA1.Panel1
+			// 
+			this->splitContainerA1->Panel1->BackColor = System::Drawing::Color::Gray;
+			//this->splitContainerA1->Panel1->Controls->Add(this->pictureBox1);
+			this->splitContainerA1->Panel1MinSize = 0;
+			// 
+			// splitContainerA1.Panel2
+			// 
+			this->splitContainerA1->Panel2->Controls->Add(this->splitContainerA2);
+			this->splitContainerA1->Panel2MinSize = 0;
+			this->splitContainerA1->Size = System::Drawing::Size(770, 407);
+			this->splitContainerA1->SplitterDistance = 500;
+			this->splitContainerA1->SplitterWidth = 3;
+			this->splitContainerA1->TabIndex = 1;
+			// 
+			// splitContainerA2
+			// 
+			this->splitContainerA2->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->splitContainerA2->Location = System::Drawing::Point(0, 0);
+			this->splitContainerA2->Margin = System::Windows::Forms::Padding(0);
+			this->splitContainerA2->Orientation = System::Windows::Forms::Orientation::Horizontal;
+			// 
+			// splitContainerA2.Panel1
+			// 
+			this->splitContainerA2->Panel1->Controls->Add(this->splitContainerA3);
+			this->splitContainerA2->Panel1MinSize = 0;
+			// 
+			// splitContainerA2.Panel2
+			// 
+			this->splitContainerA2->Panel2->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)),
+				static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->splitContainerA2->Panel2->Controls->Add(this->tableLayoutPanelA);
+			this->splitContainerA2->Panel2MinSize = 0;
+			this->splitContainerA2->Size = System::Drawing::Size(267, 407);
+			this->splitContainerA2->SplitterDistance = 150;
+			this->splitContainerA2->SplitterWidth = 3;
+			this->splitContainerA2->TabIndex = 1;
+			// 
+			// splitContainerA3
+			// 
+			this->splitContainerA3->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->splitContainerA3->Location = System::Drawing::Point(0, 0);
+			this->splitContainerA3->Margin = System::Windows::Forms::Padding(0);
+			this->splitContainerA3->Orientation = System::Windows::Forms::Orientation::Horizontal;
+			// 
+			// splitContainerA3.Panel1
+			// 
+			this->splitContainerA3->Panel1->Controls->Add(this->listViewA1);
+			this->splitContainerA3->Panel1MinSize = 0;
+			// 
+			// splitContainerA3.Panel2
+			// 
+			this->splitContainerA3->Panel2->Controls->Add(this->listViewA2);
+			this->splitContainerA3->Panel2MinSize = 0;
+			this->splitContainerA2->SplitterDistance = 150;
+			this->splitContainerA2->SplitterWidth = 3;
+			this->splitContainerA2->TabIndex = 1;
+			// 
+			// listViewA1
+			// 
+			this->listViewA1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
+				static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->listViewA1->ContextMenuStrip = this->contextMenuStripOfTreeViewA1;
+			this->listViewA1->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->listViewA1->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(128)));
+			this->listViewA1->ForeColor = System::Drawing::Color::White;
+			this->listViewA1->TabIndex = 1;
+			// 
+			// listViewA2
+			// 
+			this->listViewA2->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
+				static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->listViewA2->ContextMenuStrip = this->contextMenuStripOfTreeViewA2;
+			this->listViewA2->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->listViewA2->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(128)));
+			this->listViewA2->ForeColor = System::Drawing::Color::White;
+			this->listViewA2->TabIndex = 1;
+			// 
+			// contextMenuStripOfTreeViewA1
+			// 
+			this->contextMenuStripOfTreeViewA1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
+				this->addNewTextureToolStripMenuItem,
+					this->duplicateTextureToolStripMenuItem, this->deleteTextureToolStripMenuItem
+			});
+			this->contextMenuStripOfTreeViewA1->Size = System::Drawing::Size(144, 92);
+			// 
+			// contextMenuStripOfTreeViewA2
+			// 
+			this->contextMenuStripOfTreeViewA2->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
+				this->addNewTextureLayerToolStripMenuItem,
+					this->duplicateTextureLayerToolStripMenuItem,
+					this->deleteTextureLayerToolStripMenuItem
+			});
+			this->contextMenuStripOfTreeViewA2->Size = System::Drawing::Size(144, 92);
+			// 
+			// addNewTextureToolStripMenuItem
+			// 
+			this->addNewTextureToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->addNewTextureToolStripMenuItem->Text = L"Add";
+			// 
+			// duplicateTextureToolStripMenuItem
+			// 
+			this->duplicateTextureToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->duplicateTextureToolStripMenuItem->Text = L"Duplicate";
+			// 
+			// deleteTextureToolStripMenuItem
+			// 
+			this->deleteTextureToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->deleteTextureToolStripMenuItem->Text = L"Delete";
+			// 
+			// addNewTextureLayerToolStripMenuItem
+			// 
+			this->addNewTextureLayerToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->addNewTextureLayerToolStripMenuItem->Text = L"Add";
+			// 
+			// duplicateTextureLayerToolStripMenuItem
+			// 
+			this->duplicateTextureLayerToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->duplicateTextureLayerToolStripMenuItem->Text = L"Duplicate";
+			// 
+			// deleteTextureLayerToolStripMenuItem
+			// 
+			this->deleteTextureLayerToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->deleteTextureLayerToolStripMenuItem->Text = L"Delete";
+			// 
+			// tableLayoutPanelA
+			// 
+			this->tableLayoutPanelA->AutoScroll = true;
+			this->tableLayoutPanelA->ColumnCount = 1;
+
+			this->tableLayoutPanelA->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->tableLayoutPanelA->Location = System::Drawing::Point(0, 0);
+			this->tableLayoutPanelA->RowCount = 1;
+
+			this->tableLayoutPanelA->Size = System::Drawing::Size(267, 254);
+			this->tableLayoutPanelA->TabIndex = 1;
+
+
+			// 
 			// tabPage3
 			// 
+			this->tabPage3->Controls->Add(this->splitContainerB1);
 			this->tabPage3->Location = System::Drawing::Point(4, 24);
 			this->tabPage3->Name = L"tabPage3";
 			this->tabPage3->Padding = System::Windows::Forms::Padding(3);
@@ -379,8 +822,159 @@ private: System::Windows::Forms::ToolStripMenuItem^ makeFractalToolStripMenuItem
 			this->tabPage3->Text = L"   Material   ";
 			this->tabPage3->UseVisualStyleBackColor = true;
 			// 
+			// splitContainerB1
+			// 
+			this->splitContainerB1->BackColor = System::Drawing::Color::Gray;
+			this->splitContainerB1->Cursor = System::Windows::Forms::Cursors::Default;
+			this->splitContainerB1->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->splitContainerB1->Location = System::Drawing::Point(3, 3);
+			this->splitContainerB1->Margin = System::Windows::Forms::Padding(0);
+			// 
+			// splitContainerB1.Panel1
+			// 
+			this->splitContainerB1->Panel1->BackColor = System::Drawing::Color::Gray;
+			//this->splitContainerB1->Panel1->Controls->Add(this->pictureBox1);
+			this->splitContainerB1->Panel1MinSize = 0;
+			// 
+			// splitContainerB1.Panel2
+			// 
+			this->splitContainerB1->Panel2->Controls->Add(this->splitContainerB2);
+			this->splitContainerB1->Panel2MinSize = 0;
+			this->splitContainerB1->Size = System::Drawing::Size(770, 407);
+			this->splitContainerB1->SplitterDistance = 500;
+			this->splitContainerB1->SplitterWidth = 3;
+			this->splitContainerB1->TabIndex = 2;
+			// 
+			// splitContainerB2
+			// 
+			this->splitContainerB2->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->splitContainerB2->Location = System::Drawing::Point(0, 0);
+			this->splitContainerB2->Margin = System::Windows::Forms::Padding(0);
+			this->splitContainerB2->Orientation = System::Windows::Forms::Orientation::Horizontal;
+			// 
+			// splitContainerB2.Panel1
+			// 
+			this->splitContainerB2->Panel1->Controls->Add(this->splitContainerB3);
+			this->splitContainerB2->Panel1MinSize = 0;
+			// 
+			// splitContainerB2.Panel2
+			// 
+			this->splitContainerB2->Panel2->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)),
+				static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->splitContainerB2->Panel2->Controls->Add(this->tableLayoutPanelB);
+			this->splitContainerB2->Panel2MinSize = 0;
+			this->splitContainerB2->Size = System::Drawing::Size(267, 407);
+			this->splitContainerB2->SplitterDistance = 150;
+			this->splitContainerB2->SplitterWidth = 3;
+			this->splitContainerB2->TabIndex = 2;
+			// 
+			// splitContainerB3
+			// 
+			this->splitContainerB3->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->splitContainerB3->Location = System::Drawing::Point(0, 0);
+			this->splitContainerB3->Margin = System::Windows::Forms::Padding(0);
+			this->splitContainerB3->Orientation = System::Windows::Forms::Orientation::Horizontal;
+			// 
+			// splitContainerB3.Panel1
+			// 
+			this->splitContainerB3->Panel1->Controls->Add(this->listViewB1);
+			this->splitContainerB3->Panel1MinSize = 0;
+			// 
+			// splitContainerB3.Panel2
+			// 
+			this->splitContainerB3->Panel2->Controls->Add(this->treeViewB1);
+			this->splitContainerB3->Panel2MinSize = 0;
+			this->splitContainerB2->SplitterDistance = 150;
+			this->splitContainerB2->SplitterWidth = 3;
+			this->splitContainerB2->TabIndex = 2;
+			// 
+			// listViewB1
+			// 
+			this->listViewB1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
+				static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->listViewB1->ContextMenuStrip = this->contextMenuStripOfTreeViewB1;
+			this->listViewB1->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->listViewB1->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(128)));
+			this->listViewB1->ForeColor = System::Drawing::Color::White;
+			this->listViewB1->TabIndex = 2;
+			// 
+			// treeViewB1
+			// 
+			this->treeViewB1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
+				static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->treeViewB1->ContextMenuStrip = this->contextMenuStripOfTreeViewB2;
+			this->treeViewB1->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->treeViewB1->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(128)));
+			this->treeViewB1->ForeColor = System::Drawing::Color::White;
+			this->treeViewB1->TabIndex =2;
+			// 
+			// contextMenuStripOfTreeViewB1
+			// 
+			this->contextMenuStripOfTreeViewB1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
+				this->addNewMaterialToolStripMenuItem,
+					this->duplicateMaterialToolStripMenuItem,
+					this->deleteMaterialToolStripMenuItem
+			});
+			this->contextMenuStripOfTreeViewB1->Size = System::Drawing::Size(144, 92);
+			// 
+			// contextMenuStripOfTreeViewB2
+			// 
+			this->contextMenuStripOfTreeViewB2->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
+				this->addNewMaterialLayerToolStripMenuItem,
+					this->duplicateMaterialLayerToolStripMenuItem,
+					this->deleteMaterialLayerToolStripMenuItem
+			});
+			this->contextMenuStripOfTreeViewB2->Size = System::Drawing::Size(144, 92);
+			// 
+			// addNewMaterialToolStripMenuItem
+			// 
+			this->addNewMaterialToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->addNewMaterialToolStripMenuItem->Text = L"Add";
+			// 
+			// duplicateMaterialToolStripMenuItem
+			// 
+			this->duplicateMaterialToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->duplicateMaterialToolStripMenuItem->Text = L"Duplicate";
+			// 
+			// deleteMaterialToolStripMenuItem
+			// 
+			this->deleteMaterialToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->deleteMaterialToolStripMenuItem->Text = L"Delete";
+			// 
+			// addNewMaterialLayerToolStripMenuItem
+			// 
+			this->addNewMaterialLayerToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->addNewMaterialLayerToolStripMenuItem->Text = L"Add";
+			// 
+			// duplicateMaterialLayerToolStripMenuItem
+			// 
+			this->duplicateMaterialLayerToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->duplicateMaterialLayerToolStripMenuItem->Text = L"Duplicate";
+			// 
+			// deleteMaterialLayerToolStripMenuItem
+			// 
+			this->deleteMaterialLayerToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->deleteMaterialLayerToolStripMenuItem->Text = L"Delete";
+			// 
+			// tableLayoutPanelB
+			// 
+			this->tableLayoutPanelB->AutoScroll = true;
+			this->tableLayoutPanelB->ColumnCount = 1;
+
+			this->tableLayoutPanelB->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->tableLayoutPanelB->Location = System::Drawing::Point(0, 0);
+			this->tableLayoutPanelB->RowCount = 1;
+
+			this->tableLayoutPanelB->Size = System::Drawing::Size(267, 254);
+			this->tableLayoutPanelB->TabIndex = 2;
+
+
+			// 
 			// tabPage4
 			// 
+			this->tabPage4->Controls->Add(this->splitContainerC1);
 			this->tabPage4->Location = System::Drawing::Point(4, 24);
 			this->tabPage4->Name = L"tabPage4";
 			this->tabPage4->Padding = System::Windows::Forms::Padding(3);
@@ -388,6 +982,302 @@ private: System::Windows::Forms::ToolStripMenuItem^ makeFractalToolStripMenuItem
 			this->tabPage4->TabIndex = 3;
 			this->tabPage4->Text = L"     Twig     ";
 			this->tabPage4->UseVisualStyleBackColor = true;
+			// 
+			// splitContainerC1
+			// 
+			this->splitContainerC1->BackColor = System::Drawing::Color::Gray;
+			this->splitContainerC1->Cursor = System::Windows::Forms::Cursors::Default;
+			this->splitContainerC1->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->splitContainerC1->Location = System::Drawing::Point(3, 3);
+			this->splitContainerC1->Margin = System::Windows::Forms::Padding(0);
+			// 
+			// splitContainerC1.Panel1
+			// 
+			this->splitContainerC1->Panel1->BackColor = System::Drawing::Color::Gray;
+			//this->splitContainerC1->Panel1->Controls->Add(this->pictureBox1);
+			this->splitContainerC1->Panel1MinSize = 0;
+			// 
+			// splitContainerC1.Panel2
+			// 
+			this->splitContainerC1->Panel2->Controls->Add(this->splitContainerC2);
+			this->splitContainerC1->Panel2MinSize = 0;
+			this->splitContainerC1->Size = System::Drawing::Size(770, 407);
+			this->splitContainerC1->SplitterDistance = 500;
+			this->splitContainerC1->SplitterWidth = 3;
+			this->splitContainerC1->TabIndex = 3;
+			// 
+			// splitContainerC2
+			// 
+			this->splitContainerC2->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->splitContainerC2->Location = System::Drawing::Point(0, 0);
+			this->splitContainerC2->Margin = System::Windows::Forms::Padding(0);
+			this->splitContainerC2->Orientation = System::Windows::Forms::Orientation::Horizontal;
+			// 
+			// splitContainerC2.Panel1
+			// 
+			this->splitContainerC2->Panel1->Controls->Add(this->splitContainerC3);
+			this->splitContainerC2->Panel1MinSize = 0;
+			// 
+			// splitContainerC2.Panel2
+			// 
+			this->splitContainerC2->Panel2->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)),
+				static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->splitContainerC2->Panel2->Controls->Add(this->tableLayoutPanelC);
+			this->splitContainerC2->Panel2MinSize = 0;
+			this->splitContainerC2->Size = System::Drawing::Size(267, 407);
+			this->splitContainerC2->SplitterDistance = 150;
+			this->splitContainerC2->SplitterWidth = 3;
+			this->splitContainerC2->TabIndex = 3;
+			// 
+			// splitContainerC3
+			// 
+			this->splitContainerC3->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->splitContainerC3->Location = System::Drawing::Point(0, 0);
+			this->splitContainerC3->Margin = System::Windows::Forms::Padding(0);
+			this->splitContainerC3->Orientation = System::Windows::Forms::Orientation::Horizontal;
+			// 
+			// splitContainerC3.Panel1
+			// 
+			this->splitContainerC3->Panel1->Controls->Add(this->listViewC1);
+			this->splitContainerC3->Panel1MinSize = 0;
+			// 
+			// splitContainerC3.Panel2
+			// 
+			this->splitContainerC3->Panel2->Controls->Add(this->listViewC2);
+			this->splitContainerC3->Panel2MinSize = 0;
+			this->splitContainerC2->SplitterDistance = 150;
+			this->splitContainerC2->SplitterWidth = 3;
+			this->splitContainerC2->TabIndex = 3;
+			// 
+			// listViewC1
+			// 
+			this->listViewC1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
+				static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->listViewC1->ContextMenuStrip = this->contextMenuStripOfTreeViewC1;
+			this->listViewC1->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->listViewC1->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(128)));
+			this->listViewC1->ForeColor = System::Drawing::Color::White;
+			this->listViewC1->TabIndex = 3;
+			// 
+			// listViewC2
+			// 
+			this->listViewC2->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
+				static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->listViewC2->ContextMenuStrip = this->contextMenuStripOfTreeViewC2;
+			this->listViewC2->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->listViewC2->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(128)));
+			this->listViewC2->ForeColor = System::Drawing::Color::White;
+			this->listViewC2->TabIndex = 3;
+			// 
+			// contextMenuStripOfTreeViewC1
+			// 
+			this->contextMenuStripOfTreeViewC1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
+				this->addNewTwigToolStripMenuItem,
+					this->duplicateTwigToolStripMenuItem,
+					this->deleteTwigToolStripMenuItem
+			});
+			this->contextMenuStripOfTreeViewC1->Size = System::Drawing::Size(144, 92);
+			// 
+			// contextMenuStripOfTreeViewC2
+			// 
+			this->contextMenuStripOfTreeViewC2->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
+				this->addNewTwigLayerToolStripMenuItem,
+					this->duplicateTwigLayerToolStripMenuItem,
+					this->deleteTwigLayerToolStripMenuItem
+			});
+			this->contextMenuStripOfTreeViewC2->Size = System::Drawing::Size(144, 92);
+			// 
+			// addNewTwigToolStripMenuItem
+			// 
+			this->addNewTwigToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->addNewTwigToolStripMenuItem->Text = L"Add";
+			// 
+			// duplicateTwigToolStripMenuItem
+			// 
+			this->duplicateTwigToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->duplicateTwigToolStripMenuItem->Text = L"Duplicate";
+			// 
+			// deleteTwigToolStripMenuItem
+			// 
+			this->deleteTwigToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->deleteTwigToolStripMenuItem->Text = L"Delete";
+			// 
+			// addNewTwigLayerToolStripMenuItem
+			// 
+			this->addNewTwigLayerToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->addNewTwigLayerToolStripMenuItem->Text = L"Add";
+			// 
+			// duplicateTwigLayerToolStripMenuItem
+			// 
+			this->duplicateTwigLayerToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->duplicateTwigLayerToolStripMenuItem->Text = L"Duplicate";
+			// 
+			// deleteTwigLayerToolStripMenuItem
+			// 
+			this->deleteTwigLayerToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->deleteTwigLayerToolStripMenuItem->Text = L"Delete";
+			// 
+			// tableLayoutPanelC
+			// 
+			this->tableLayoutPanelC->AutoScroll = true;
+			this->tableLayoutPanelC->ColumnCount = 1;
+
+			this->tableLayoutPanelC->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->tableLayoutPanelC->Location = System::Drawing::Point(0, 0);
+			this->tableLayoutPanelC->RowCount = 1;
+
+			this->tableLayoutPanelC->Size = System::Drawing::Size(267, 254);
+			this->tableLayoutPanelC->TabIndex = 3;
+
+
+			// 
+			// tabPage5
+			// 
+			this->tabPage5->Controls->Add(this->splitContainerD1);
+			this->tabPage5->Location = System::Drawing::Point(4, 24);
+			this->tabPage5->Name = L"tabPage5";
+			this->tabPage5->Padding = System::Windows::Forms::Padding(3);
+			this->tabPage5->Size = System::Drawing::Size(776, 413);
+			this->tabPage5->TabIndex = 4;
+			this->tabPage5->Text = L"   Generator  ";
+			this->tabPage5->UseVisualStyleBackColor = true;
+			// 
+			// splitContainerD1
+			// 
+			this->splitContainerD1->BackColor = System::Drawing::Color::Gray;
+			this->splitContainerD1->Cursor = System::Windows::Forms::Cursors::Default;
+			this->splitContainerD1->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->splitContainerD1->Location = System::Drawing::Point(3, 3);
+			this->splitContainerD1->Margin = System::Windows::Forms::Padding(0);
+			// 
+			// splitContainerD1.Panel1
+			// 
+			this->splitContainerD1->Panel1->BackColor = System::Drawing::Color::Gray;
+			//this->splitContainerD1->Panel1->Controls->Add(this->pictureBox1);
+			this->splitContainerD1->Panel1MinSize = 0;
+			// 
+			// splitContainerD1.Panel2
+			// 
+			this->splitContainerD1->Panel2->Controls->Add(this->splitContainerD2);
+			this->splitContainerD1->Panel2MinSize = 0;
+			this->splitContainerD1->Size = System::Drawing::Size(770, 407);
+			this->splitContainerD1->SplitterDistance = 500;
+			this->splitContainerD1->SplitterWidth = 3;
+			this->splitContainerD1->TabIndex = 4;
+			// 
+			// splitContainerD2
+			// 
+			this->splitContainerD2->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->splitContainerD2->Location = System::Drawing::Point(0, 0);
+			this->splitContainerD2->Margin = System::Windows::Forms::Padding(0);
+			this->splitContainerD2->Orientation = System::Windows::Forms::Orientation::Horizontal;
+			// 
+			// splitContainerD2.Panel1
+			// 
+			this->splitContainerD2->Panel1->Controls->Add(this->listViewD1);
+			this->splitContainerD2->Panel1MinSize = 0;
+			// 
+			// splitContainerD2.Panel2
+			// 
+			this->splitContainerD2->Panel2->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)),
+				static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->splitContainerD2->Panel2->Controls->Add(this->tableLayoutPanelD);
+			this->splitContainerD2->Panel2MinSize = 0;
+			this->splitContainerD2->Size = System::Drawing::Size(267, 407);
+			this->splitContainerD2->SplitterDistance = 150;
+			this->splitContainerD2->SplitterWidth = 3;
+			this->splitContainerD2->TabIndex = 4;
+			// 
+			// listViewD1
+			// 
+			this->listViewD1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
+				static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->listViewD1->ContextMenuStrip = this->contextMenuStripOfTreeViewD1;
+			this->listViewD1->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->listViewD1->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(128)));
+			this->listViewD1->ForeColor = System::Drawing::Color::White;
+			this->listViewD1->TabIndex = 4;
+			this->listViewD1->View = View::Details;
+			this->listViewD1->Columns->Add(gcnew ColumnHeader());
+			this->listViewD1->HeaderStyle = ColumnHeaderStyle::None;
+			this->listViewD1->LabelEdit = true;
+			this->listViewD1->SelectedIndexChanged += gcnew System::EventHandler(this, &MyForm::listViewD1_SelectedIndexChanged);
+			// 
+			// contextMenuStripOfTreeViewD1
+			// 
+			this->contextMenuStripOfTreeViewD1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {
+				this->addObjectToolStripMenuItem,
+					this->addTreeToolStripMenuItem,
+					this->duplicateObjTreToolStripMenuItem,
+					this->deleteObjTreToolStripMenuItem
+			});
+			this->contextMenuStripOfTreeViewD1->Size = System::Drawing::Size(144, 92);
+			// 
+			// addObjectToolStripMenuItem
+			// 
+			this->addObjectToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->addObjectToolStripMenuItem->Text = L"Add Object";
+			this->addObjectToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::AddObject);
+			// 
+			// addTreeToolStripMenuItem
+			// 
+			this->addTreeToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->addTreeToolStripMenuItem->Text = L"Add Tree";
+			this->addTreeToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::AddTree);
+			// 
+			// duplicateObjTreToolStripMenuItem
+			// 
+			this->duplicateObjTreToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->duplicateObjTreToolStripMenuItem->Text = L"Duplicate";
+			this->duplicateObjTreToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::DuplicateObjTre);
+			// 
+			// deleteObjTreToolStripMenuItem
+			// 
+			this->deleteObjTreToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->deleteObjTreToolStripMenuItem->Text = L"Delete";
+			this->deleteObjTreToolStripMenuItem-> Click += gcnew System::EventHandler(this, &MyForm::DeleteObjTre);
+			// 
+			// tableLayoutPanelD
+			// 
+			this->tableLayoutPanelD->AutoScroll = true;
+			this->tableLayoutPanelD->ColumnCount = 1;
+
+			this->tableLayoutPanelD->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->tableLayoutPanelD->Location = System::Drawing::Point(0, 0);
+			this->tableLayoutPanelD->RowCount = 1;
+
+			this->tableLayoutPanelD->Size = System::Drawing::Size(267, 254);
+			this->tableLayoutPanelD->TabIndex = 4;
+			this->tableLayoutPanelD->Scroll += gcnew System::Windows::Forms::ScrollEventHandler(this, &MyForm::tableLayoutPanelD_Scroll);
+			this->tableLayoutPanelD->MouseWheel += gcnew System::Windows::Forms::MouseEventHandler(this, &MyForm::tableLayoutPanelD_MouseWheel);
+
+			// 
+			// tabPage6
+			// 
+			this->tabPage6->Controls->Add(this->tableLayoutPanelE);
+			this->tabPage6->Location = System::Drawing::Point(4, 24);
+			this->tabPage6->Name = L"tabPage6";
+			this->tabPage6->Padding = System::Windows::Forms::Padding(3);
+			this->tabPage6->Size = System::Drawing::Size(776, 413);
+			this->tabPage6->TabIndex = 5;
+			this->tabPage6->Text = L"     Info      ";
+			this->tabPage6->UseVisualStyleBackColor = true;
+			// 
+			// tableLayoutPanelE
+			// 
+			this->tableLayoutPanelE->AutoScroll = true;
+			this->tableLayoutPanelE->ColumnCount = 1;
+
+			this->tableLayoutPanelE->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->tableLayoutPanelE->Location = System::Drawing::Point(0, 0);
+			this->tableLayoutPanelE->RowCount = 1;
+
+			this->tableLayoutPanelE->Size = System::Drawing::Size(267, 254);
+			this->tableLayoutPanelE->TabIndex = 5;
+
 			// 
 			// MyForm
 			// 
@@ -399,6 +1289,7 @@ private: System::Windows::Forms::ToolStripMenuItem^ makeFractalToolStripMenuItem
 			this->Name = L"MyForm";
 			this->Text = L"MyForm";
 			this->tabControl1->ResumeLayout(false);
+
 			this->tabPage1->ResumeLayout(false);
 			this->splitContainer1->Panel1->ResumeLayout(false);
 			this->splitContainer1->Panel2->ResumeLayout(false);
@@ -410,12 +1301,75 @@ private: System::Windows::Forms::ToolStripMenuItem^ makeFractalToolStripMenuItem
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainer2))->EndInit();
 			this->splitContainer2->ResumeLayout(false);
 			this->contextMenuStripOfTreeView->ResumeLayout(false);
+
+			this->tabPage2->ResumeLayout(false);
+			this->splitContainerA1->Panel1->ResumeLayout(false);
+			this->splitContainerA1->Panel2->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainerA1))->EndInit();
+			this->splitContainerA1->ResumeLayout(false);
+			this->splitContainerA2->Panel1->ResumeLayout(false);
+			this->splitContainerA2->Panel2->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainerA2))->EndInit();
+			this->splitContainerA2->ResumeLayout(false);
+			this->splitContainerA3->Panel1->ResumeLayout(false);
+			this->splitContainerA3->Panel2->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainerA3))->EndInit();
+			this->splitContainerA3->ResumeLayout(false);
+			this->contextMenuStripOfTreeViewA1->ResumeLayout(false);
+			this->contextMenuStripOfTreeViewA2->ResumeLayout(false);
+
+			this->tabPage3->ResumeLayout(false);
+			this->splitContainerB1->Panel1->ResumeLayout(false);
+			this->splitContainerB1->Panel2->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainerB1))->EndInit();
+			this->splitContainerB1->ResumeLayout(false);
+			this->splitContainerB2->Panel1->ResumeLayout(false);
+			this->splitContainerB2->Panel2->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainerB2))->EndInit();
+			this->splitContainerB2->ResumeLayout(false);
+			this->splitContainerB3->Panel1->ResumeLayout(false);
+			this->splitContainerB3->Panel2->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainerB3))->EndInit();
+			this->splitContainerB3->ResumeLayout(false);
+			this->contextMenuStripOfTreeViewB1->ResumeLayout(false);
+			this->contextMenuStripOfTreeViewB2->ResumeLayout(false);
+
+			this->tabPage4->ResumeLayout(false);
+			this->splitContainerC1->Panel1->ResumeLayout(false);
+			this->splitContainerC1->Panel2->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainerC1))->EndInit();
+			this->splitContainerC1->ResumeLayout(false);
+			this->splitContainerC2->Panel1->ResumeLayout(false);
+			this->splitContainerC2->Panel2->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainerC2))->EndInit();
+			this->splitContainerC2->ResumeLayout(false);
+			this->splitContainerC3->Panel1->ResumeLayout(false);
+			this->splitContainerC3->Panel2->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainerC3))->EndInit();
+			this->splitContainerC3->ResumeLayout(false);
+			this->contextMenuStripOfTreeViewC1->ResumeLayout(false);
+			this->contextMenuStripOfTreeViewC2->ResumeLayout(false);
+
+			this->tabPage5->ResumeLayout(false);
+			this->splitContainerD1->Panel1->ResumeLayout(false);
+			this->splitContainerD1->Panel2->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainerD1))->EndInit();
+			this->splitContainerD1->ResumeLayout(false);
+			this->splitContainerD2->Panel1->ResumeLayout(false);
+			this->splitContainerD2->Panel2->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainerD2))->EndInit();
+			this->splitContainerD2->ResumeLayout(false);
+			this->contextMenuStripOfTreeViewD1->ResumeLayout(false);
+
+			this->tabPage6->ResumeLayout(false);
+
 			this->ResumeLayout(false);
 
 		}
 
 #pragma endregion
 	private:void setTableLayoutPanelControlComponent(void) {
+		//FotItem
 		this->label0 = (gcnew Label());
 		this->label1 = (gcnew Label());
 		this->label2 = (gcnew Label());
@@ -496,7 +1450,96 @@ private: System::Windows::Forms::ToolStripMenuItem^ makeFractalToolStripMenuItem
 		this->trackBar23 = (gcnew TrackBar());
 		this->trackBar24 = (gcnew TrackBar());
 		this->trackBar25 = (gcnew TrackBar());
+
+		//ForTexture
+
+
+		//ForMaterial
+
+
+		//ForTwig
+
+
+		//ForGenerator
+		this->labelD0 = (gcnew Label());
+		this->labelD1 = (gcnew Label());
+		this->labelD2 = (gcnew Label());
+		this->labelD3 = (gcnew Label());
+		this->labelD4 = (gcnew Label());
+		this->labelD5 = (gcnew Label());
+		this->labelD6 = (gcnew Label());
+		this->labelD7 = (gcnew Label());
+		this->labelD8 = (gcnew Label());
+		this->labelD9 = (gcnew Label());
+		this->labelD10 = (gcnew Label());
+		this->labelD11 = (gcnew Label());
+		this->labelD12 = (gcnew Label());
+		this->labelD13 = (gcnew Label());
+		this->labelD14 = (gcnew Label());
+
+		this->comboBoxD0 = (gcnew ComboBox());
+
+		this->textBoxD0 = (gcnew TextBox());
+		this->textBoxD1 = (gcnew TextBox());
+		this->textBoxD2 = (gcnew TextBox());
+		this->textBoxD3 = (gcnew TextBox());
+		this->textBoxD4 = (gcnew TextBox());
+		this->textBoxD5 = (gcnew TextBox());
+		this->textBoxD6 = (gcnew TextBox());
+		this->textBoxD7 = (gcnew TextBox());
+		this->textBoxD8 = (gcnew TextBox());
+		this->textBoxD9 = (gcnew TextBox());
+		this->textBoxD10 = (gcnew TextBox());
+		this->textBoxD11 = (gcnew TextBox());
+		this->textBoxD12 = (gcnew TextBox());
+		this->textBoxD13 = (gcnew TextBox());
+		this->textBoxD14 = (gcnew TextBox());
+		this->textBoxD15 = (gcnew TextBox());
+
+		this->trackBarD0 = (gcnew TrackBar());
+		this->trackBarD1 = (gcnew TrackBar());
+		this->trackBarD2 = (gcnew TrackBar());
+		this->trackBarD3 = (gcnew TrackBar());
+		this->trackBarD4 = (gcnew TrackBar());
+		this->trackBarD5 = (gcnew TrackBar());
+		this->trackBarD6 = (gcnew TrackBar());
+		this->trackBarD7 = (gcnew TrackBar());
+		this->trackBarD8 = (gcnew TrackBar());
+		this->trackBarD9 = (gcnew TrackBar());
+		this->trackBarD10 = (gcnew TrackBar());
+		this->trackBarD11 = (gcnew TrackBar());
+		this->trackBarD12 = (gcnew TrackBar());
+		this->trackBarD13 = (gcnew TrackBar());
+
+		this->buttonD0 = (gcnew Button());
+		this->buttonD1 = (gcnew Button());
+
+		//ForInfo
+		this->buttonE0 = (gcnew Button());
+		this->buttonE1 = (gcnew Button());
 	};
+
+	/*
+■■■■■■■■■■■                         ■■■■■■■■                                            
+■■■■■■■■■■■                          ■■■■■■     ■■                                      
+■■                                     ■■       ■■                                      
+■■                                     ■■       ■■                                      
+■■                                     ■■       ■■                                      
+■■               ■■■■       ■■  ■■■    ■■     ■■■■■■■      ■■■■       ■■  ■■■■    ■■■■  
+■■             ■■■■■■■■     ■■ ■■■■    ■■     ■■■■■■■    ■■■■■■■■     ■■ ■■■■■■ ■■■■■■■ 
+■■            ■■■    ■■■    ■■■        ■■       ■■      ■■■    ■■■    ■■■    ■■■■    ■■■
+■■■■■■■■■■    ■■      ■■    ■■         ■■       ■■      ■■      ■■    ■■      ■■      ■■
+■■■■■■■■■■   ■■        ■■   ■■         ■■       ■■     ■■       ■■    ■■      ■■      ■■
+■■           ■■        ■■   ■■         ■■       ■■     ■■■      ■■■   ■■      ■■      ■■
+■■           ■■        ■■   ■■         ■■       ■■     ■■■■■■■■■■■■   ■■      ■■      ■■
+■■           ■■        ■■   ■■         ■■       ■■     ■■             ■■      ■■      ■■
+■■           ■■        ■■   ■■         ■■       ■■     ■■             ■■      ■■      ■■
+■■            ■■      ■■    ■■         ■■       ■■      ■■      ■     ■■      ■■      ■■
+■■            ■■■    ■■■    ■■         ■■       ■■      ■■■    ■■■    ■■      ■■      ■■
+■■             ■■■■■■■■     ■■       ■■■■■■     ■■■■     ■■■■■■■■     ■■      ■■      ■■
+■■               ■■■■       ■■      ■■■■■■■■     ■■■■      ■■■■■      ■■      ■■      ■■
+	*/
+
 
 	private: System::Void treeView1_AfterSelect(System::Object^ sender, System::Windows::Forms::TreeViewEventArgs^ e) {
 		i.SetPropNodeName(treeView1->SelectedNode->Name);
@@ -782,24 +1825,24 @@ private: System::Void MakeFractal(System::Object^ sender, System::EventArgs^ e) 
 		   }
 	   }
 
- private:void SetBPropertyPanel(String^ SelectedNodeName) {//�\���̂�������ςȎ���intialize�ɒǉ�����Ă�tablelayoutpanel��stile�����������!
+ private:void SetBPropertyPanel(String^ SelectedNodeName) {//表示のされ方が変な時はintializeに追加されてるtablelayoutpanelのstileあたりを消す!
 		   label0->Text = "GroupNum";
 		   label1->Text = "Texture";
 		   label2->Text = "Rings";
 		   label3->Text = "ShapeDivisionNum";
 		   label4->Text = "RadiusDivisionNum";
 		   label5->Text = "BirthPlace";
-		   label6->Text = "BirthPlaceRandmize";
+		   label6->Text = "BirthPlaceRandomize";
 		   label7->Text = "Length";
-		   label8->Text = "LengthRandmize";
+		   label8->Text = "LengthRandomize";
 		   label9->Text = "XRotation";
 		   label10->Text = "YRotation";
 		   label11->Text = "ZRotation";
-		   label12->Text = "XRotationRandmize";
-		   label13->Text = "YRotationRandmize";
-		   label14->Text = "ZRotationRandmize";
+		   label12->Text = "XRotationRandomize";
+		   label13->Text = "YRotationRandomize";
+		   label14->Text = "ZRotationRandomize";
 		   label15->Text = "BaseRadius";
-		   label16->Text = "BaseRadiusRandmize";
+		   label16->Text = "BaseRadiusRandomize";
 		   label17->Text = "BaseRadiusGraphType";
 		   label18->Text = "BaseRadiusGraphPointNum";
 		   label19->Text = "BaseRadiusGraph";
@@ -4257,5 +5300,1855 @@ private: System::Void chart_Click(System::Object^ sender, System::EventArgs^ e) 
 		camt();
 	}
 		   
+
+
+
+
+/*
+■■■■■■■■■■■                        ■■■■■■■■■■■■■■                                                                        
+■■■■■■■■■■■                         ■■■■■■■■■■■■■                              ■■                                        
+■■                                       ■■                                    ■■                                        
+■■                                       ■■                                    ■■                                        
+■■                                       ■■                                    ■■                                        
+■■               ■■■■       ■■  ■■■      ■■           ■■■■      ■■       ■■  ■■■■■■■   ■■      ■■    ■■  ■■■     ■■■■    
+■■             ■■■■■■■■     ■■ ■■■■      ■■         ■■■■■■■■     ■■     ■■   ■■■■■■■   ■■      ■■    ■■ ■■■■   ■■■■■■■■  
+■■            ■■■    ■■■    ■■■          ■■        ■■■    ■■■    ■■■   ■■      ■■      ■■      ■■    ■■■      ■■■    ■■■ 
+■■■■■■■■■■    ■■      ■■    ■■           ■■        ■■      ■■     ■■  ■■■      ■■      ■■      ■■    ■■       ■■      ■■ 
+■■■■■■■■■■   ■■        ■■   ■■           ■■       ■■       ■■      ■■ ■■       ■■      ■■      ■■    ■■      ■■       ■■ 
+■■           ■■        ■■   ■■           ■■       ■■■      ■■■      ■■■        ■■      ■■      ■■    ■■      ■■■      ■■■
+■■           ■■        ■■   ■■           ■■       ■■■■■■■■■■■■      ■■■        ■■      ■■      ■■    ■■      ■■■■■■■■■■■■
+■■           ■■        ■■   ■■           ■■       ■■                ■■■        ■■      ■■      ■■    ■■      ■■          
+■■           ■■        ■■   ■■           ■■       ■■               ■■ ■■       ■■      ■■      ■■    ■■      ■■          
+■■            ■■      ■■    ■■           ■■        ■■      ■      ■■   ■■      ■■      ■■      ■■    ■■       ■■      ■  
+■■            ■■■    ■■■    ■■           ■■        ■■■    ■■■    ■■■   ■■      ■■      ■■■    ■■■    ■■       ■■■    ■■■ 
+■■             ■■■■■■■■     ■■           ■■         ■■■■■■■■     ■■     ■■     ■■■■     ■■■■■■ ■■    ■■        ■■■■■■■■  
+■■               ■■■■       ■■           ■■           ■■■■■     ■■       ■■     ■■■■     ■■■■  ■■    ■■          ■■■■■   
+
+*/
+
+
+
+
+
+
+
+
+
+/*
+                                                                                                                         ■■  
+■■■■■■■■■■■                          ■■■          ■■■                                                 ■■                 ■■  
+■■■■■■■■■■■                          ■■■■         ■■■                  ■■                             ■■                 ■■  
+■■                                   ■■■■        ■■■■                  ■■                                                ■■  
+■■                                   ■■■■■       ■■■■                  ■■                                                ■■  
+■■                                   ■■ ■■      ■■ ■■                  ■■                                                ■■  
+■■               ■■■■       ■■  ■■■  ■■  ■■    ■■■ ■■      ■■■■■     ■■■■■■■      ■■■■       ■■  ■■■  ■■      ■■■■■      ■■  
+■■             ■■■■■■■■     ■■ ■■■■  ■■  ■■■   ■■  ■■    ■■■■■■■■    ■■■■■■■    ■■■■■■■■     ■■ ■■■■  ■■    ■■■■■■■■     ■■  
+■■            ■■■    ■■■    ■■■      ■■   ■■  ■■■  ■■    ■■    ■■■     ■■      ■■■    ■■■    ■■■      ■■    ■■    ■■■    ■■  
+■■■■■■■■■■    ■■      ■■    ■■       ■■   ■■■ ■■   ■■           ■■     ■■      ■■      ■■    ■■       ■■           ■■    ■■  
+■■■■■■■■■■   ■■        ■■   ■■       ■■    ■■■■    ■■           ■■     ■■     ■■       ■■    ■■       ■■           ■■    ■■  
+■■           ■■        ■■   ■■       ■■    ■■■■    ■■           ■■     ■■     ■■■      ■■■   ■■       ■■           ■■    ■■  
+■■           ■■        ■■   ■■       ■■     ■■     ■■     ■■■■■■■■     ■■     ■■■■■■■■■■■■   ■■       ■■     ■■■■■■■■    ■■  
+■■           ■■        ■■   ■■       ■■      ■     ■■    ■■     ■■     ■■     ■■             ■■       ■■    ■■     ■■    ■■  
+■■           ■■        ■■   ■■       ■■            ■■   ■■      ■■     ■■     ■■             ■■       ■■   ■■      ■■    ■■  
+■■            ■■      ■■    ■■       ■■            ■■   ■■      ■■     ■■      ■■      ■     ■■       ■■   ■■      ■■    ■■  
+■■            ■■■    ■■■    ■■       ■■            ■■   ■■■    ■■■     ■■      ■■■    ■■■    ■■       ■■   ■■■    ■■■    ■■  
+■■             ■■■■■■■■     ■■       ■■            ■■    ■■■■■■■ ■■■   ■■■■     ■■■■■■■■     ■■       ■■    ■■■■■■■ ■■■  ■■■■
+■■               ■■■■       ■■       ■■            ■■     ■■■■■  ■■■    ■■■■      ■■■■■      ■■       ■■     ■■■■■  ■■■   ■■■
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+■■■■■■■■■■■                        ■■■■■■■■■■■■■■                     ■■               
+■■■■■■■■■■■                         ■■■■■■■■■■■■■                     ■■               
+■■                                       ■■                                            
+■■                                       ■■                                         ■■ 
+■■                                       ■■                                        ■■■■
+■■               ■■■■       ■■  ■■■      ■■       ■■      ■■     ■■   ■■      ■■■■■■   
+■■             ■■■■■■■■     ■■ ■■■■      ■■       ■■     ■■■     ■■   ■■     ■■■■■■■■  
+■■            ■■■    ■■■    ■■■          ■■       ■■     ■■■     ■■   ■■    ■■     ■■  
+■■■■■■■■■■    ■■      ■■    ■■           ■■        ■■    ■■■■    ■■   ■■    ■■     ■■  
+■■■■■■■■■■   ■■        ■■   ■■           ■■        ■■   ■■ ■■   ■■    ■■    ■■     ■■■ 
+■■           ■■        ■■   ■■           ■■        ■■   ■■ ■■   ■■    ■■    ■■     ■■  
+■■           ■■        ■■   ■■           ■■        ■■   ■■  ■■  ■■    ■■    ■■     ■■  
+■■           ■■        ■■   ■■           ■■         ■■  ■   ■■  ■■    ■■     ■■■■■■■   
+■■           ■■        ■■   ■■           ■■         ■■ ■■   ■■ ■■     ■■      ■■■■■    
+■■            ■■      ■■    ■■           ■■         ■■ ■■    ■ ■■     ■■     ■         
+■■            ■■■    ■■■    ■■           ■■          ■■■     ■■■■     ■■    ■■         
+■■             ■■■■■■■■     ■■           ■■          ■■■     ■■■      ■■    ■■■■■■■■■  
+■■               ■■■■       ■■           ■■          ■■■     ■■■      ■■     ■■■■■■■■■ 
+                                                                            ■■      ■■■
+                                                                           ■■        ■■
+                                                                           ■■        ■■
+                                                                           ■■        ■■
+                                                                            ■■■■■■■■■■ 
+                                                                             ■■■■■■■   
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+■■■■■■■■■■■                              ■■■■■■                                                                                                     
+■■■■■■■■■■■                            ■■■■■■■■■                                                                       ■■                           
+■■                                    ■■■     ■■■                                                                      ■■                           
+■■                                    ■■        ■■                                                                     ■■                           
+■■                                   ■■■        ■                                                                      ■■                           
+■■               ■■■■       ■■  ■■■  ■■                  ■■■■       ■■  ■■■■         ■■■■       ■■  ■■■    ■■■■■     ■■■■■■■      ■■■■       ■■  ■■■
+■■             ■■■■■■■■     ■■ ■■■■  ■■                ■■■■■■■■     ■■ ■■■■■■      ■■■■■■■■     ■■ ■■■■  ■■■■■■■■    ■■■■■■■    ■■■■■■■■     ■■ ■■■■
+■■            ■■■    ■■■    ■■■      ■■               ■■■    ■■■    ■■■    ■■■    ■■■    ■■■    ■■■      ■■    ■■■     ■■      ■■■    ■■■    ■■■    
+■■■■■■■■■■    ■■      ■■    ■■      ■■■               ■■      ■■    ■■      ■■    ■■      ■■    ■■              ■■     ■■      ■■      ■■    ■■     
+■■■■■■■■■■   ■■        ■■   ■■      ■■■      ■■■■■■  ■■       ■■    ■■      ■■   ■■       ■■    ■■              ■■     ■■     ■■        ■■   ■■     
+■■           ■■        ■■   ■■      ■■■      ■■■■■■  ■■■      ■■■   ■■      ■■   ■■■      ■■■   ■■              ■■     ■■     ■■        ■■   ■■     
+■■           ■■        ■■   ■■       ■■          ■■  ■■■■■■■■■■■■   ■■      ■■   ■■■■■■■■■■■■   ■■        ■■■■■■■■     ■■     ■■        ■■   ■■     
+■■           ■■        ■■   ■■       ■■          ■■  ■■             ■■      ■■   ■■             ■■       ■■     ■■     ■■     ■■        ■■   ■■     
+■■           ■■        ■■   ■■       ■■         ■■■  ■■             ■■      ■■   ■■             ■■      ■■      ■■     ■■     ■■        ■■   ■■     
+■■            ■■      ■■    ■■        ■■        ■■■   ■■      ■     ■■      ■■    ■■      ■     ■■      ■■      ■■     ■■      ■■      ■■    ■■     
+■■            ■■■    ■■■    ■■        ■■■      ■■■■   ■■■    ■■■    ■■      ■■    ■■■    ■■■    ■■      ■■■    ■■■     ■■      ■■■    ■■■    ■■     
+■■             ■■■■■■■■     ■■         ■■■■■■■■■ ■■    ■■■■■■■■     ■■      ■■     ■■■■■■■■     ■■       ■■■■■■■ ■■■   ■■■■     ■■■■■■■■     ■■     
+■■               ■■■■       ■■           ■■■■■   ■■      ■■■■■      ■■      ■■       ■■■■■      ■■        ■■■■■  ■■■    ■■■■      ■■■■       ■■     
+*/
+
+
+
+private: System::Void listViewD1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+	if (listViewD1->SelectedItems->Count != 0) {
+		switch (listViewD1->SelectedItems[0]->Name->ToCharArray()[0]) {
+		case 'O':
+			gn.listItemType = 0;
+			break;
+		case 'T':
+			gn.listItemType = 1;
+			break;
+		}
+		gn.SetListItemPointer(listViewD1->SelectedItems[0]->Name);
+		gn.ScrollX = 0;
+		gn.ScrollY = 0;
+		ResetTableLayoutPanelD();
+	}
+}
+
+private:void ResetTableLayoutPanelD() {
+	tableLayoutPanelD->SuspendLayout();
+	for (int i = 0; i < tableLayoutPanelD->RowCount; i++) {
+		for (int s = 0; s < tableLayoutPanelD->ColumnCount; s++) {
+			tableLayoutPanelD->Controls->Remove(tableLayoutPanelD->GetControlFromPosition(s, i));
+		}
+	}
+	tableLayoutPanelD->ColumnCount = 0;
+	tableLayoutPanelD->RowCount = 0;
+	tableLayoutPanelD->AutoScrollPosition = Point(0, 0);
+	tableLayoutPanelD->SetColumnSpan(labelD0, 1);
+	tableLayoutPanelD->SetColumnSpan(labelD1, 1);
+	tableLayoutPanelD->SetColumnSpan(labelD2, 1);
+	tableLayoutPanelD->SetColumnSpan(labelD3, 1);
+	tableLayoutPanelD->SetColumnSpan(labelD4, 1);
+	tableLayoutPanelD->SetColumnSpan(labelD5, 1);
+	tableLayoutPanelD->SetColumnSpan(labelD6, 1);
+	tableLayoutPanelD->SetColumnSpan(labelD7, 1);
+	tableLayoutPanelD->SetColumnSpan(labelD8, 1);
+	tableLayoutPanelD->SetColumnSpan(labelD9, 1);
+	tableLayoutPanelD->SetColumnSpan(labelD10, 1);
+	tableLayoutPanelD->SetColumnSpan(labelD11, 1);
+	tableLayoutPanelD->SetColumnSpan(labelD12, 1);
+	tableLayoutPanelD->SetColumnSpan(labelD13, 1);
+	tableLayoutPanelD->SetColumnSpan(labelD14, 1);
+	tableLayoutPanelD->SetColumnSpan(comboBoxD0, 1);
+	tableLayoutPanelD->SetColumnSpan(textBoxD0, 1);
+	tableLayoutPanelD->SetColumnSpan(textBoxD1, 1);
+	tableLayoutPanelD->SetColumnSpan(textBoxD2, 1);
+	tableLayoutPanelD->SetColumnSpan(textBoxD3, 1);
+	tableLayoutPanelD->SetColumnSpan(textBoxD4, 1);
+	tableLayoutPanelD->SetColumnSpan(textBoxD5, 1);
+	tableLayoutPanelD->SetColumnSpan(textBoxD6, 1);
+	tableLayoutPanelD->SetColumnSpan(textBoxD7, 1);
+	tableLayoutPanelD->SetColumnSpan(textBoxD8, 1);
+	tableLayoutPanelD->SetColumnSpan(textBoxD9, 1);
+	tableLayoutPanelD->SetColumnSpan(textBoxD10, 1);
+	tableLayoutPanelD->SetColumnSpan(textBoxD11, 1);
+	tableLayoutPanelD->SetColumnSpan(textBoxD12, 1);
+	tableLayoutPanelD->SetColumnSpan(textBoxD13, 1);
+	tableLayoutPanelD->SetColumnSpan(textBoxD14, 1);
+	tableLayoutPanelD->SetColumnSpan(textBoxD15, 1);
+	tableLayoutPanelD->SetColumnSpan(trackBarD0, 1);
+	tableLayoutPanelD->SetColumnSpan(trackBarD1, 1);
+	tableLayoutPanelD->SetColumnSpan(trackBarD2, 1);
+	tableLayoutPanelD->SetColumnSpan(trackBarD3, 1);
+	tableLayoutPanelD->SetColumnSpan(trackBarD4, 1);
+	tableLayoutPanelD->SetColumnSpan(trackBarD5, 1);
+	tableLayoutPanelD->SetColumnSpan(trackBarD6, 1);
+	tableLayoutPanelD->SetColumnSpan(trackBarD7, 1);
+	tableLayoutPanelD->SetColumnSpan(trackBarD8, 1);
+	tableLayoutPanelD->SetColumnSpan(trackBarD9, 1);
+	tableLayoutPanelD->SetColumnSpan(trackBarD10, 1);
+	tableLayoutPanelD->SetColumnSpan(trackBarD11, 1);
+	tableLayoutPanelD->SetColumnSpan(trackBarD12, 1);
+	tableLayoutPanelD->SetColumnSpan(trackBarD13, 1);
+	tableLayoutPanelD->SetColumnSpan(buttonD0, 1);
+	tableLayoutPanelD->SetColumnSpan(buttonD1, 1);
+
+	tableLayoutPanelD->SetRowSpan(labelD0, 1);
+	tableLayoutPanelD->SetRowSpan(labelD1, 1);
+	tableLayoutPanelD->SetRowSpan(labelD2, 1);
+	tableLayoutPanelD->SetRowSpan(labelD3, 1);
+	tableLayoutPanelD->SetRowSpan(labelD4, 1);
+	tableLayoutPanelD->SetRowSpan(labelD5, 1);
+	tableLayoutPanelD->SetRowSpan(labelD6, 1);
+	tableLayoutPanelD->SetRowSpan(labelD7, 1);
+	tableLayoutPanelD->SetRowSpan(labelD8, 1);
+	tableLayoutPanelD->SetRowSpan(labelD9, 1);
+	tableLayoutPanelD->SetRowSpan(labelD10, 1);
+	tableLayoutPanelD->SetRowSpan(labelD11, 1);
+	tableLayoutPanelD->SetRowSpan(labelD12, 1);
+	tableLayoutPanelD->SetRowSpan(labelD13, 1);
+	tableLayoutPanelD->SetRowSpan(labelD14, 1);
+	tableLayoutPanelD->SetRowSpan(comboBoxD0, 1);
+	tableLayoutPanelD->SetRowSpan(textBoxD0, 1);
+	tableLayoutPanelD->SetRowSpan(textBoxD1, 1);
+	tableLayoutPanelD->SetRowSpan(textBoxD2, 1);
+	tableLayoutPanelD->SetRowSpan(textBoxD3, 1);
+	tableLayoutPanelD->SetRowSpan(textBoxD4, 1);
+	tableLayoutPanelD->SetRowSpan(textBoxD5, 1);
+	tableLayoutPanelD->SetRowSpan(textBoxD6, 1);
+	tableLayoutPanelD->SetRowSpan(textBoxD7, 1);
+	tableLayoutPanelD->SetRowSpan(textBoxD8, 1);
+	tableLayoutPanelD->SetRowSpan(textBoxD9, 1);
+	tableLayoutPanelD->SetRowSpan(textBoxD10, 1);
+	tableLayoutPanelD->SetRowSpan(textBoxD11, 1);
+	tableLayoutPanelD->SetRowSpan(textBoxD12, 1);
+	tableLayoutPanelD->SetRowSpan(textBoxD13, 1);
+	tableLayoutPanelD->SetRowSpan(textBoxD14, 1);
+	tableLayoutPanelD->SetRowSpan(textBoxD15, 1);
+	tableLayoutPanelD->SetRowSpan(trackBarD0, 1);
+	tableLayoutPanelD->SetRowSpan(trackBarD1, 1);
+	tableLayoutPanelD->SetRowSpan(trackBarD2, 1);
+	tableLayoutPanelD->SetRowSpan(trackBarD3, 1);
+	tableLayoutPanelD->SetRowSpan(trackBarD4, 1);
+	tableLayoutPanelD->SetRowSpan(trackBarD5, 1);
+	tableLayoutPanelD->SetRowSpan(trackBarD6, 1);
+	tableLayoutPanelD->SetRowSpan(trackBarD7, 1);
+	tableLayoutPanelD->SetRowSpan(trackBarD8, 1);
+	tableLayoutPanelD->SetRowSpan(trackBarD9, 1);
+	tableLayoutPanelD->SetRowSpan(trackBarD10, 1);
+	tableLayoutPanelD->SetRowSpan(trackBarD11, 1);
+	tableLayoutPanelD->SetRowSpan(trackBarD12, 1);
+	tableLayoutPanelD->SetRowSpan(trackBarD13, 1);
+	tableLayoutPanelD->SetRowSpan(buttonD0, 1);
+	tableLayoutPanelD->SetRowSpan(buttonD1, 1);
+	trackBarD0->Orientation = Orientation::Horizontal;
+	trackBarD1->Orientation = Orientation::Horizontal;
+	trackBarD2->Orientation = Orientation::Horizontal;
+	trackBarD3->Orientation = Orientation::Horizontal;
+	trackBarD4->Orientation = Orientation::Horizontal;
+	trackBarD5->Orientation = Orientation::Horizontal;
+	trackBarD6->Orientation = Orientation::Horizontal;
+	trackBarD7->Orientation = Orientation::Horizontal;
+	trackBarD8->Orientation = Orientation::Horizontal;
+	trackBarD9->Orientation = Orientation::Horizontal;
+	trackBarD10->Orientation = Orientation::Horizontal;
+	trackBarD11->Orientation = Orientation::Horizontal;
+	trackBarD12->Orientation = Orientation::Horizontal;
+	trackBarD13->Orientation = Orientation::Horizontal;
+
+	switch (gn.listItemType) {
+	case 0:
+		switch (gn.listItemWGType()) {
+		case 0:
+			SetDOLPropertyPanel();
+			break;
+		case 1:
+			SetDOBPropertyPanel();
+			break;
+		case 2:
+			SetDOLBPropertyPanel();
+			break;
+		}
+		break;
+	case 1:
+		switch (gn.listItemWGType()) {
+		case 0:
+			SetDTFAPropertyPanel();
+			break;
+		case 1:
+			SetDTSAPropertyPanel();
+			break;
+		case 2:
+			SetDTFSPropertyPanel();
+			break;
+		}
+		break;
+	default:
+		break;
+	}
+	tableLayoutPanelD->ResumeLayout(true);
+}
+
+private:void SetDOLPropertyPanel() {
+}
+
+private:void SetDOBPropertyPanel() {
+}
+
+private:void SetDOLBPropertyPanel() {
+}
+
+private:void SetDTFAPropertyPanel() {
+}
+
+private:void SetDTSAPropertyPanel() {
+}
+
+private:void SetDTFSPropertyPanel() {
+	labelD0->Text = "GenType";
+	labelD1->Text = "Repeat";
+	labelD2->Text = "BirthX";
+	labelD3->Text = "BirthY";
+	labelD4->Text = "BirthZ";
+	labelD5->Text = "ZMax";
+	labelD6->Text = "previewRX";
+	labelD7->Text = "previewRY";
+	labelD8->Text = "previewRZ";
+	labelD9->Text = "GoLength";
+	labelD10->Text = "Rotation";
+	labelD11->Text = "Radius";
+	labelD12->Text = "Type";
+	labelD13->Text = "FractalRatio";
+	labelD14->Text = "ManualInput";
+
+	labelD0->ForeColor = Color::White;
+	labelD1->ForeColor = Color::White;
+	labelD2->ForeColor = Color::White;
+	labelD3->ForeColor = Color::White;
+	labelD4->ForeColor = Color::White;
+	labelD5->ForeColor = Color::White;
+	labelD6->ForeColor = Color::White;
+	labelD7->ForeColor = Color::White;
+	labelD8->ForeColor = Color::White;
+	labelD9->ForeColor = Color::White;
+	labelD10->ForeColor = Color::White;
+	labelD11->ForeColor = Color::White;
+	labelD12->ForeColor = Color::White;
+	labelD13->ForeColor = Color::White;
+	labelD14->ForeColor = Color::White;
+
+	labelD0->Dock = DockStyle::Bottom;
+	labelD1->Dock = DockStyle::Bottom;
+	labelD2->Dock = DockStyle::Bottom;
+	labelD3->Dock = DockStyle::Bottom;
+	labelD4->Dock = DockStyle::Bottom;
+	labelD5->Dock = DockStyle::Bottom;
+	labelD6->Dock = DockStyle::Bottom;
+	labelD7->Dock = DockStyle::Bottom;
+	labelD8->Dock = DockStyle::Bottom;
+	labelD9->Dock = DockStyle::Bottom;
+	labelD10->Dock = DockStyle::Bottom;
+	labelD11->Dock = DockStyle::Bottom;
+	labelD12->Dock = DockStyle::Bottom;
+	labelD13->Dock = DockStyle::Bottom;
+	labelD14->Dock = DockStyle::Bottom;
+
+	comboBoxD0->Name = "0";
+	comboBoxD0->Dock = DockStyle::Bottom;
+	comboBoxD0->DropDownStyle = ComboBoxStyle::DropDownList;
+	comboBoxD0->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	comboBoxD0->Leave += gcnew System::EventHandler(this, &MyForm::comboBoxD_TextChanged);
+	comboBoxD0->Items->Clear();
+	comboBoxD0->Items->Add("FA");
+	comboBoxD0->Items->Add("SA");
+	comboBoxD0->Items->Add("FS");
+	comboBoxD0->SelectedIndex =2;
+
+	textBoxD0->Name = "0";
+	textBoxD1->Name = "1";
+	textBoxD2->Name = "2";
+	textBoxD3->Name = "3";
+	textBoxD4->Name = "4";
+	textBoxD5->Name = "5";
+	textBoxD6->Name = "6";
+	textBoxD7->Name = "7";
+	textBoxD8->Name = "8";
+	textBoxD9->Name = "9";
+	textBoxD10->Name = "10";
+	textBoxD11->Name = "11";
+	textBoxD12->Name = "12";
+	textBoxD13->Name = "13";
+	textBoxD14->Name = "14";
+	textBoxD15->Name = "15";
+
+	textBoxD0->Dock = DockStyle::Bottom;
+	textBoxD1->Dock = DockStyle::Bottom;
+	textBoxD2->Dock = DockStyle::Bottom;
+	textBoxD3->Dock = DockStyle::Bottom;
+	textBoxD4->Dock = DockStyle::Bottom;
+	textBoxD5->Dock = DockStyle::Bottom;
+	textBoxD6->Dock = DockStyle::Bottom;
+	textBoxD7->Dock = DockStyle::Bottom;
+	textBoxD8->Dock = DockStyle::Bottom;
+	textBoxD9->Dock = DockStyle::Bottom;
+	textBoxD10->Dock = DockStyle::Bottom;
+	textBoxD11->Dock = DockStyle::Bottom;
+	textBoxD12->Dock = DockStyle::Bottom;
+	textBoxD13->Dock = DockStyle::Bottom;
+	textBoxD14->Dock = DockStyle::Bottom;
+	textBoxD15->Dock = DockStyle::Bottom;
+
+	textBoxD0->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::textBox_KeyPress);
+	textBoxD1->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::textBox_KeyPress);
+	textBoxD2->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::textBox_KeyPress);
+	textBoxD3->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::textBox_KeyPress);
+	textBoxD4->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::textBox_KeyPress);
+	textBoxD5->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::textBox_KeyPress);
+	textBoxD6->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::textBox_KeyPress);
+	textBoxD7->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::textBox_KeyPress);
+	textBoxD8->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::textBox_KeyPress);
+	textBoxD9->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::textBox_KeyPress);
+	textBoxD10->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::textBox_KeyPress);
+	textBoxD11->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::textBox_KeyPress);
+	textBoxD12->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::textBox_KeyPress);
+	textBoxD13->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::textBox_KeyPress);
+	textBoxD14->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::textBox_KeyPress);
+	textBoxD15->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::textBox_KeyPress);
+
+	textBoxD0->Leave += gcnew System::EventHandler(this, &MyForm::textBoxD_TextChanged);
+	textBoxD1->Leave += gcnew System::EventHandler(this, &MyForm::textBoxD_TextChanged);
+	textBoxD2->Leave += gcnew System::EventHandler(this, &MyForm::textBoxD_TextChanged);
+	textBoxD3->Leave += gcnew System::EventHandler(this, &MyForm::textBoxD_TextChanged);
+	textBoxD4->Leave += gcnew System::EventHandler(this, &MyForm::textBoxD_TextChanged);
+	textBoxD5->Leave += gcnew System::EventHandler(this, &MyForm::textBoxD_TextChanged);
+	textBoxD6->Leave += gcnew System::EventHandler(this, &MyForm::textBoxD_TextChanged);
+	textBoxD7->Leave += gcnew System::EventHandler(this, &MyForm::textBoxD_TextChanged);
+	textBoxD8->Leave += gcnew System::EventHandler(this, &MyForm::textBoxD_TextChanged);
+	textBoxD9->Leave += gcnew System::EventHandler(this, &MyForm::textBoxD_TextChanged);
+	textBoxD10->Leave += gcnew System::EventHandler(this, &MyForm::textBoxD_TextChanged);
+	textBoxD11->Leave += gcnew System::EventHandler(this, &MyForm::textBoxD_TextChanged);
+	textBoxD12->Leave += gcnew System::EventHandler(this, &MyForm::textBoxD_TextChanged);
+	textBoxD13->Leave += gcnew System::EventHandler(this, &MyForm::textBoxD_TextChanged);
+	textBoxD14->Leave += gcnew System::EventHandler(this, &MyForm::textBoxD_TextChanged);
+	textBoxD15->Leave += gcnew System::EventHandler(this, &MyForm::textBoxD_TextChanged);
+
+	textBoxD0->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	textBoxD1->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	textBoxD2->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	textBoxD3->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	textBoxD4->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	textBoxD5->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	textBoxD6->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	textBoxD7->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	textBoxD8->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	textBoxD9->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	textBoxD10->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	textBoxD11->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	textBoxD12->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	textBoxD13->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	textBoxD14->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	textBoxD15->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+
+	textBoxD1->Text = gn.GetValue(1, textBoxD1->Name).ToString();
+	textBoxD3->Text = gn.GetValue(1, textBoxD3->Name).ToString();
+	textBoxD4->Text = gn.GetValue(1, textBoxD4->Name).ToString();
+	textBoxD5->Text = gn.GetValue(1, textBoxD5->Name).ToString();
+	textBoxD6->Text = gn.GetValue(1, textBoxD6->Name).ToString();
+	textBoxD7->Text = gn.GetValue(1, textBoxD7->Name).ToString();
+	textBoxD8->Text = gn.GetValue(1, textBoxD8->Name).ToString();
+	textBoxD9->Text = gn.GetValue(1, textBoxD9->Name).ToString();
+	textBoxD10->Text = gn.GetValue(1, textBoxD10->Name).ToString();
+	textBoxD11->Text = gn.GetValue(1, textBoxD11->Name).ToString();
+	textBoxD12->Text = gn.GetValue(1, textBoxD12->Name).ToString();
+	textBoxD13->Text = gn.GetValue(1, textBoxD13->Name).ToString();
+	textBoxD14->Text = gn.GetValue(1, textBoxD14->Name).ToString();
+	textBoxD15->Text = gn.GetValue(1, textBoxD15->Name).ToString();
+
+	textBoxD0->Text = gn.GetString(textBoxD0->Name);
+	textBoxD2->Text = gn.GetString(textBoxD2->Name);
+
+	trackBarD0->Name = "1";
+	trackBarD1->Name = "3";
+	trackBarD2->Name = "4";
+	trackBarD3->Name = "5";
+	trackBarD4->Name = "6";
+	trackBarD5->Name = "7";
+	trackBarD6->Name = "8";
+	trackBarD7->Name = "9";
+	trackBarD8->Name = "10";
+	trackBarD9->Name = "11";
+	trackBarD10->Name = "12";
+	trackBarD11->Name = "13";
+	trackBarD12->Name = "14";
+	trackBarD13->Name = "15";
+
+	trackBarD0->Dock = DockStyle::Bottom;
+	trackBarD1->Dock = DockStyle::Bottom;
+	trackBarD2->Dock = DockStyle::Bottom;
+	trackBarD3->Dock = DockStyle::Bottom;
+	trackBarD4->Dock = DockStyle::Bottom;
+	trackBarD5->Dock = DockStyle::Bottom;
+	trackBarD6->Dock = DockStyle::Bottom;
+	trackBarD7->Dock = DockStyle::Bottom;
+	trackBarD8->Dock = DockStyle::Bottom;
+	trackBarD9->Dock = DockStyle::Bottom;
+	trackBarD10->Dock = DockStyle::Bottom;
+	trackBarD11->Dock = DockStyle::Bottom;
+	trackBarD12->Dock = DockStyle::Bottom;
+	trackBarD13->Dock = DockStyle::Bottom;
+
+	trackBarD0->Scroll += gcnew System::EventHandler(this, &MyForm::trackBarD_Scroll);
+	trackBarD1->Scroll += gcnew System::EventHandler(this, &MyForm::trackBarD_Scroll);
+	trackBarD2->Scroll += gcnew System::EventHandler(this, &MyForm::trackBarD_Scroll);
+	trackBarD3->Scroll += gcnew System::EventHandler(this, &MyForm::trackBarD_Scroll);
+	trackBarD4->Scroll += gcnew System::EventHandler(this, &MyForm::trackBarD_Scroll);
+	trackBarD5->Scroll += gcnew System::EventHandler(this, &MyForm::trackBarD_Scroll);
+	trackBarD6->Scroll += gcnew System::EventHandler(this, &MyForm::trackBarD_Scroll);
+	trackBarD7->Scroll += gcnew System::EventHandler(this, &MyForm::trackBarD_Scroll);
+	trackBarD8->Scroll += gcnew System::EventHandler(this, &MyForm::trackBarD_Scroll);
+	trackBarD9->Scroll += gcnew System::EventHandler(this, &MyForm::trackBarD_Scroll);
+	trackBarD10->Scroll += gcnew System::EventHandler(this, &MyForm::trackBarD_Scroll);
+	trackBarD11->Scroll += gcnew System::EventHandler(this, &MyForm::trackBarD_Scroll);
+	trackBarD12->Scroll += gcnew System::EventHandler(this, &MyForm::trackBarD_Scroll);
+	trackBarD13->Scroll += gcnew System::EventHandler(this, &MyForm::trackBarD_Scroll);
+
+	trackBarD0->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	trackBarD1->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	trackBarD2->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	trackBarD3->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	trackBarD4->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	trackBarD5->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	trackBarD6->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	trackBarD7->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	trackBarD8->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	trackBarD9->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	trackBarD10->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	trackBarD11->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	trackBarD12->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	trackBarD13->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+
+	trackBarD0->Minimum = 0;
+	trackBarD1->Minimum = -2000;
+	trackBarD2->Minimum = -2000;
+	trackBarD3->Minimum = -2000;
+	trackBarD4->Minimum = -2000;
+	trackBarD5->Minimum = -2000;
+	trackBarD6->Minimum = -2000;
+	trackBarD7->Minimum = -2000;
+	trackBarD8->Minimum = -1000;
+	trackBarD9->Minimum = -1000;
+	trackBarD10->Minimum = -1000;
+	trackBarD11->Minimum = 0;
+	trackBarD12->Minimum = -1000;
+	trackBarD13->Minimum = 0;
+
+	trackBarD0->Maximum = 10;
+	trackBarD1->Maximum = 2000;
+	trackBarD2->Maximum = 2000;
+	trackBarD3->Maximum = 2000;
+	trackBarD4->Maximum = 2000;
+	trackBarD5->Maximum = 2000;
+	trackBarD6->Maximum = 2000;
+	trackBarD7->Maximum = 2000;
+	trackBarD8->Maximum = 1000;
+	trackBarD9->Maximum = 1000;
+	trackBarD10->Maximum = 1000;
+	trackBarD11->Maximum = 9;
+	trackBarD12->Maximum = 1000;
+	trackBarD13->Maximum = 1;
+
+	trackBarD0->TickFrequency = 1;
+	trackBarD1->TickFrequency = 200;
+	trackBarD2->TickFrequency = 200;
+	trackBarD3->TickFrequency = 200;
+	trackBarD4->TickFrequency = 200;
+	trackBarD5->TickFrequency = 200;
+	trackBarD6->TickFrequency = 200;
+	trackBarD7->TickFrequency = 200;
+	trackBarD8->TickFrequency = 100;
+	trackBarD9->TickFrequency = 100;
+	trackBarD10->TickFrequency = 100;
+	trackBarD11->TickFrequency = 1;
+	trackBarD12->TickFrequency = 100;
+	trackBarD13->TickFrequency = 1;
+
+	trackBarD0->Value = ValueBind(gn.GetValue(1,trackBarD0->Name),  trackBarD0->Minimum, trackBarD0->Maximum);
+	trackBarD1->Value = ValueBind(gn.GetValue(1, trackBarD1->Name), trackBarD1->Minimum, trackBarD1->Maximum);
+	trackBarD2->Value = ValueBind(gn.GetValue(1, trackBarD2->Name), trackBarD2->Minimum, trackBarD2->Maximum);
+	trackBarD3->Value = ValueBind(gn.GetValue(1, trackBarD3->Name), trackBarD3->Minimum, trackBarD3->Maximum);
+	trackBarD4->Value = ValueBind(gn.GetValue(1, trackBarD4->Name), trackBarD4->Minimum, trackBarD4->Maximum);
+	trackBarD5->Value = ValueBind(gn.GetValue(1, trackBarD5->Name), trackBarD5->Minimum, trackBarD5->Maximum);
+	trackBarD6->Value = ValueBind(gn.GetValue(1, trackBarD6->Name), trackBarD6->Minimum, trackBarD6->Maximum);
+	trackBarD7->Value = ValueBind(gn.GetValue(1, trackBarD7->Name), trackBarD7->Minimum, trackBarD7->Maximum);
+	trackBarD8->Value = ValueBind(gn.GetValue(1, trackBarD8->Name), trackBarD8->Minimum, trackBarD8->Maximum);
+	trackBarD9->Value = ValueBind(gn.GetValue(1, trackBarD9->Name), trackBarD9->Minimum, trackBarD9->Maximum);
+	trackBarD10->Value = ValueBind(gn.GetValue(1, trackBarD10->Name), trackBarD10->Minimum, trackBarD10->Maximum);
+	trackBarD11->Value = ValueBind(gn.GetValue(1, trackBarD11->Name), trackBarD11->Minimum, trackBarD11->Maximum);
+	trackBarD12->Value = ValueBind(gn.GetValue(1, trackBarD12->Name), trackBarD12->Minimum, trackBarD12->Maximum);
+	trackBarD13->Value = ValueBind(gn.GetValue(1, trackBarD13->Name), trackBarD13->Minimum, trackBarD13->Maximum);
+
+	buttonD0->Name = "0";
+	buttonD1->Name = "1";
+
+	buttonD0->Text = "出力";
+	buttonD1->Text = "インポート";
+
+	buttonD0->ForeColor = Color::White;
+	buttonD1->ForeColor = Color::White;
+
+	buttonD0->FlatStyle = FlatStyle::Flat;
+	buttonD1->FlatStyle = FlatStyle::Flat;
+
+	buttonD0->Dock = DockStyle::Bottom;
+	buttonD1->Dock = DockStyle::Bottom;
+
+	buttonD0->Click += gcnew System::EventHandler(this, &MyForm::buttonD_Click);
+	buttonD1->Click += gcnew System::EventHandler(this, &MyForm::buttonD_Click);
+
+	buttonD0->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+	buttonD1->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControlD_GotFocus);
+
+	tableLayoutPanelD->ColumnCount = 20;
+	tableLayoutPanelD->RowCount = 20;
+	for (int i = 0; i < 20; i++) {
+		tableLayoutPanelD->ColumnStyles->Add(gcnew ColumnStyle(SizeType::Percent, 5));
+	}
+	for (int i = 0; i < 20; i++) {
+		tableLayoutPanelD->RowStyles->Add(gcnew RowStyle(SizeType::Absolute, 40));
+	}
+
+	tableLayoutPanelD->Controls->Add(labelD0, 1, 0);
+	tableLayoutPanelD->Controls->Add(labelD1, 1, 2);
+	tableLayoutPanelD->Controls->Add(labelD2, 1, 4);
+	tableLayoutPanelD->Controls->Add(labelD3, 1, 5);
+	tableLayoutPanelD->Controls->Add(labelD4, 1, 6);
+	tableLayoutPanelD->Controls->Add(labelD5, 1, 7);
+	tableLayoutPanelD->Controls->Add(labelD6, 1, 8);
+	tableLayoutPanelD->Controls->Add(labelD7, 1, 9);
+	tableLayoutPanelD->Controls->Add(labelD8, 1, 10);
+	tableLayoutPanelD->Controls->Add(labelD9, 1, 11);
+	tableLayoutPanelD->Controls->Add(labelD10, 1, 12);
+	tableLayoutPanelD->Controls->Add(labelD11, 1, 13);
+	tableLayoutPanelD->Controls->Add(labelD12, 1, 14);
+	tableLayoutPanelD->Controls->Add(labelD13, 1, 15);
+	tableLayoutPanelD->Controls->Add(labelD14, 1, 18);
+
+	tableLayoutPanelD->Controls->Add(comboBoxD0, 7, 0);
+
+	tableLayoutPanelD->Controls->Add(textBoxD0, 1, 1);
+	tableLayoutPanelD->Controls->Add(textBoxD1, 16, 2);
+	tableLayoutPanelD->Controls->Add(textBoxD2, 1, 3);
+	tableLayoutPanelD->Controls->Add(textBoxD3, 16, 4);
+	tableLayoutPanelD->Controls->Add(textBoxD4, 16, 5);
+	tableLayoutPanelD->Controls->Add(textBoxD5, 16, 6);
+	tableLayoutPanelD->Controls->Add(textBoxD6, 16, 7);
+	tableLayoutPanelD->Controls->Add(textBoxD7, 16, 8);
+	tableLayoutPanelD->Controls->Add(textBoxD8, 16, 9);
+	tableLayoutPanelD->Controls->Add(textBoxD9, 16, 10);
+	tableLayoutPanelD->Controls->Add(textBoxD10, 16, 11);
+	tableLayoutPanelD->Controls->Add(textBoxD11, 16, 12);
+	tableLayoutPanelD->Controls->Add(textBoxD12, 16, 13);
+	tableLayoutPanelD->Controls->Add(textBoxD13, 16, 14);
+	tableLayoutPanelD->Controls->Add(textBoxD14, 16, 15);
+	tableLayoutPanelD->Controls->Add(textBoxD15, 16, 18);
+
+	tableLayoutPanelD->Controls->Add(trackBarD0, 7, 2);
+	tableLayoutPanelD->Controls->Add(trackBarD1, 7, 4);
+	tableLayoutPanelD->Controls->Add(trackBarD2, 7, 5);
+	tableLayoutPanelD->Controls->Add(trackBarD3, 7, 6);
+	tableLayoutPanelD->Controls->Add(trackBarD4, 7, 7);
+	tableLayoutPanelD->Controls->Add(trackBarD5, 7, 8);
+	tableLayoutPanelD->Controls->Add(trackBarD6, 7, 9);
+	tableLayoutPanelD->Controls->Add(trackBarD7, 7, 10);
+	tableLayoutPanelD->Controls->Add(trackBarD8, 7, 11);
+	tableLayoutPanelD->Controls->Add(trackBarD9, 7, 12);
+	tableLayoutPanelD->Controls->Add(trackBarD10, 7, 13);
+	tableLayoutPanelD->Controls->Add(trackBarD11, 7, 14);
+	tableLayoutPanelD->Controls->Add(trackBarD12, 7, 15);
+	tableLayoutPanelD->Controls->Add(trackBarD13, 7, 18);
+
+	tableLayoutPanelD->Controls->Add(buttonD0, 7, 16);
+	tableLayoutPanelD->Controls->Add(buttonD1, 7, 17);
+
+	tableLayoutPanelD->SetColumnSpan(labelD0, 5);
+	tableLayoutPanelD->SetColumnSpan(labelD1, 5);
+	tableLayoutPanelD->SetColumnSpan(labelD2, 5);
+	tableLayoutPanelD->SetColumnSpan(labelD3, 5);
+	tableLayoutPanelD->SetColumnSpan(labelD4, 5);
+	tableLayoutPanelD->SetColumnSpan(labelD5, 5);
+	tableLayoutPanelD->SetColumnSpan(labelD6, 5);
+	tableLayoutPanelD->SetColumnSpan(labelD7, 5);
+	tableLayoutPanelD->SetColumnSpan(labelD8, 5);
+	tableLayoutPanelD->SetColumnSpan(labelD9, 5);
+	tableLayoutPanelD->SetColumnSpan(labelD10, 5);
+	tableLayoutPanelD->SetColumnSpan(labelD11, 5);
+	tableLayoutPanelD->SetColumnSpan(labelD12, 5);
+	tableLayoutPanelD->SetColumnSpan(labelD13, 5);
+	tableLayoutPanelD->SetColumnSpan(labelD14, 5);
+
+	tableLayoutPanelD->SetColumnSpan(comboBoxD0, 12);
+
+	tableLayoutPanelD->SetColumnSpan(textBoxD0, 18);
+	tableLayoutPanelD->SetColumnSpan(textBoxD1, 3);
+	tableLayoutPanelD->SetColumnSpan(textBoxD2, 18);
+	tableLayoutPanelD->SetColumnSpan(textBoxD3, 3);
+	tableLayoutPanelD->SetColumnSpan(textBoxD4, 3);
+	tableLayoutPanelD->SetColumnSpan(textBoxD5, 3);
+	tableLayoutPanelD->SetColumnSpan(textBoxD6, 3);
+	tableLayoutPanelD->SetColumnSpan(textBoxD7, 3);
+	tableLayoutPanelD->SetColumnSpan(textBoxD8, 3);
+	tableLayoutPanelD->SetColumnSpan(textBoxD9, 3);
+	tableLayoutPanelD->SetColumnSpan(textBoxD10, 3);
+	tableLayoutPanelD->SetColumnSpan(textBoxD11, 3);
+	tableLayoutPanelD->SetColumnSpan(textBoxD12, 3);
+	tableLayoutPanelD->SetColumnSpan(textBoxD13, 3);
+	tableLayoutPanelD->SetColumnSpan(textBoxD14, 3);
+	tableLayoutPanelD->SetColumnSpan(textBoxD15, 3);
+
+	tableLayoutPanelD->SetColumnSpan(trackBarD0, 8);
+	tableLayoutPanelD->SetColumnSpan(trackBarD1, 8);
+	tableLayoutPanelD->SetColumnSpan(trackBarD2, 8);
+	tableLayoutPanelD->SetColumnSpan(trackBarD3, 8);
+	tableLayoutPanelD->SetColumnSpan(trackBarD4, 8);
+	tableLayoutPanelD->SetColumnSpan(trackBarD5, 8);
+	tableLayoutPanelD->SetColumnSpan(trackBarD6, 8);
+	tableLayoutPanelD->SetColumnSpan(trackBarD7, 8);
+	tableLayoutPanelD->SetColumnSpan(trackBarD8, 8);
+	tableLayoutPanelD->SetColumnSpan(trackBarD9, 8);
+	tableLayoutPanelD->SetColumnSpan(trackBarD10, 8);
+	tableLayoutPanelD->SetColumnSpan(trackBarD11, 8);
+	tableLayoutPanelD->SetColumnSpan(trackBarD12, 8);
+	tableLayoutPanelD->SetColumnSpan(trackBarD13, 8);
+
+	tableLayoutPanelD->SetColumnSpan(buttonD0, 8);
+	tableLayoutPanelD->SetColumnSpan(buttonD1, 8);
+}
+
+ private: System::Void AddObject(System::Object^ sender, System::EventArgs^ e) {
+	 gn.ObjectCreate();
+	 ListViewItem^ item = gcnew ListViewItem();
+	 item->Text = "O";
+	 item->Name = "O" + gn.ObjectNum.ToString();
+	 gn.ObjectNum += 1;
+	 listViewD1->Items->Add(item);
+ }
+
+private: System::Void AddTree(System::Object^ sender, System::EventArgs^ e) {
+	gn.TreeCreate();
+	ListViewItem^ item = gcnew ListViewItem();
+	item->Text = "T";
+	item->Name = "T" + gn.TreeNum.ToString();
+	gn.TreeNum += 1;
+	listViewD1->Items->Add(item);
+}
+
+private: System::Void DuplicateObjTre(System::Object^ sender, System::EventArgs^ e) {
+	if (listViewD1->SelectedItems->Count != 0) {
+		gn.ItemDuplicate(listViewD1->SelectedItems[0]->Name);
+		ListViewItem^ item = gcnew ListViewItem();
+		switch (gn.listItemType) {
+		case 0:
+			item->Text = "O";
+			item->Name = "O" + gn.ObjectNum.ToString();
+			gn.ObjectNum += 1;
+			listViewD1->Items->Add(item);
+			break;
+		case 1:
+			item->Text = "T";
+			item->Name = "T" + gn.TreeNum.ToString();
+			gn.TreeNum += 1;
+			listViewD1->Items->Add(item);
+			break;
+		}
+	}
+}
+
+private: System::Void DeleteObjTre(System::Object^ sender, System::EventArgs^ e) {
+	if (listViewD1->SelectedItems->Count != 0) {
+		gn.ItemDelete(listViewD1->SelectedItems[0]->Name);
+		listViewD1->SelectedItems[0]->Remove();
+	}
+}
+
+private: System::Void tableLayoutPanelD_Scroll(System::Object^ sender, System::Windows::Forms::ScrollEventArgs^ e) {
+	gn.ScrollX = -tableLayoutPanelD->AutoScrollPosition.X;
+	gn.ScrollY = -tableLayoutPanelD->AutoScrollPosition.Y;
+}
+
+private: System::Void tableLayoutPanelD_MouseWheel(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
+	gn.ScrollX = -tableLayoutPanelD->AutoScrollPosition.X;
+	gn.ScrollY = -tableLayoutPanelD->AutoScrollPosition.Y;
+}
+
+private: System::Void tableLayoutPanelControlD_GotFocus(System::Object^ sender, System::EventArgs^ e) {
+	tableLayoutPanelD->AutoScrollPosition = Point(gn.ScrollX, gn.ScrollY);
+	tableLayoutPanelD->ResumeLayout(true);
+}
+
+private: System::Void comboBoxD_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+	gn.SetComboBoxValue(((ComboBox^)sender)->SelectedIndex, ((Control^)sender)->Name);
+}
+
+private: System::Void textBoxD_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+		   int num = 0;
+		   int value = 0;
+		   int min = -16777216;
+		   int max = 16777216;
+		   string ControlText = "";
+		   for (int i = 0; i < (((TextBox^)sender)->Name->ToCharArray()->Length); i++) {
+			   char a = ((TextBox^)sender)->Name->ToCharArray()[i];
+			   num = num * 10 + a - '0';//char'0'=int 48
+		   }
+		   for (int i = 0; i < ((TextBox^)sender)->Text->ToCharArray()->Length; i++) {
+			   ControlText += ((TextBox^)sender)->Text->ToCharArray()[i];
+		   }
+
+		   //switchnonaka
+           //value = std::stoi(ControlText);
+		   //value = (int)(std::stod(ControlText) * 10000);
+		  
+		   switch (gn.listItemType) {
+		   case 0:
+			   switch (gn.listItemWGType()) {
+			   case 0:
+				   switch(num) {
+				   }
+				   break;
+			   case 1:
+				   switch (num) {
+				   }
+				   break;
+			   case 2:
+				   switch (num) {
+				   }
+				   break;
+			   }
+			   break;
+		   case 1:
+			   switch (gn.listItemWGType()) {
+			   case 0:
+				   switch (num) {
+				   }
+				   break;
+			   case 1:
+				   switch (num) {
+				   }
+				   break;
+			   case 2:
+				   switch (num) {
+				   case 0:
+					   gn.SetString(((TextBox^)sender)->Text, ((Control^)sender)->Name);
+					   break;
+				   case 1:
+					   min = trackBarD0->Minimum;
+					   max = trackBarD0->Maximum;
+					   value = ValueBind(std::stoi(ControlText),min,max);
+					   gn.SetTBValue(value, ((Control^)sender)->Name);
+					   textBoxD1->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+					   trackBarD0->Value = ValueBind(gn.GetValue(1, ((Control^)sender)->Name),trackBarD0->Minimum, trackBarD0->Maximum);
+					   break;
+				   case 2:
+					   gn.SetString(((TextBox^)sender)->Text, ((Control^)sender)->Name);
+					   break;
+				   case 3:
+					   min = trackBarD1->Minimum;
+					   max = trackBarD1->Maximum;
+					   value = ValueBind(std::stoi(ControlText), min, max);
+					   gn.SetTBValue(value, ((Control^)sender)->Name);
+					   textBoxD3->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+					   trackBarD1->Value = ValueBind(gn.GetValue(1, ((Control^)sender)->Name), trackBarD1->Minimum, trackBarD1->Maximum);
+					   break;
+				   case 4:
+					   min = trackBarD2->Minimum;
+					   max = trackBarD2->Maximum;
+					   value = ValueBind(std::stoi(ControlText), min, max);
+					   gn.SetTBValue(value, ((Control^)sender)->Name);
+					   textBoxD4->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+					   trackBarD2->Value = ValueBind(gn.GetValue(1, ((Control^)sender)->Name), trackBarD2->Minimum, trackBarD2->Maximum);
+					   break;
+				   case 5:
+					   min = trackBarD3->Minimum;
+					   max = trackBarD3->Maximum;
+					   value = ValueBind(std::stoi(ControlText), min, max);
+					   gn.SetTBValue(value, ((Control^)sender)->Name);
+					   textBoxD5->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+					   trackBarD3->Value = ValueBind(gn.GetValue(1, ((Control^)sender)->Name), trackBarD3->Minimum, trackBarD3->Maximum);
+					   break;
+				   case 6:
+					   min = trackBarD4->Minimum;
+					   max = trackBarD4->Maximum;
+					   value = ValueBind(std::stoi(ControlText), min, max);
+					   gn.SetTBValue(value, ((Control^)sender)->Name);
+					   textBoxD6->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+					   trackBarD4->Value = ValueBind(gn.GetValue(1, ((Control^)sender)->Name), trackBarD4->Minimum, trackBarD4->Maximum);
+					   break;
+				   case 7:
+					   min = trackBarD5->Minimum;
+					   max = trackBarD5->Maximum;
+					   value = ValueBind(std::stoi(ControlText), min, max);
+					   gn.SetTBValue(value, ((Control^)sender)->Name);
+					   textBoxD7->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+					   trackBarD5->Value = ValueBind(gn.GetValue(1, ((Control^)sender)->Name), trackBarD5->Minimum, trackBarD5->Maximum);
+					   break;
+				   case 8:
+					   min = trackBarD6->Minimum;
+					   max = trackBarD6->Maximum;
+					   value = ValueBind(std::stoi(ControlText), min, max);
+					   gn.SetTBValue(value, ((Control^)sender)->Name);
+					   textBoxD8->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+					   trackBarD6->Value = ValueBind(gn.GetValue(1, ((Control^)sender)->Name), trackBarD6->Minimum, trackBarD6->Maximum);
+					   break;
+				   case 9:
+					   min = trackBarD7->Minimum;
+					   max = trackBarD7->Maximum;
+					   value = ValueBind(std::stoi(ControlText), min, max);
+					   gn.SetTBValue(value, ((Control^)sender)->Name);
+					   textBoxD9->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+					   trackBarD7->Value = ValueBind(gn.GetValue(1, ((Control^)sender)->Name), trackBarD7->Minimum, trackBarD7->Maximum);
+					   break;
+				   case 10:
+					   min = trackBarD8->Minimum;
+					   max = trackBarD8->Maximum;
+					   value = ValueBind(std::stoi(ControlText), min, max);
+					   gn.SetTBValue(value, ((Control^)sender)->Name);
+					   textBoxD10->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+					   trackBarD8->Value = ValueBind(gn.GetValue(1, ((Control^)sender)->Name), trackBarD8->Minimum, trackBarD8->Maximum);
+					   break;
+				   case 11:
+					   min = trackBarD9->Minimum;
+					   max = trackBarD9->Maximum;
+					   value = ValueBind(std::stoi(ControlText), min, max);
+					   gn.SetTBValue(value, ((Control^)sender)->Name);
+					   textBoxD11->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+					   trackBarD9->Value = ValueBind(gn.GetValue(1, ((Control^)sender)->Name), trackBarD9->Minimum, trackBarD9->Maximum);
+					   break;
+				   case 12:
+					   min = trackBarD10->Minimum;
+					   max = trackBarD10->Maximum;
+					   value = ValueBind(std::stoi(ControlText), min, max);
+					   gn.SetTBValue(value, ((Control^)sender)->Name);
+					   textBoxD12->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+					   trackBarD10->Value = ValueBind(gn.GetValue(1, ((Control^)sender)->Name), trackBarD10->Minimum, trackBarD10->Maximum);
+					   break;
+				   case 13:
+					   min = trackBarD11->Minimum;
+					   max = trackBarD11->Maximum;
+					   value = ValueBind(std::stoi(ControlText), min, max);
+					   gn.SetTBValue(value, ((Control^)sender)->Name);
+					   textBoxD13->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+					   trackBarD11->Value = ValueBind(gn.GetValue(1, ((Control^)sender)->Name), trackBarD11->Minimum, trackBarD11->Maximum);
+					   break;
+				   case 14:
+					   min = trackBarD12->Minimum;
+					   max = trackBarD12->Maximum;
+					   value = ValueBind(std::stoi(ControlText), min, max);
+					   gn.SetTBValue(value, ((Control^)sender)->Name);
+					   textBoxD14->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+					   trackBarD12->Value = ValueBind(gn.GetValue(1, ((Control^)sender)->Name), trackBarD12->Minimum, trackBarD12->Maximum);
+					   break;
+				   case 15:
+					   min = trackBarD13->Minimum;
+					   max = trackBarD13->Maximum;
+					   value = ValueBind(std::stoi(ControlText), min, max);
+					   gn.SetTBValue(value, ((Control^)sender)->Name);
+					   textBoxD15->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+					   trackBarD13->Value = ValueBind(gn.GetValue(1, ((Control^)sender)->Name), trackBarD13->Minimum, trackBarD13->Maximum);
+					   break;
+				   }
+				   break;
+			   }
+			   break;
+		   }
+}
+
+private: System::Void trackBarD_Scroll(System::Object^ sender, System::EventArgs^ e) {
+	int num = 0;
+	for (int i = 0; i < (((TrackBar^)sender)->Name->ToCharArray()->Length); i++) {
+		char a = ((TrackBar^)sender)->Name->ToCharArray()[i];
+		num = num * 10 + a - '0';//char'0'=int 48
+	}
+
+	switch (gn.listItemType) {
+	case 0:
+		switch (gn.listItemWGType()) {
+		case 0:
+			switch (num) {
+			}
+			break;
+		case 1:
+			switch (num) {
+			}
+			break;
+		case 2:
+			switch (num) {
+			}
+			break;
+		}
+		break;
+	case 1:
+		switch (gn.listItemWGType()) {
+		case 0:
+			switch (num) {
+			}
+			break;
+		case 1:
+			switch (num) {
+			}
+			break;
+		case 2:
+			switch (num) {
+			case 1:
+				gn.SetTBValue(((TrackBar^)sender)->Value, ((Control^)sender)->Name);
+				textBoxD1->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+				break;
+			case 3:
+				gn.SetTBValue(((TrackBar^)sender)->Value, ((Control^)sender)->Name);
+				textBoxD3->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+				break;
+			case 4:
+				gn.SetTBValue(((TrackBar^)sender)->Value, ((Control^)sender)->Name);
+				textBoxD4->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+				break;
+			case 5:
+				gn.SetTBValue(((TrackBar^)sender)->Value, ((Control^)sender)->Name);
+				textBoxD5->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+				break;
+			case 6:
+				gn.SetTBValue(((TrackBar^)sender)->Value, ((Control^)sender)->Name);
+				textBoxD6->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+				break;
+			case 7:
+				gn.SetTBValue(((TrackBar^)sender)->Value, ((Control^)sender)->Name);
+				textBoxD7->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+				break;
+			case 8:
+				gn.SetTBValue(((TrackBar^)sender)->Value, ((Control^)sender)->Name);
+				textBoxD8->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+				break;
+			case 9:
+				gn.SetTBValue(((TrackBar^)sender)->Value, ((Control^)sender)->Name);
+				textBoxD9->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+				break;
+			case 10:
+				gn.SetTBValue(((TrackBar^)sender)->Value, ((Control^)sender)->Name);
+				textBoxD10->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+				break;
+			case 11:
+				gn.SetTBValue(((TrackBar^)sender)->Value, ((Control^)sender)->Name);
+				textBoxD11->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+				break;
+			case 12:
+				gn.SetTBValue(((TrackBar^)sender)->Value, ((Control^)sender)->Name);
+				textBoxD12->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+				break;
+			case 13:
+				gn.SetTBValue(((TrackBar^)sender)->Value, ((Control^)sender)->Name);
+				textBoxD13->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+				break;
+			case 14:
+				gn.SetTBValue(((TrackBar^)sender)->Value, ((Control^)sender)->Name);
+				textBoxD14->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+				break;
+			case 15:
+				gn.SetTBValue(((TrackBar^)sender)->Value, ((Control^)sender)->Name);
+				textBoxD15->Text = gn.GetValue(1, ((Control^)sender)->Name).ToString();
+				break;
+			}
+			break;
+		}
+		break;
+	}
+}
+
+private: System::Void buttonD_Click(System::Object^ sender, System::EventArgs^ e) {
+	int num = 0;
+	for (int i = 0; i < (((Button^)sender)->Name->ToCharArray()->Length); i++) {
+		char a = ((Button^)sender)->Name->ToCharArray()[i];
+		num = num * 10 + a - '0';//char'0'=int 48
+	}
+	switch (gn.listItemType) {
+	case 0:
+		switch (gn.listItemWGType()) {
+		case 0:
+			switch (num) {
+
+			}
+			break;
+		case 1:
+			switch (num) {
+
+			}
+			break;
+		case 2:
+			switch (num) {
+
+			}
+			break;
+		}
+		break;
+	case 1:
+		switch (gn.listItemWGType()) {
+		case 0:
+			switch (num) {
+
+			}
+			break;
+		case 1:
+			switch (num) {
+
+			}
+			break;
+		case 2:
+			switch (num) {
+			case 0:
+				break;
+			case 1:
+				break;
+			}
+			break;
+		}
+		break;
+	}
+}
+
+private: int ValueBind(int value,int min ,int max) {
+	if (value < min) {
+		value = min;
+	}
+	if (value > max) {
+		value = max;
+	}
+	return value;
+}
+
+
+ /*■■■■■■■■■■■                         ■■                     ■■■■            
+	■■■■■■■■■■■                         ■■                    ■■■■■            
+	■■                                  ■■                   ■■■               
+	■■                                  ■■                   ■■                
+	■■                                  ■■                   ■■                
+	■■             ■■■■■       ■■  ■■   ■■     ■■  ■■■■    ■■■■■■■    ■■■■■    
+	■■            ■■■■■■■■     ■■ ■■■   ■■     ■■■■■■■■■     ■■      ■■■■■■■■  
+	■■■■■■■■■■   ■■■    ■■■    ■■■■     ■■     ■■■■   ■■■    ■■     ■■■    ■■■ 
+	■■■■■■■■■■   ■■      ■■    ■■■      ■■     ■■■     ■■    ■■     ■■      ■■ 
+	■■          ■■■      ■■■   ■■       ■■     ■■      ■■    ■■    ■■■      ■■■
+	■■          ■■        ■■   ■■       ■■     ■■      ■■    ■■    ■■        ■■
+	■■          ■■        ■■   ■■       ■■     ■■      ■■    ■■    ■■        ■■
+	■■          ■■       ■■■   ■■       ■■     ■■      ■■    ■■    ■■       ■■■
+	■■           ■■      ■■    ■■       ■■     ■■      ■■    ■■     ■■      ■■ 
+	■■           ■■■    ■■■    ■■       ■■     ■■      ■■    ■■     ■■■    ■■■ 
+	■■            ■■■■■■■■     ■■       ■■     ■■      ■■    ■■      ■■■■■■■■  
+	■■             ■■■■■       ■■       ■■     ■■      ■■    ■■       ■■■■■    
+	 */
+
+	   private:void SetTableLayoutPanelE() {
+		   tableLayoutPanelE->SuspendLayout();
+		   
+		   buttonE0->Name = "0";
+		   buttonE1->Name = "1";
+
+		   buttonE0->Text = "Save";
+		   buttonE1->Text = "Load";
+
+		   buttonE0->ForeColor = Color::White;
+		   buttonE1->ForeColor = Color::White;
+
+		   buttonE0->FlatStyle = FlatStyle::Flat;
+		   buttonE1->FlatStyle = FlatStyle::Flat;
+
+		   buttonE0->Dock = DockStyle::Bottom;
+		   buttonE1->Dock = DockStyle::Bottom;
+
+		   buttonE0->Click += gcnew System::EventHandler(this, &MyForm::buttonE_Click);
+		   buttonE1->Click += gcnew System::EventHandler(this, &MyForm::buttonE_Click);
+
+		   tableLayoutPanelE->BackColor= System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
+			   static_cast<System::Int32>(static_cast<System::Byte>(64)));
+
+		   tableLayoutPanelE->ColumnCount = 20;
+		   tableLayoutPanelE->RowCount = 8;
+		   for (int i = 0; i < 20; i++) {
+			   tableLayoutPanelE->ColumnStyles->Add(gcnew ColumnStyle(SizeType::Percent, 5));
+		   }
+		   for (int i = 0; i < 8; i++) {
+			   tableLayoutPanelE->RowStyles->Add(gcnew RowStyle(SizeType::Absolute, 40));
+		   }
+		   tableLayoutPanelE->Controls->Add(buttonE0, 6, 1);
+		   tableLayoutPanelE->Controls->Add(buttonE1, 6, 3);
+
+		   tableLayoutPanelE->SetColumnSpan(buttonE0, 8);
+		   tableLayoutPanelE->SetColumnSpan(buttonE1, 8);
+
+		   tableLayoutPanelE->ResumeLayout(true);
+	   }
+
+private: System::Void SetIcon() {
+	System::Drawing::Icon^ icon = gcnew System::Drawing::Icon("icon1.ico",16,16);
+	this->Icon = icon;
+}
+
+private: System::Void buttonE_Click(System::Object^ sender, System::EventArgs^ e) {
+	int num = 0;
+	for (int i = 0; i < (((Button^)sender)->Name->ToCharArray()->Length); i++) {
+		char a = ((Button^)sender)->Name->ToCharArray()[i];
+		num = num * 10 + a - '0';//char'0'=int 48
+	}
+	switch (num) {
+	case 0:
+		FileSave();
+		break;
+	case 1:
+		FileLoad();
+		break;
+	}
+}
+
+private: void FileSave() {
+	Stream ^myStream;
+	SaveFileDialog ^saveFileDialog = gcnew SaveFileDialog();
+
+	saveFileDialog->Filter = "gnsv files (*.gnsv)|*.gnsv";
+	saveFileDialog->FilterIndex = 1;
+	saveFileDialog->RestoreDirectory = true;
+
+	if (saveFileDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK)
+	{
+		try {
+			myStream = saveFileDialog->OpenFile(); 
+
+			StreamWriter^ writer = gcnew StreamWriter(myStream);
+
+			// Code to write the stream goes here.
+
+			//For item
+			writer->WriteLine("<Item>");
+			writer=iSaveRepeater(i.RootPointer,writer,1);
+			writer->WriteLine("</Item>");
+
+			//For ...
+
+
+
+
+
+			writer->Close();
+			myStream->Close();
+
+		}catch(...){
+
+		};
+	}
+}
+
+private: StreamWriter^  iSaveRepeater (shared_ptr<struct Node> pointer ,StreamWriter^ writer,int tabnum) {
+	String^ tabs = TabReturn(tabnum);
+	switch (pointer->NodeType) {
+	case 0:
+		writer->WriteLine(tabs + "<R>");
+		break;
+	case 1:
+		writer->WriteLine(tabs + "<B>");
+		break;
+	case 2:
+		writer->WriteLine(tabs + "<b>");
+		break;
+	case 3:
+		writer->WriteLine(tabs + "<T>");
+		break;
+	case 4:
+		writer->WriteLine(tabs + "<t>");
+		break;
+	case 5:
+		writer->WriteLine(tabs + "<F>");
+		break;
+	}
+	writer->WriteLine(tabs+"NodeType:"+pointer->NodeType);
+	writer->WriteLine(tabs+"Property:");
+	switch (pointer->NodeType) {
+	case 0:
+		break;
+	case 1:
+		for (int i = 0; i < 124; i++) {
+			writer->WriteLine(tabs + "	" + pointer->Property->at(i));
+		}
+		break;
+	case 2:
+		for (int i = 0; i < 115; i++) {
+			writer->WriteLine(tabs + "	" + pointer->Property->at(i));
+		}
+		break;
+	case 3:
+		for (int i = 0; i < 12; i++) {
+			writer->WriteLine(tabs + "	" + pointer->Property->at(i));
+		}
+		break;
+	case 4:
+		for (int i = 0; i < 6; i++) {
+			writer->WriteLine(tabs + "	" + pointer->Property->at(i));
+		}
+		break;
+	case 5:
+		break;
+	}
+	writer->WriteLine(tabs + "Child:");
+	for (int i = 0; i < pointer->Child->size(); i++) {
+		if (pointer->Child->at(i) == nullptr) {
+			continue;
+		}
+		writer = iSaveRepeater(pointer->Child->at(i),writer,tabnum+1);
+	}
+	writer->WriteLine(tabs + "Group:");
+	for (int i = 0; i < pointer->Group->size(); i++) {
+		if (pointer->Group->at(i) == nullptr) {
+			continue;
+		}
+		writer = iSaveRepeater(pointer->Group->at(i), writer, tabnum + 1);
+	}
+	switch (pointer->NodeType) {
+	case 0:
+		writer->WriteLine(tabs + "</R>");
+		break;
+	case 1:
+		writer->WriteLine(tabs + "</B>");
+		break;
+	case 2:
+		writer->WriteLine(tabs + "</b>");
+		break;
+	case 3:
+		writer->WriteLine(tabs + "</T>");
+		break;
+	case 4:
+		writer->WriteLine(tabs + "</t>");
+		break;
+	case 5:
+		writer->WriteLine(tabs + "</F>");
+		break;
+	}
+	return writer;
+}
+
+private: String^ TabReturn(int tabnum){
+	String^ tabs="";
+	for (int i = 0; i < tabnum; i++) {
+		tabs += "	";
+	}
+	return tabs;
+}
+
+private: void FileLoad() {
+	Stream^ myStream;
+	OpenFileDialog^ openFileDialog = gcnew OpenFileDialog();
+
+	openFileDialog->InitialDirectory = "c:\\";
+	openFileDialog->Filter = "gnsv files (*.gnsv)|*.gnsv";
+	openFileDialog->FilterIndex = 1;
+	openFileDialog->RestoreDirectory = true;
+
+	if (openFileDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK)
+	{
+		
+		myStream = openFileDialog->OpenFile();
+		
+		StreamReader^ reader = gcnew StreamReader(myStream);
+
+		// Code to write the stream goes here.
+
+		//For Item
+
+		iNodeReset();
+		iRootLoad(reader);
+
+		//For ...
+
+
+
+
+		reader->Close();
+		myStream->Close();
+	}
+
+
+}
+
+private: int ValueReturn(String^ str) {
+	int value = 0;
+	bool pm = false;
+	for (int i = 0; i < (str->ToCharArray()->Length); i++) {
+		char a = str->ToCharArray()[i];
+		value = value * 10 + a - '0';//char'0'=int 48
+		if (a == '	') {
+			value = 0;
+		}
+		if (a == ':') {
+			value = 0;
+		}
+		if (a == '-') {
+			value = 0;
+			pm = true;
+		}
+	}
+	if (pm == true) {
+		value = value * (-1);
+	}
+	return value;
+}
+
+private: System::Void iNodeReset() {
+	int num = treeView1->Nodes[0]->Nodes->Count;
+	for (int s = 0; s < num;s++) {
+		i.NodeDelete(treeView1->Nodes[0]->Nodes[0]->Name);
+		treeView1->Nodes[0]->Nodes[0]->Remove();
+	}
+	shared_ptr<vector<shared_ptr<Node>>>rootNodeChild(new vector < shared_ptr<Node>>());
+	shared_ptr<vector<shared_ptr<Node>>>rootNodeGroup(new vector<shared_ptr<Node>>());
+	i.RootPointer->Child=rootNodeChild;
+	i.RootPointer->Group=rootNodeGroup;
+	i.RootPointer->NodeNum = 0;
+}
+
+private: StreamReader^ iRootLoad(StreamReader^ reader) {
+	reader->ReadLine();
+	reader->ReadLine();
+	reader->ReadLine();
+	reader->ReadLine();
+	reader->ReadLine();
+
+	//child
+	for (String^ line = reader->ReadLine(); !String::Equals(line->Replace("	", "") , "Group:"); line = reader->ReadLine()) {
+		System::Diagnostics::Debug::WriteLine(line);
+		reader = iLoadRepeater(i.RootPointer, reader,treeView1->Nodes[0]);
+	}
+	//group
+	for (String^ line = reader->ReadLine(); !String::Equals(line->Replace("	", "")->Replace("R", "")->Replace("B", "")->Replace("b", "")->Replace("T", "")->Replace("t", "")->Replace("F", "")->Replace("Item", ""), "</>"); line = reader->ReadLine()) {
+		System::Diagnostics::Debug::WriteLine(line);
+		reader = iLoadRepeater(i.RootPointer, reader, treeView1->Nodes[0]);
+	}
+
+	return reader;
+}
+
+private: StreamReader^ iLoadRepeater(shared_ptr<struct Node> parentPointer, StreamReader^ reader, TreeNode^ parentTreeNode) {
+	switch (ValueReturn(reader->ReadLine())) {
+	case 1:
+		reader = iBLoad(parentPointer, reader, parentTreeNode);
+		break;
+	case 2:
+		reader = ibLoad(parentPointer, reader, parentTreeNode);
+		break;
+	case 3:
+		reader = iTLoad(parentPointer, reader, parentTreeNode);
+		break;
+	case 4:
+		reader = itLoad(parentPointer, reader, parentTreeNode);
+		break;
+	default:
+		break;
+	}
+	return reader;
+}
+
+private: StreamReader^ iBLoad(shared_ptr<struct Node> parentPointer, StreamReader^ reader, TreeNode^ parentTreeNode) {
+	reader->ReadLine();
+
+	TreeNode^ treenode = gcnew TreeNode();
+	treenode->Text = "B";
+	treenode->Name = parentTreeNode->Name + "-" + "B" + parentPointer->NodeNum;
+	parentTreeNode->Nodes->Add(treenode);
+	TreeNode^ treenodeG = gcnew TreeNode();
+	treenodeG->Text = "G";
+	treenode->Nodes->Add(treenodeG);
+
+	shared_ptr<vector<int>>newNodeProperty(new vector<int>{
+		ValueReturn(reader->ReadLine()),//0
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//10
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//20
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//30
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//40
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//50
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//60
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//70
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//80
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//90
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//100
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//110
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//120
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine())
+		});
+	shared_ptr<vector<shared_ptr<Node>>>newNodeChild(new vector < shared_ptr<Node>>());
+	shared_ptr<vector<shared_ptr<Node>>>newNodeGroup(new vector<shared_ptr<Node>>());
+	shared_ptr<Node> newNode(new Node{ 1 ,0,false,false,nullptr,parentPointer,newNodeProperty,newNodeChild,newNodeGroup });
+	parentPointer->NodeNum += 1;
+	parentPointer->Child->push_back(newNode);
+
+	reader->ReadLine();
+
+	//child
+	for (String^ line = reader->ReadLine(); !String::Equals(line->Replace("	", ""), "Group:"); line = reader->ReadLine()) {
+		System::Diagnostics::Debug::WriteLine(line);
+		reader = iLoadRepeater(newNode, reader, treenode);
+	}
+	//group
+	for (String^ line = reader->ReadLine(); !String::Equals(line->Replace("	", "")->Replace("R", "")->Replace("B", "")->Replace("b", "")->Replace("T", "")->Replace("t", "")->Replace("F", "")->Replace("Item", ""), "</>"); line = reader->ReadLine()) {
+		System::Diagnostics::Debug::WriteLine(line);
+		reader = iLoadRepeater(newNode, reader, treenode);
+	}
+
+	return reader;
+}
+
+private: StreamReader^ ibLoad(shared_ptr<struct Node> parentPointer, StreamReader^ reader, TreeNode^ parentTreeNode) {
+	reader->ReadLine();
+
+	TreeNode^ treenodeg = gcnew TreeNode();
+	treenodeg->Text = "b";
+	treenodeg->Name = parentTreeNode->Name + "-" + "b" + parentPointer->Group->size();
+	parentTreeNode->Nodes[0]->Nodes->Add(treenodeg);
+
+	PTSTR newGroupNodePath = (PTSTR)calloc(100000, sizeof(TCHAR));
+	shared_ptr<vector<int>>newGroupNodeProperty(new vector<int>{
+		ValueReturn(reader->ReadLine()),//0
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//10
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//20
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//30
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//40
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//50
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//60
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//70
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//80
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//90
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//100
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//110
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine())
+	});
+	shared_ptr<vector<shared_ptr<Node>>>newGroupNodeChild(new vector<shared_ptr<Node>>());
+	shared_ptr<vector<shared_ptr<Node>>>newGroupNodeGroup(new vector<shared_ptr<Node>>());
+	shared_ptr<Node> newGroupNode(new Node{ 2 ,0,true,true,newGroupNodePath,parentPointer,newGroupNodeProperty,newGroupNodeChild,newGroupNodeGroup });
+	parentPointer->Group->push_back(newGroupNode);
+
+	reader->ReadLine();
+
+	//child
+	for (String^ line = reader->ReadLine(); !String::Equals(line->Replace("	", ""), "Group:"); line = reader->ReadLine()) {
+		reader = iLoadRepeater(newGroupNode, reader, treenodeg);
+	}
+	//group
+	for (String^ line = reader->ReadLine(); !String::Equals(line->Replace("	", "")->Replace("R", "")->Replace("B", "")->Replace("b", "")->Replace("T", "")->Replace("t", "")->Replace("F", "")->Replace("Item", ""), "</>"); line = reader->ReadLine()) {
+		reader = iLoadRepeater(newGroupNode, reader, treenodeg);
+	}
+
+	return reader;
+}
+
+private: StreamReader^ iTLoad(shared_ptr<struct Node> parentPointer, StreamReader^ reader, TreeNode^ parentTreeNode) {
+	reader->ReadLine();
+
+	TreeNode^ treenode = gcnew TreeNode();
+	treenode->Text = "T";
+	treenode->Name = parentTreeNode->Name + "-" + "T" + parentPointer->NodeNum;
+	parentTreeNode->Nodes->Add(treenode);
+	TreeNode^ treenodeG = gcnew TreeNode();
+	treenodeG->Text = "G";
+	treenode->Nodes->Add(treenodeG);
+
+	shared_ptr<vector<int>>newNodeProperty(new vector<int>{
+		ValueReturn(reader->ReadLine()),//0
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),//10
+		ValueReturn(reader->ReadLine())
+		});
+	shared_ptr<vector<shared_ptr<Node>>>newNodeChild(new vector < shared_ptr<Node>>());
+	shared_ptr<vector<shared_ptr<Node>>>newNodeGroup(new vector<shared_ptr<Node>>());
+	shared_ptr<Node> newNode(new Node{ 3,0,false,false,nullptr,parentPointer,newNodeProperty,newNodeChild,newNodeGroup });
+	parentPointer->NodeNum += 1;
+	parentPointer->Child->push_back(newNode);
+
+	reader->ReadLine();
+
+	//child
+	for (String^ line = reader->ReadLine(); !String::Equals(line->Replace("	", ""), "Group:"); line = reader->ReadLine()) {
+		reader = iLoadRepeater(newNode, reader, treenode);
+	}
+	//group
+	for (String^ line = reader->ReadLine(); !String::Equals(line->Replace("	", "")->Replace("R", "")->Replace("B", "")->Replace("b", "")->Replace("T", "")->Replace("t", "")->Replace("F", "")->Replace("Item", ""), "</>"); line = reader->ReadLine()) {
+		reader = iLoadRepeater(newNode, reader, treenode);
+	}
+
+	return reader;
+}
+
+private: StreamReader^ itLoad(shared_ptr<struct Node> parentPointer, StreamReader^ reader, TreeNode^ parentTreeNode) {
+	reader->ReadLine();
+
+	TreeNode^ treenodeg = gcnew TreeNode();
+	treenodeg->Text = "t";
+	treenodeg->Name = parentTreeNode->Name + "-" + "t" + parentPointer->Group->size();
+	parentTreeNode->Nodes[0]->Nodes->Add(treenodeg);
+
+	PTSTR newGroupNodePath = (PTSTR)calloc(100000, sizeof(TCHAR));
+	shared_ptr<vector<int>>newGroupNodeProperty(new vector<int>{
+		ValueReturn(reader->ReadLine()),//0
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine()),
+		ValueReturn(reader->ReadLine())
+		});
+	shared_ptr<vector<shared_ptr<Node>>>newGroupNodeChild(new vector<shared_ptr<Node>>());
+	shared_ptr<vector<shared_ptr<Node>>>newGroupNodeGroup(new vector<shared_ptr<Node>>());
+	shared_ptr<Node> newGroupNode(new Node{ 4 ,0,true,true,newGroupNodePath,parentPointer,newGroupNodeProperty,newGroupNodeChild,newGroupNodeGroup });
+	parentPointer->Group->push_back(newGroupNode);
+
+	reader->ReadLine();
+
+	//child
+	for (String^ line = reader->ReadLine(); !String::Equals(line->Replace("	", ""), "Group:"); line = reader->ReadLine()) {
+		reader = iLoadRepeater(newGroupNode, reader, treenodeg);
+	}
+	//group
+	for (String^ line = reader->ReadLine(); !String::Equals(line->Replace("	", "")->Replace("R", "")->Replace("B", "")->Replace("b", "")->Replace("T", "")->Replace("t", "")->Replace("F", "")->Replace("Item", ""), "</>"); line = reader->ReadLine()) {
+		reader = iLoadRepeater(newGroupNode, reader, treenodeg);
+	}
+
+	return reader;
+}
+
+
+
+
+
+
 };
 }

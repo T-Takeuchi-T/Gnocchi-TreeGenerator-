@@ -1967,7 +1967,6 @@ shared_ptr<vector<int>>Item::Rmaker(int gnum, shared_ptr<Node> selectPointer) {
 			break;
 		};
 		return PropNodeNamePointer->Property->at(pointTeller);
-
 	}
 
 	void Item::PointReset(int pointNumTeller) {
