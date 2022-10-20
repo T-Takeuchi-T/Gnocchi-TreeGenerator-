@@ -1,14 +1,5 @@
 #include "Item.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <limits.h>
-#include <math.h>
-#include <chrono>
-#include <vector>
-#include <memory>
-#include <iostream>
-#include <random>
-#include <cstdlib>
+
 
 using namespace System;
 using namespace System::Diagnostics;
@@ -137,7 +128,7 @@ void Item::NodeChildSearcher(shared_ptr<struct Node> Seacher)
 void Item::NodeBCreate(String^ NodeName)
 {
 	shared_ptr<Node> selectPointer = SelectPointer(NodeName);
-	shared_ptr<vector<int>>newNodeProperty(new vector<int>{ 1,-1,3,2,2,0,0,10000,0,0,
+	shared_ptr<vector<int>>newNodeProperty(new vector<int>{ 1,-1,3,2,1,0,0,10000,0,0,
 			0,0,0,0,0,10000,0,0,2,0,
 			10000,0,0,0,0,0,0,0,0,0,
 			0,0,0,0,0,0,0,0,0,10000,
@@ -153,7 +144,7 @@ void Item::NodeBCreate(String^ NodeName)
 	shared_ptr<vector<shared_ptr<Node>>>newNodeChild(new vector < shared_ptr<Node>>());
 	shared_ptr<vector<shared_ptr<Node>>>newNodeGroup(new vector<shared_ptr<Node>>());
 PTSTR newGroupNodePath = (PTSTR)calloc(100000, sizeof(TCHAR));
-	shared_ptr<vector<int>>newGroupNodeProperty(new vector<int>{ -1,3,2,2,0,10000,0,0,0,10000,
+	shared_ptr<vector<int>>newGroupNodeProperty(new vector<int>{ -1,3,2,1,0,10000,0,0,0,10000,
 			0,2,0,10000,0,0,0,0,0,0,
 			0,0,0,0,0,0,0,0,0,0,
 			0,0,10000,0,0,0,0,0,0,0,
@@ -213,8 +204,7 @@ void Item::NodeStartRoot()
 	shared_ptr<vector<shared_ptr<Node>>>rootNodeGroup(new vector<shared_ptr<Node>>());
 	shared_ptr<vector<shared_ptr<Node>>>rootNodeMC(new vector<shared_ptr<Node>>());
 	vector< vector<double>> v;
-	 vector<double> v2;
-	shared_ptr < struct Node > rootNode(new Node{ 0,0,true,false,nullptr,nullptr,rootNodeProperty ,rootNodeChild ,rootNodeGroup,rootNodeMC,v ,v2,false ,0.01,10 });
+	shared_ptr < struct Node > rootNode(new Node{ 0,0,true,false,nullptr,nullptr,rootNodeProperty ,rootNodeChild ,rootNodeGroup,rootNodeMC,v,false ,0.01,10 });
 	RootPointer= rootNode;
 }
 
@@ -735,8 +725,8 @@ shared_ptr<vector<int>>Item::Rmaker(int gnum, shared_ptr<Node> selectPointer) {
 		shared_ptr<vector<int>>curvePoints(new vector<int>());
 		int gnumteller = 0;
 		int gpbeginteller = 0;
-		int x[20] = { 0};
-		int y[20] = { 0 };
+		int x[20] = {0};
+		int y[20] = {0};
 		if (selectPointer->NodeType == 1) {
 			switch (gnum) {
 			case 0:
@@ -1667,7 +1657,7 @@ shared_ptr<vector<int>>Item::Rmaker(int gnum, shared_ptr<Node> selectPointer) {
 		for (int i = 0; i < PropNodeNamePointer->Group->size(); i++) {
 			if (PropNodeNamePointer->Group->at(i) != nullptr) {
 				PropNodeNamePointer->Group->at(i)->Property->at(gpointTeller) =Value;
-					PropNodeNamePointer->PropChange = true;
+					PropNodeNamePointer->Group->at(i)->PropChange = true;
 			}
 		}
 		switch (PropNodeNamePointer->NodeType) {
@@ -2157,7 +2147,7 @@ shared_ptr<vector<int>>Item::Rmaker(int gnum, shared_ptr<Node> selectPointer) {
 					PropNodeNamePointer->Property->at(119),
 					PropNodeNamePointer->Property->at(120),
 						PropNodeNamePointer->Property->at(121),
-						PropNodeNamePointer->Property->at(122),
+						PropNodeNamePointer->Property->at(123)
                 });
 				shared_ptr<vector<shared_ptr<Node>>>newGroupNodeChild(new vector<shared_ptr<Node>>());
 				shared_ptr<vector<shared_ptr<Node>>>newGroupNodeGroup(new vector<shared_ptr<Node>>());

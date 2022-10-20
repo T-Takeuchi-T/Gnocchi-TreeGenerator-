@@ -1,8 +1,4 @@
 #include "Generator.h"
-#include <vector>
-#include <windows.h>
-#include <memory>
-#include <msclr/marshal_cppstd.h>
 using namespace msclr::interop;
 
 int Generator::listItemWGType()

@@ -5,7 +5,6 @@
 #include "Twig.h"
 #include "Generator.h"
 #include "Info.h"
-#include<string>
 
 namespace MainForm {			
 
@@ -332,8 +331,10 @@ private: System::Windows::Forms::ToolStripMenuItem^ makeFractalToolStripMenuItem
 		/// デザイナー サポートに必要なメソッドです。このメソッドの内容を
 		/// コード エディターで変更しないでください。
 		/// </summary>
+		
 		void InitializeComponent(void)
 		{
+			this->Closing += gcnew System::ComponentModel::CancelEventHandler(this, &MyForm::Form_Closing);
 			this->components = (gcnew System::ComponentModel::Container());
 			System::Windows::Forms::TreeNode^ treeNode1 = (gcnew System::Windows::Forms::TreeNode(L"R"));
 
@@ -1931,10 +1932,10 @@ private: System::Void MakeFractal(System::Object^ sender, System::EventArgs^ e) 
 		   comboBox1->Items->Clear();
 		   comboBox2->Items->Clear();
 		   comboBox3->Items->Clear();
-		   comboBox1->Items->Add("R");
+		   comboBox1->Items->Add("L");
 		   comboBox1->Items->Add("B");
 		   comboBox1->Items->Add("D");
-		   comboBox2->Items->Add("R");
+		   comboBox2->Items->Add("L");
 		   comboBox2->Items->Add("B");
 		   comboBox2->Items->Add("D");
 		   comboBox3->Items->Add("Normal");
@@ -2225,7 +2226,7 @@ private: System::Void MakeFractal(System::Object^ sender, System::EventArgs^ e) 
 		   trackBar0->Minimum = 1;
 		   trackBar1->Minimum = 3;
 		   trackBar2->Minimum = 2;
-		   trackBar3->Minimum = 2;
+		   trackBar3->Minimum = 1;
 		   trackBar4->Minimum = 0;
 		   trackBar5->Minimum = 0;
 		   trackBar6->Minimum = 0;
@@ -2607,10 +2608,10 @@ private:void SetbPropertyPanel(String^ SelectedNodeName) {
 	comboBox1->Items->Clear();
 	comboBox2->Items->Clear();
 	comboBox3->Items->Clear();
-	comboBox1->Items->Add("R");
+	comboBox1->Items->Add("L");
 	comboBox1->Items->Add("B");
 	comboBox1->Items->Add("D");
-	comboBox2->Items->Add("R");
+	comboBox2->Items->Add("L");
 	comboBox2->Items->Add("B");
 	comboBox2->Items->Add("D");
 	comboBox3->Items->Add("Normal");
@@ -2810,7 +2811,7 @@ private:void SetbPropertyPanel(String^ SelectedNodeName) {
 	trackBar16->GotFocus += gcnew System::EventHandler(this, &MyForm::tableLayoutPanelControl_GotFocus);
 	trackBar0->Minimum = 3;
 	trackBar1->Minimum = 2;
-	trackBar2->Minimum = 2;
+	trackBar2->Minimum = 1;
 	trackBar3->Minimum = 0;
 	trackBar4->Minimum = 0;
 	trackBar5->Minimum = 0;
@@ -4559,498 +4560,198 @@ private:void SetTrackBarValue(String^ ControlName) {
 	case 1:
 		switch (num) {
 		case 0:
-			if (trackBar0->Maximum < i.GetValue(1, trackBar0->Name)) {
-				trackBar0->Value = trackBar0->Maximum;
-			}
-			else {
-				trackBar0->Value = i.GetValue(1, trackBar0->Name);
-			}
+			trackBar0->Value = ValueBind(i.GetValue(1, trackBar0->Name), trackBar0->Minimum, trackBar0->Maximum);
 			break;
 		case 1:
-			if (trackBar1->Maximum < i.GetValue(1, trackBar1->Name)) {
-				trackBar1->Value = trackBar1->Maximum;
-			}
-			else {
-				trackBar1->Value = i.GetValue(1, trackBar1->Name);
-			}
+			trackBar1->Value = ValueBind(i.GetValue(1, trackBar1->Name), trackBar1->Minimum, trackBar1->Maximum);
 			break;
 		case 2:
-			if (trackBar2->Maximum < i.GetValue(1, trackBar2->Name)) {
-				trackBar2->Value = trackBar2->Maximum;
-			}
-			else {
-				trackBar2->Value = i.GetValue(1, trackBar2->Name);
-			}
+			trackBar2->Value = ValueBind(i.GetValue(1, trackBar2->Name), trackBar2->Minimum, trackBar2->Maximum);
 			break;
 		case 3:
-			if (trackBar3->Maximum < i.GetValue(1, trackBar3->Name)) {
-				trackBar3->Value = trackBar3->Maximum;
-			}
-			else {
-				trackBar3->Value = i.GetValue(1, trackBar3->Name);
-			}
+			trackBar3->Value = ValueBind(i.GetValue(1, trackBar3->Name), trackBar3->Minimum, trackBar3->Maximum);
 			break;
 		case 4:
-			if (trackBar4->Maximum < i.GetValue(1, trackBar4->Name)) {
-				trackBar4->Value = trackBar4->Maximum;
-			}
-			else {
-				trackBar4->Value = i.GetValue(1, trackBar4->Name);
-			}
+			trackBar4->Value = ValueBind(i.GetValue(1, trackBar4->Name), trackBar4->Minimum, trackBar4->Maximum);
 			break;
 		case 5:
-			if (trackBar5->Maximum < i.GetValue(1, trackBar5->Name)) {
-				trackBar5->Value = trackBar5->Maximum;
-			}
-			else {
-				trackBar5->Value = i.GetValue(1, trackBar5->Name);
-			}
+			trackBar5->Value = ValueBind(i.GetValue(1, trackBar5->Name), trackBar5->Minimum, trackBar5->Maximum);
 			break;
 		case 6:
-			if (trackBar6->Maximum < i.GetValue(1, trackBar6->Name)) {
-				trackBar6->Value = trackBar6->Maximum;
-			}
-			else {
-				trackBar6->Value = i.GetValue(1, trackBar6->Name);
-			}
+			trackBar6->Value = ValueBind(i.GetValue(1, trackBar6->Name), trackBar6->Minimum, trackBar6->Maximum);
 			break;
 		case 7:
-			if (trackBar7->Maximum < i.GetValue(1, trackBar7->Name)) {
-				trackBar7->Value = trackBar7->Maximum;
-			}
-			else {
-				trackBar7->Value = i.GetValue(1, trackBar7->Name);
-			}
+			trackBar7->Value = ValueBind(i.GetValue(1, trackBar7->Name), trackBar7->Minimum, trackBar7->Maximum);
 			break;
 		case 8:
-			if (trackBar8->Maximum < i.GetValue(1, trackBar8->Name)) {
-				trackBar8->Value = trackBar8->Maximum;
-			}
-			else {
-				trackBar8->Value = i.GetValue(1, trackBar8->Name);
-			}
+			trackBar8->Value = ValueBind(i.GetValue(1, trackBar8->Name), trackBar8->Minimum, trackBar8->Maximum);
 			break;
 		case 9:
-			if (trackBar9->Maximum < i.GetValue(1, trackBar9->Name)) {
-				trackBar9->Value = trackBar9->Maximum;
-			}
-			else {
-				trackBar9->Value = i.GetValue(1, trackBar9->Name);
-			}
+			trackBar9->Value = ValueBind(i.GetValue(1, trackBar9->Name), trackBar9->Minimum, trackBar9->Maximum);
 			break;
 		case 10:
-			if (trackBar10->Maximum < i.GetValue(1, trackBar10->Name)) {
-				trackBar10->Value = trackBar10->Maximum;
-			}
-			else {
-				trackBar10->Value = i.GetValue(1, trackBar10->Name);
-			}
+			trackBar10->Value = ValueBind(i.GetValue(1, trackBar10->Name), trackBar10->Minimum, trackBar10->Maximum);
 			break;
 		case 11:
-			if (trackBar11->Maximum < i.GetValue(1, trackBar11->Name)) {
-				trackBar11->Value = trackBar11->Maximum;
-			}
-			else {
-				trackBar11->Value = i.GetValue(1, trackBar11->Name);
-			}
+			trackBar11->Value = ValueBind(i.GetValue(1, trackBar11->Name), trackBar11->Minimum, trackBar11->Maximum);
 			break;
 		case 12:
-			if (trackBar12->Maximum < i.GetValue(1, trackBar12->Name)) {
-				trackBar12->Value = trackBar12->Maximum;
-			}
-			else {
-				trackBar12->Value = i.GetValue(1, trackBar12->Name);
-			}
+			trackBar12->Value = ValueBind(i.GetValue(1, trackBar12->Name), trackBar12->Minimum, trackBar12->Maximum);
 			break;
 		case 13:
-			if (trackBar13->Maximum < i.GetValue(1, trackBar13->Name)) {
-				trackBar13->Value = trackBar13->Maximum;
-			}
-			else {
-				trackBar13->Value = i.GetValue(1, trackBar13->Name);
-			}
+			trackBar13->Value = ValueBind(i.GetValue(1, trackBar13->Name), trackBar13->Minimum, trackBar13->Maximum);
 			break;
 		case 14:
-			if (trackBar14->Maximum < i.GetValue(1, trackBar14->Name)) {
-				trackBar14->Value = trackBar14->Maximum;
-			}
-			else {
-				trackBar14->Value = i.GetValue(1, trackBar14->Name);
-			}
+			trackBar14->Value = ValueBind(i.GetValue(1, trackBar14->Name), trackBar14->Minimum, trackBar14->Maximum);
 			break;
 		case 15:
-			if (trackBar15->Maximum < i.GetValue(1, trackBar15->Name)) {
-				trackBar15->Value = trackBar15->Maximum;
-			}
-			else {
-				trackBar15->Value = i.GetValue(1, trackBar15->Name);
-			}
+			trackBar15->Value = ValueBind(i.GetValue(1, trackBar15->Name), trackBar15->Minimum, trackBar15->Maximum);
 			break;
 		case 16:
-			if (trackBar16->Maximum < i.GetValue(1, trackBar16->Name)) {
-				trackBar16->Value = trackBar16->Maximum;
-			}
-			else {
-				trackBar16->Value = i.GetValue(1, trackBar16->Name);
-			}
+			trackBar16->Value = ValueBind(i.GetValue(1, trackBar16->Name), trackBar16->Minimum, trackBar16->Maximum);
 			break;
 		case 17:
-			if (trackBar17->Maximum < i.GetValue(1, trackBar17->Name)) {
-				trackBar17->Value = trackBar17->Maximum;
-			}
-			else {
-				trackBar17->Value = i.GetValue(1, trackBar17->Name);
-			}
+			trackBar17->Value = ValueBind(i.GetValue(1, trackBar17->Name), trackBar17->Minimum, trackBar17->Maximum);
 			break;
 		case 18:
-			if (trackBar18->Maximum < i.GetValue(1, trackBar18->Name)) {
-				trackBar18->Value = trackBar18->Maximum;
-			}
-			else {
-				trackBar18->Value = i.GetValue(1, trackBar18->Name);
-			}
+			trackBar18->Value = ValueBind(i.GetValue(1, trackBar18->Name), trackBar18->Minimum, trackBar18->Maximum);
 			break;
 		case 19:
-			if (trackBar19->Maximum < i.GetValue(1, trackBar19->Name)) {
-				trackBar19->Value = trackBar19->Maximum;
-			}
-			else {
-				trackBar19->Value = i.GetValue(1, trackBar19->Name);
-			}
+			trackBar19->Value = ValueBind(i.GetValue(1, trackBar19->Name), trackBar19->Minimum, trackBar19->Maximum);
 			break;
 		case 20:
-			if (trackBar20->Maximum < i.GetValue(1, trackBar20->Name)) {
-				trackBar20->Value = trackBar20->Maximum;
-			}
-			else {
-				trackBar20->Value = i.GetValue(1, trackBar20->Name);
-			}
+			trackBar20->Value = ValueBind(i.GetValue(1, trackBar20->Name), trackBar20->Minimum, trackBar20->Maximum);
 			break;
 		case 21:
-			if (trackBar21->Maximum < i.GetValue(1, trackBar21->Name)) {
-				trackBar21->Value = trackBar21->Maximum;
-			}
-			else {
-				trackBar21->Value = i.GetValue(1, trackBar21->Name);
-			}
+			trackBar21->Value = ValueBind(i.GetValue(1, trackBar21->Name), trackBar21->Minimum, trackBar21->Maximum);
 			break;
 		case 22:
-			if (trackBar22->Maximum < i.GetValue(1, trackBar22->Name)) {
-				trackBar22->Value = trackBar22->Maximum;
-			}
-			else {
-				trackBar22->Value = i.GetValue(1, trackBar22->Name);
-			}
+			trackBar22->Value = ValueBind(i.GetValue(1, trackBar22->Name), trackBar22->Minimum, trackBar22->Maximum);
 			break;
 		case 23:
-			if (trackBar23->Maximum < i.GetValue(1, trackBar23->Name)) {
-				trackBar23->Value = trackBar23->Maximum;
-			}
-			else {
-				trackBar23->Value = i.GetValue(1, trackBar23->Name);
-			}
+			trackBar23->Value = ValueBind(i.GetValue(1, trackBar23->Name), trackBar23->Minimum, trackBar23->Maximum);
 			break;
 		case 24:
-			if (trackBar24->Maximum < i.GetValue(1, trackBar24->Name)) {
-				trackBar24->Value = trackBar24->Maximum;
-			}
-			else {
-				trackBar24->Value = i.GetValue(1, trackBar24->Name);
-			}
+			trackBar24->Value = ValueBind(i.GetValue(1, trackBar24->Name), trackBar24->Minimum, trackBar24->Maximum);
 			break;
 		case 25:
-			if (trackBar25->Maximum < i.GetValue(1, trackBar25->Name)) {
-				trackBar25->Value = trackBar25->Maximum;
-			}
-			else {
-				trackBar25->Value = i.GetValue(1, trackBar25->Name);
-			}
+			trackBar25->Value = ValueBind(i.GetValue(1, trackBar25->Name), trackBar25->Minimum, trackBar25->Maximum);
 			break;
 		}
 		break;
 	case 2:
 		switch (num) {
 		case 0:
-			if (trackBar0->Maximum < i.GetValue(1, trackBar0->Name)) {
-				trackBar0->Value = trackBar0->Maximum;
-			}
-			else {
-				trackBar0->Value = i.GetValue(1, trackBar0->Name);
-			}
+			trackBar0->Value = ValueBind(i.GetValue(1, trackBar0->Name), trackBar0->Minimum, trackBar0->Maximum);
 			break;
 		case 1:
-			if (trackBar1->Maximum < i.GetValue(1, trackBar1->Name)) {
-				trackBar1->Value = trackBar1->Maximum;
-			}
-			else {
-				trackBar1->Value = i.GetValue(1, trackBar1->Name);
-			}
+			trackBar1->Value = ValueBind(i.GetValue(1, trackBar1->Name), trackBar1->Minimum, trackBar1->Maximum);
 			break;
 		case 2:
-			if (trackBar2->Maximum < i.GetValue(1, trackBar2->Name)) {
-				trackBar2->Value = trackBar2->Maximum;
-			}
-			else {
-				trackBar2->Value = i.GetValue(1, trackBar2->Name);
-			}
+			trackBar2->Value = ValueBind(i.GetValue(1, trackBar2->Name), trackBar2->Minimum, trackBar2->Maximum);
 			break;
 		case 3:
-			if (trackBar3->Maximum < i.GetValue(1, trackBar3->Name)) {
-				trackBar3->Value = trackBar3->Maximum;
-			}
-			else {
-				trackBar3->Value = i.GetValue(1, trackBar3->Name);
-			}
+			trackBar3->Value = ValueBind(i.GetValue(1, trackBar3->Name), trackBar3->Minimum, trackBar3->Maximum);
 			break;
 		case 4:
-			if (trackBar4->Maximum < i.GetValue(1, trackBar4->Name)) {
-				trackBar4->Value = trackBar4->Maximum;
-			}
-			else {
-				trackBar4->Value = i.GetValue(1, trackBar4->Name);
-			}
+			trackBar4->Value = ValueBind(i.GetValue(1, trackBar4->Name), trackBar4->Minimum, trackBar4->Maximum);
 			break;
 		case 5:
-			if (trackBar5->Maximum < i.GetValue(1, trackBar5->Name)) {
-				trackBar5->Value = trackBar5->Maximum;
-			}
-			else {
-				trackBar5->Value = i.GetValue(1, trackBar5->Name);
-			}
+			trackBar5->Value = ValueBind(i.GetValue(1, trackBar5->Name), trackBar5->Minimum, trackBar5->Maximum);
 			break;
 		case 6:
-			if (trackBar6->Maximum < i.GetValue(1, trackBar6->Name)) {
-				trackBar6->Value = trackBar6->Maximum;
-			}
-			else {
-				trackBar6->Value = i.GetValue(1, trackBar6->Name);
-			}
+			trackBar6->Value = ValueBind(i.GetValue(1, trackBar6->Name), trackBar6->Minimum, trackBar6->Maximum);
 			break;
 		case 7:
-			if (trackBar7->Maximum < i.GetValue(1, trackBar7->Name)) {
-				trackBar7->Value = trackBar7->Maximum;
-			}
-			else {
-				trackBar7->Value = i.GetValue(1, trackBar7->Name);
-			}
+			trackBar7->Value = ValueBind(i.GetValue(1, trackBar7->Name), trackBar7->Minimum, trackBar7->Maximum);
 			break;
 		case 8:
-			if (trackBar8->Maximum < i.GetValue(1, trackBar8->Name)) {
-				trackBar8->Value = trackBar8->Maximum;
-			}
-			else {
-				trackBar8->Value = i.GetValue(1, trackBar8->Name);
-			}
+			trackBar8->Value = ValueBind(i.GetValue(1, trackBar8->Name), trackBar8->Minimum, trackBar8->Maximum);
 			break;
 		case 9:
-			if (trackBar9->Maximum < i.GetValue(1, trackBar9->Name)) {
-				trackBar9->Value = trackBar9->Maximum;
-			}
-			else {
-				trackBar9->Value = i.GetValue(1, trackBar9->Name);
-			}
+			trackBar9->Value = ValueBind(i.GetValue(1, trackBar9->Name), trackBar9->Minimum, trackBar9->Maximum);
 			break;
 		case 10:
-			if (trackBar10->Maximum < i.GetValue(1, trackBar10->Name)) {
-				trackBar10->Value = trackBar10->Maximum;
-			}
-			else {
-				trackBar10->Value = i.GetValue(1, trackBar10->Name);
-			}
+			trackBar10->Value = ValueBind(i.GetValue(1, trackBar10->Name), trackBar10->Minimum, trackBar10->Maximum);
 			break;
 		case 11:
-			if (trackBar11->Maximum < i.GetValue(1, trackBar11->Name)) {
-				trackBar11->Value = trackBar11->Maximum;
-			}
-			else {
-				trackBar11->Value = i.GetValue(1, trackBar11->Name);
-			}
+			trackBar11->Value = ValueBind(i.GetValue(1, trackBar11->Name), trackBar11->Minimum, trackBar11->Maximum);
 			break;
 		case 12:
-			if (trackBar12->Maximum < i.GetValue(1, trackBar12->Name)) {
-				trackBar12->Value = trackBar12->Maximum;
-			}
-			else {
-				trackBar12->Value = i.GetValue(1, trackBar12->Name);
-			}
+			trackBar12->Value = ValueBind(i.GetValue(1, trackBar12->Name), trackBar12->Minimum, trackBar12->Maximum);
 			break;
 		case 13:
-			if (trackBar13->Maximum < i.GetValue(1, trackBar13->Name)) {
-				trackBar13->Value = trackBar13->Maximum;
-			}
-			else {
-				trackBar13->Value = i.GetValue(1, trackBar13->Name);
-			}
+			trackBar13->Value = ValueBind(i.GetValue(1, trackBar13->Name), trackBar13->Minimum, trackBar13->Maximum);
 			break;
 		case 14:
-			if (trackBar14->Maximum < i.GetValue(1, trackBar14->Name)) {
-				trackBar14->Value = trackBar14->Maximum;
-			}
-			else {
-				trackBar14->Value = i.GetValue(1, trackBar14->Name);
-			}
+			trackBar14->Value = ValueBind(i.GetValue(1, trackBar14->Name), trackBar14->Minimum, trackBar14->Maximum);
 			break;
 		case 15:
-			if (trackBar15->Maximum < i.GetValue(1, trackBar15->Name)) {
-				trackBar15->Value = trackBar15->Maximum;
-			}
-			else {
-				trackBar15->Value = i.GetValue(1, trackBar15->Name);
-			}
+			trackBar15->Value = ValueBind(i.GetValue(1, trackBar15->Name), trackBar15->Minimum, trackBar15->Maximum);
 			break;
 		case 16:
-			if (trackBar16->Maximum < i.GetValue(1, trackBar16->Name)) {
-				trackBar16->Value = trackBar16->Maximum;
-			}
-			else {
-				trackBar16->Value = i.GetValue(1, trackBar16->Name);
-			}
+			trackBar16->Value = ValueBind(i.GetValue(1, trackBar16->Name), trackBar16->Minimum, trackBar16->Maximum);
 			break;
 		}
 		break;
 	case 3:
 		switch (num) {
 		case 0:
-			if (trackBar0->Maximum < i.GetValue(1, trackBar0->Name)) {
-				trackBar0->Value = trackBar0->Maximum;
-			}
-			else {
-				trackBar0->Value = i.GetValue(1, trackBar0->Name);
-			}
+			trackBar0->Value = ValueBind(i.GetValue(1, trackBar0->Name), trackBar0->Minimum, trackBar0->Maximum);
 			break;
 		case 1:
-			if (trackBar1->Maximum < i.GetValue(1, trackBar1->Name)) {
-				trackBar1->Value = trackBar1->Maximum;
-			}
-			else {
-				trackBar1->Value = i.GetValue(1, trackBar1->Name);
-			}
+			trackBar1->Value = ValueBind(i.GetValue(1, trackBar1->Name), trackBar1->Minimum, trackBar1->Maximum);
 			break;
 		case 2:
-			if (trackBar2->Maximum < i.GetValue(1, trackBar2->Name)) {
-				trackBar2->Value = trackBar2->Maximum;
-			}
-			else {
-				trackBar2->Value = i.GetValue(1, trackBar2->Name);
-			}
+			trackBar2->Value = ValueBind(i.GetValue(1, trackBar2->Name), trackBar2->Minimum, trackBar2->Maximum);
 			break;
 		case 3:
-			if (trackBar3->Maximum < i.GetValue(1, trackBar3->Name)) {
-				trackBar3->Value = trackBar3->Maximum;
-			}
-			else {
-				trackBar3->Value = i.GetValue(1, trackBar3->Name);
-			}
+			trackBar3->Value = ValueBind(i.GetValue(1, trackBar3->Name), trackBar3->Minimum, trackBar3->Maximum);
 			break;
 		case 4:
-			if (trackBar4->Maximum < i.GetValue(1, trackBar4->Name)) {
-				trackBar4->Value = trackBar4->Maximum;
-			}
-			else {
-				trackBar4->Value = i.GetValue(1, trackBar4->Name);
-			}
+			trackBar4->Value = ValueBind(i.GetValue(1, trackBar4->Name), trackBar4->Minimum, trackBar4->Maximum);
 			break;
 		case 5:
-			if (trackBar5->Maximum < i.GetValue(1, trackBar5->Name)) {
-				trackBar5->Value = trackBar5->Maximum;
-			}
-			else {
-				trackBar5->Value = i.GetValue(1, trackBar5->Name);
-			}
+			trackBar5->Value = ValueBind(i.GetValue(1, trackBar5->Name), trackBar5->Minimum, trackBar5->Maximum);
 			break;
 		case 6:
-			if (trackBar6->Maximum < i.GetValue(1, trackBar6->Name)) {
-				trackBar6->Value = trackBar6->Maximum;
-			}
-			else {
-				trackBar6->Value = i.GetValue(1, trackBar6->Name);
-			}
+			trackBar6->Value = ValueBind(i.GetValue(1, trackBar6->Name), trackBar6->Minimum, trackBar6->Maximum);
 			break;
 		case 7:
-			if (trackBar7->Maximum < i.GetValue(1, trackBar7->Name)) {
-				trackBar7->Value = trackBar7->Maximum;
-			}
-			else {
-				trackBar7->Value = i.GetValue(1, trackBar7->Name);
-			}
+			trackBar7->Value = ValueBind(i.GetValue(1, trackBar7->Name), trackBar7->Minimum, trackBar7->Maximum);
 			break;
 		case 8:
-			if (trackBar8->Maximum < i.GetValue(1, trackBar8->Name)) {
-				trackBar8->Value = trackBar8->Maximum;
-			}
-			else {
-				trackBar8->Value = i.GetValue(1, trackBar8->Name);
-			}
+			trackBar8->Value = ValueBind(i.GetValue(1, trackBar8->Name), trackBar8->Minimum, trackBar8->Maximum);
 			break;
 		case 9:
-			if (trackBar9->Maximum < i.GetValue(1, trackBar9->Name)) {
-				trackBar9->Value = trackBar9->Maximum;
-			}
-			else {
-				trackBar9->Value = i.GetValue(1, trackBar9->Name);
-			}
+			trackBar9->Value = ValueBind(i.GetValue(1, trackBar9->Name), trackBar9->Minimum, trackBar9->Maximum);
 			break;
 		case 10:
-			if (trackBar10->Maximum < i.GetValue(1, trackBar10->Name)) {
-				trackBar10->Value = trackBar10->Maximum;
-			}
-			else {
-				trackBar10->Value = i.GetValue(1, trackBar10->Name);
-			}
+			trackBar10->Value = ValueBind(i.GetValue(1, trackBar10->Name), trackBar10->Minimum, trackBar10->Maximum);
 			break;
 		}
 		break;
 	case 4:
 		switch (num) {
 		case 0:
-			if (trackBar0->Maximum < i.GetValue(1, trackBar0->Name)) {
-				trackBar0->Value = trackBar0->Maximum;
-			}
-			else {
-				trackBar0->Value = i.GetValue(1, trackBar0->Name);
-			}
+			trackBar0->Value = ValueBind(i.GetValue(1, trackBar0->Name), trackBar0->Minimum, trackBar0->Maximum);
 			break;
 		case 1:
-			if (trackBar1->Maximum < i.GetValue(1, trackBar1->Name)) {
-				trackBar1->Value = trackBar1->Maximum;
-			}
-			else {
-				trackBar1->Value = i.GetValue(1, trackBar1->Name);
-			}
+			trackBar1->Value = ValueBind(i.GetValue(1, trackBar1->Name), trackBar1->Minimum, trackBar1->Maximum);
 			break;
 		case 2:
-			if (trackBar2->Maximum < i.GetValue(1, trackBar2->Name)) {
-				trackBar2->Value = trackBar2->Maximum;
-			}
-			else {
-				trackBar2->Value = i.GetValue(1, trackBar2->Name);
-			}
+			trackBar2->Value = ValueBind(i.GetValue(1, trackBar2->Name), trackBar2->Minimum, trackBar2->Maximum);
 			break;
 		case 3:
-			if (trackBar3->Maximum < i.GetValue(1, trackBar3->Name)) {
-				trackBar3->Value = trackBar3->Maximum;
-			}
-			else {
-				trackBar3->Value = i.GetValue(1, trackBar3->Name);
-			}
+			trackBar3->Value = ValueBind(i.GetValue(1, trackBar3->Name), trackBar3->Minimum, trackBar3->Maximum);
 			break;
 		case 4:
-			if (trackBar4->Maximum < i.GetValue(1, trackBar4->Name)) {
-				trackBar4->Value = trackBar4->Maximum;
-			}
-			else {
-				trackBar4->Value = i.GetValue(1, trackBar4->Name);
-			}
+			trackBar4->Value = ValueBind(i.GetValue(1, trackBar4->Name), trackBar4->Minimum, trackBar4->Maximum);
 			break;
 		}
 		break;
 	case 5:
-		if (trackBar0->Maximum < i.GetValue(1, trackBar0->Name)) {
-			trackBar0->Value = trackBar0->Maximum;
-		}
-		else {
-			trackBar0->Value = i.GetValue(1, trackBar0->Name);
-		}
+		trackBar0->Value = ValueBind(i.GetValue(1, trackBar0->Name), trackBar0->Minimum, trackBar0->Maximum);
 		break;
 	}
 }
@@ -6414,6 +6115,7 @@ private: System::Void buttonD_Click(System::Object^ sender, System::EventArgs^ e
 		case 2:
 			switch (num) {
 			case 0:
+
 				break;
 			case 1:
 				break;
@@ -6512,6 +6214,7 @@ private: System::Void buttonE_Click(System::Object^ sender, System::EventArgs^ e
 		break;
 	case 1:
 		FileLoad();
+		nodetotexttrigger();
 		break;
 	}
 }
@@ -7144,11 +6847,8 @@ private: StreamReader^ itLoad(shared_ptr<struct Node> parentPointer, StreamReade
 
 	return reader;
 }
-
-
-
-
-
-
+private: System::Void Form_Closing(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {
+			close();
+	}
 };
 }

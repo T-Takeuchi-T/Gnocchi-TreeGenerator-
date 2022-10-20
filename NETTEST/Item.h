@@ -1,8 +1,10 @@
-#include <vector>
 #include <windows.h>
+#include <math.h>
+#include <vector>
 #include <memory>
-
+#include <random>
 extern void nodetotexttrigger();
+extern void close();
 extern void camt();
 extern void camr();
 extern void camf();
@@ -71,11 +73,11 @@ struct Node {
 
 	shared_ptr<vector<shared_ptr<Node>>> MainChild;
 	vector< vector<double>> divplist;
-    vector<double> Radiustoshapelist;
 	bool isMCRemoved;
 	float truelength;
 	float truebaseRadius;
 	float fracrate;
+	vector< vector<double>> divplistwithMainChild;
 };
 #pragma once
 class Item
